@@ -1,0 +1,37 @@
+<h3> Adicionar contrato </h3>
+{{#each erros}}
+    <div class="alert alert-danger">{{texto}}</div>
+{{else}}
+
+{{/each}}
+
+<div class="card">
+    <div class="card-body">
+        <form action="/adminContratos/contratos/novo" method="POST">
+            <label for="numero">Numero/Ano: </label>
+            <input type="text" id="numero" name="numero" placeholder="Numero do contrato: 003/2019" class="form-control" data-mask="000/0000" required> </br>
+            <label for="empresa">Empresa: </label>
+            <select name="empresa" class="form-control">
+                <option value="0">Selecione uma empresa.</option>
+                {{#each empresas}}
+                <option value="{{_id}}">{{razao_social}}</option>
+                {{else}}
+                <option value="0">Nenhuma empresa registrada.</option>
+                {{/each}}
+            </select>
+            <br>
+            <label for="fator_reducao">Fator de redução: </label>
+            <input type="text" id="fator_reducao" name="fator_reducao" placeholder="Fator de redução" class="form-control" required></br>
+            <label for="email">Email: </label>
+            <input type="text" id="email" name="email" placeholder="contato@empresa.com, contato2@empresa.com" class="form-control" required></br>
+            <label for="fiscal">Fiscal: </label>
+            <input type="text" id="fiscal" name="fiscal" placeholder="Nome dos fiscais do contrato" class="form-control" required></br>
+            <label for="status" >Status: </label><br>
+            <div class="form-control">
+            <input type="radio" name="status" value="true" class="radio-inline" checked> Ativo
+            <input type="radio" name="status" value="false" class="radio-inline"> Inativo 
+            </div><br>
+            <button type="submit" class="btn btn-success">Criar</button>       
+        </form>
+    </div>
+</div>
