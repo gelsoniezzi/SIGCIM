@@ -10,16 +10,6 @@ router.get('/', (req, res) => {
     res.render("admin/index")
 })
 
-router.get('/contratos', (req, res) => {
-    Contrato.find().populate("empresa").sort({numero: 'asc'}).then((contratos) => {
-        res.render("admin/contratos", {contratos: contratos})
-    }).catch((err) => {
-        req.flash("error_msg", "Houve um erro ao listar os contratos.")
-        res.redirect("/adminContratos")
-    })
-    
-})
-
 router.get('/empresas', (req,res) => {
     Empresa.find().sort({date: 'desc'}).then((empresas) => {
         res.render("admin/empresas", {empresas: empresas})
@@ -32,17 +22,6 @@ router.get('/empresas', (req,res) => {
 router.get("/empresas/add", (req, res) => {
     res.render("admin/addempresa")
 
-})
-
-router.get("/contratos/add", (req, res) => {
-    Empresa.find().then((empresas) => {
-
-        res.render("admin/addcontrato", {empresas: empresas})
-    }).catch((err) => {
-        req.flash("error_msg", "Houve um erro ao carregar as empresas.")
-        res.redirect("/adminContratos")
-    })
-    
 })
 
 router.post("/empresas/nova", (req, res) => {
@@ -64,9 +43,7 @@ router.post("/empresas/nova", (req, res) => {
         erros.push({texto: "Nome da empresa muito curto."})
     }
     
-
     if(erros.length > 0){
-
         res.render("admin/addempresa", {erros: erros})
     }else{
         const novaEmpresa = {
@@ -82,10 +59,7 @@ router.post("/empresas/nova", (req, res) => {
             req.flash("error_msg", "Houve um erro ao salvar a empresa, tente novamente.")
             res.redirect("/adminContratos")
         })
-
     }
-    
-
 })
 
 router.get("/empresas/edit/:id", (req, res) => {
@@ -127,6 +101,41 @@ router.post("/empresas/delete/", (req, res) => {
         res.redirect("adminContratos/empresas")
     })
 
+})
+
+router.get('/contratos', (req, res) => {
+    Contrato.find().populate("empresa").sort({numero: 'asc'}).then((contratos) => {
+        res.render("admin/contratos", {contratos: contratos})
+    }).catch((err) => {
+        req.flash("error_msg", "Houve um erro ao listar os contratos.")
+        res.redirect("/adminContratos")
+    })
+    
+})
+
+router.get("/contratos/add", (req, res) => {
+    Empresa.find().then((empresas) => {
+        res.render("admin/addcontrato", {empresas})
+    }).catch((err) => {
+        req.flash("error_msg", "Houve um erro ao carregar as empresas.")
+        res.redirect("/adminContratos")
+    })
+    
+})
+
+router.get("/contratos/edit/:id", (req,res) => {
+    Contrato.findOne({_id: req.params.id}).populate("empresa").then((contrato) => {
+                Empresa.find().then((empresas) => {
+                res.render("admin/editcontrato", {empresas, contrato})
+                }).catch((err) => {
+                    req.flash("error_msg", "Houve um erro ao carregar as empresas.")
+        res.redirect("/adminContratos")
+                })
+                     
+    }).catch((err) => {
+        req.flash("error_msg","Houve um erro ao carregar o contrato.")
+        res.redirect("/adminContratos")
+    })
 })
 
 router.post("/contratos/delete/", (req, res) => {
