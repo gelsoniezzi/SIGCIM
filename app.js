@@ -4,6 +4,7 @@
     const bodyParser = require('body-parser')
     const app = express()
     const adminContratos = require("./routes/adminContratos")
+    const admin = require("./routes/admin")
     const path = require("path")
     const mongoose = require('mongoose')
     const session = require("express-session")
@@ -51,9 +52,11 @@
 // Rotas
     app.get("/contratos", (req, res) =>{
         res.send("Lista de contratos.")
-
     })
+
     app.use('/adminContratos', adminContratos)
+    app.use("/admin", admin)
+
     
 // Outros
     const PORT = 8081

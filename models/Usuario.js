@@ -11,7 +11,7 @@ const Usuario = new Schema({
         type: String,
         required: true
     },
-    perfilUsuario: {
+    perfil_usuario: {
         type: Number,
         required: true,
         default: 0
