@@ -16,7 +16,7 @@ router.get('/', (req, res) => {
     router.get('/empresas', (req,res) => {
         Empresa.find().sort({date: 'desc'}).then((empresas) => {
             res.render("admin/empresas", {empresas: empresas})
-        }).catch(() => {
+        }).catch((err) => {
             req.flash("error_msg", "Houve um erro ao listar as empresas.")
             res.redirect("/adminContratos")
         })
@@ -95,14 +95,22 @@ router.get('/', (req, res) => {
     })
 
     router.post("/empresas/delete/", (req, res) => {
-        Empresa.remove({_id: req.body.id}).then(() => {
-            req.flash("success_msg", "Empresa deletada com sucesso.")
-            res.redirect("/adminContratos/empresas")
-        }).catch((err) => {
-            req.flash("error_msg", "Houve um erro ao deletar a empresa.")
-            res.redirect("adminContratos/empresas")
-        })
+        var idempresa = req.body.id
 
+        Contrato.findOne({empresa: idempresa}).then((contrato) => {
+            if(contrato.empresa._id == idempresa){
+                req.flash("error_msg", "Não é possível deletar empresa vinculada a contrato.")
+                res.redirect("/adminContratos/empresas")
+            }            
+        }).catch((err) =>{
+            Empresa.remove({_id: idempresa}).then(() => {
+                req.flash("success_msg", "Empresa deletada com sucesso.")
+                res.redirect("/adminContratos/empresas")
+            }).catch((err) => {
+                req.flash("error_msg", "Houve um erro ao deletar a empresa.")
+                res.redirect("/adminContratos/empresas")
+            })
+        })
     })
 
 // Rotas Contratos

@@ -7,6 +7,10 @@ const Usuario = new Schema({
         required: true,
 
     },
+    matricula: {
+        type: String,
+        required: true
+    },
     email: {
         type: String,
         required: true
@@ -14,11 +18,16 @@ const Usuario = new Schema({
     perfil_usuario: {
         type: Number,
         required: true,
-        default: 0
+        default: 3
     },
     senha: {
         type: String,
         required: true
+    },
+    cargo: {
+        type: Number,
+        required: true,
+        default: 0
     }
 
 })

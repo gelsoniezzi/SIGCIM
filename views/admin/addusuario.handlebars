@@ -9,15 +9,15 @@
     <div class="card-body">
         <form action="/admin/usuarios/add" method="POST">
             <label for="nome">Nome: </label>
-            <input type="text" id="nome" name="nome" placeholder="Nome completo do usuário." class="form-control"> </br>
+            <input type="text" id="nome" name="nome" placeholder="Nome completo do usuário." class="form-control" required value="{{novoUsuario.nome}}"> </br>
             <label for="matricula"> Matrícula Siape: </label>
-            <input type="text" id="matricula" name="matricula" placeholder="Matrícula do siape." class="form-control"></br>
-            <label for="senha">Password</label>
-            <input type="password" class="form-control" id="senha" name="senha" placeholder="Password"></br>
-            <label for="senha">Confirmar password</label>
-            <input type="password" class="form-control" id="senha2" name="senha2" placeholder="Password"></br>
+            <input type="text" id="matricula" name="matricula" placeholder="Matrícula do siape." class="form-control" required value="{{novoUsuario.matricula}}"></br>
             <label for="cnpj"> E-mail: </label>
-            <input type="text" id="email" name="email" placeholder="E-mail para contato." class="form-control"></br>
+            <input type="text" id="email" name="email" placeholder="E-mail para contato." class="form-control" required value="{{novoUsuario.email}}"></br>
+            <label for="senha">Password</label>
+            <input type="password" class="form-control" id="senha" name="senha" placeholder="Password" required value="{{novoUsuario.senha}}"></br>
+            <label for="senha">Confirmar password</label>
+            <input type="password" class="form-control" id="senha2" name="senha2" placeholder="Password" required></br>
             <label for="perfil">Perfil</label>
             <select name="perfil" class="form-control">
                 <option value="8">Selecione um perfil</option>
