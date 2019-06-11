@@ -1,6 +1,5 @@
 <h2>Usuários</h2>
 <hr>
-{{usuarios}}
 <table class="table table-striped">
     <thead class="thead-dark">
         <tr>
@@ -13,9 +12,31 @@
         </tr>
     </thead>
     <tbody>
-        <tr>
-
-        </tr>
+        {{#each usuarios}}
+            <tr>
+                <td>{{matricula}}</td>
+                <td>{{nome}}</td>
+                <td>{{email}}</td>
+                <td>{{perfil_usuario}}</td>
+                <td>{{status}}</td>
+                <td>
+                    <form action="/admin/usuarios/delete/" method="POST">
+                    <a href="/admin/usuarios/edit/{{_id}}" class="btn btn-light" data-toggle="tooltip" data-placement="top" title="Editar"><i class="material-icons">edit</i></a>
+                    <input type="hidden" name="id" value="{{_id}}">                    
+                    <button class="btn btn-light" type="submit" data-toggle="tooltip" data-placement="top" title="Remover"><i class="material-icons">remove_circle</i></button>
+                </form>
+                </td>
+            </tr>
+        {{else}}
+            <tr>
+                <td><h5>Nenhum usuario cadastrado.</h5></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>            
+            </tr>
+        {{/each}}        
     </tbody>
 </table>
 <br>

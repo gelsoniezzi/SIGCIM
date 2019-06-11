@@ -18,7 +18,7 @@ const Usuario = new Schema({
     perfil_usuario: {
         type: Number,
         required: true,
-        default: 3
+        default: 0
     },
     senha: {
         type: String,
@@ -28,6 +28,11 @@ const Usuario = new Schema({
         type: Number,
         required: true,
         default: 0
+    },
+    status: {
+        type: Boolean,
+        required: true,
+        default: 1
     }
 
 })

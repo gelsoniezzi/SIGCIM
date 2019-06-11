@@ -16,8 +16,7 @@
             <td>{{razao_social}}</td>
             <td>{{cnpj}}</td>
             <td>{{email}}</td>
-            <td>
-                
+            <td>                
                 <form action="/adminContratos/empresas/delete/" method="POST">
                     <a href="/adminContratos/empresas/edit/{{_id}}" class="btn btn-light" data-toggle="tooltip" data-placement="top" title="Editar"><i class="material-icons">edit</i></a>
                     <input type="hidden" name="id" value="{{_id}}">                    
@@ -27,7 +26,12 @@
             </tr>
 
         {{else}}
-            <tr><td><h5>Nenhuma empresa cadastrada.</h5></td><td><td><td></td></td></td></tr>
+            <tr>
+                <td><h5>Nenhuma empresa cadastrada.</h5></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
         {{/each}}
     </tbody>
     

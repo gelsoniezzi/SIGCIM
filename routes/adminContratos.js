@@ -200,12 +200,10 @@ router.post("/contratos/edit", (req, res) => {
             req.flash("error_msg", "Houve um erro ao editar o contrato.")
             res.redirect("/adminContratos/contratos")
         })
-
     }).catch((err) => {
         req.flash("error_msg", "Houve um erro ao editar o contrato.")
         res.redirect("/adminContratos/contratos")
     })
-
 })
 
 

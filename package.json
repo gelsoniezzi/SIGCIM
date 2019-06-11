@@ -9,5 +9,32 @@
     "express-handlebars": "^3.1.0",
     "express-session": "^1.16.1",
     "mongoose": "^5.5.12"
-  }
+  },
+  "name": "sigcim",
+  "version": "1.0.0",
+  "description": "Sistema de Gerenciamento de Compras de Insumos de Manutencao",
+  "main": "app.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/giezzi/sigcim.git"
+  },
+  "keywords": [
+    "sistema",
+    "gerenciamento",
+    "manutencao",
+    "insumos",
+    "cotacoes",
+    "orcamentos",
+    "sinapi"
+  ],
+  "author": "Gelson Iezzi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/giezzi/sigcim/issues"
+  },
+  "homepage": "https://gitlab.com/giezzi/sigcim#readme"
 }
