@@ -5,7 +5,6 @@ const Usuario = new Schema({
     nome: {
         type: String,
         required: true,
-
     },
     matricula: {
         type: String,
