@@ -7,10 +7,9 @@ const Empresa = mongoose.model("empresas")
 const Contrato = mongoose.model("contratos")
 
 // Rota index
-
-router.get('/', (req, res) => {
-    res.render("admin/index")
-})
+    router.get('/', (req, res) => {
+        res.render("admin/index")
+    })
 
 // Rotas Empresas
     router.get('/empresas', (req,res) => {
@@ -114,108 +113,108 @@ router.get('/', (req, res) => {
     })
 
 // Rotas Contratos
-router.get('/contratos', (req, res) => {
-    Contrato.find().populate("empresa").sort({numero: 'asc'}).then((contratos) => {
-        res.render("admin/contratos", {contratos: contratos})
-    }).catch((err) => {
-        req.flash("error_msg", "Houve um erro ao listar os contratos.")
-        res.redirect("/adminContratos")
-    })
-    
-})
-
-router.get("/contratos/add", (req, res) => {
-    Empresa.find().then((empresas) => {
-        res.render("admin/addcontrato", {empresas})
-    }).catch((err) => {
-        req.flash("error_msg", "Houve um erro ao carregar as empresas.")
-        res.redirect("/adminContratos")
-    })
-    
-})
-
-router.post("/contratos/add", (req, res) => {
-
-    var erros = []
-
-    if(req.body.empresa == "0"){
-        erros.push({texto: "Selecione uma empresa."})
-    }
-
-    if(erros.length > 0){
-        res.render("admin/addcontrato", {erros: erros})
-    }else{
-        const novoContrato = {
-            numero: req.body.numero,
-            empresa: req.body.empresa,
-            email: req.body.email,
-            fator_reducao: req.body.fator_reducao,
-            fiscal: req.body.fiscal,
-            status: req.body.status
-        }
-    
-        new Contrato(novoContrato).save().then(() => {
-            req.flash("success_msg", "Contrato criado com sucesso.")
-            res.redirect("/adminContratos/contratos")
+    router.get('/contratos', (req, res) => {
+        Contrato.find().populate("empresa").sort({numero: 'asc'}).then((contratos) => {
+            res.render("admin/contratos", {contratos: contratos})
         }).catch((err) => {
-            req.flash("error_msg", "Houve um erro ao salvar o contrato, tente novamente.")
-            res.redirect("/adminContratos/contratos")
+            req.flash("error_msg", "Houve um erro ao listar os contratos.")
+            res.redirect("/adminContratos")
         })
-
-    }
-
-
-
-})
-
-
-router.get("/contratos/edit/:id", (req,res) => {
-    Contrato.findOne({_id: req.params.id}).populate("empresa").then((contrato) => {
-                Empresa.find().then((empresas) => {
-                res.render("admin/editcontrato", {empresas, contrato})
-                }).catch((err) => {
-                    req.flash("error_msg", "Houve um erro ao carregar as empresas.")
-        res.redirect("/adminContratos")
-                })
-                     
-    }).catch((err) => {
-        req.flash("error_msg","Houve um erro ao carregar o contrato.")
-        res.redirect("/adminContratos")
+        
     })
-})
 
-router.post("/contratos/edit", (req, res) => {
-    Contrato.findOne({_id: req.body.id}).then((contrato) => {
-        contrato.numero = req.body.numero
-        contrato.empresa = req.body.empresa
-        contrato.fator_reducao = req.body.fator_reducao
-        contrato.email = req.body.email
-        contrato.fiscal = req.body.fiscal
-        contrato.status = req.body.status
+    router.get("/contratos/add", (req, res) => {
+        Empresa.find().then((empresas) => {
+            res.render("admin/addcontrato", {empresas})
+        }).catch((err) => {
+            req.flash("error_msg", "Houve um erro ao carregar as empresas.")
+            res.redirect("/adminContratos")
+        })
+        
+    })
 
-        contrato.save().then(() => {
-            req.flash("success_msg", "Contrato editado com sucesso.")
-            res.redirect("/adminContratos/contratos")
+    router.post("/contratos/add", (req, res) => {
+
+        var erros = []
+
+        if(req.body.empresa == "0"){
+            erros.push({texto: "Selecione uma empresa."})
+        }
+
+        if(erros.length > 0){
+            res.render("admin/addcontrato", {erros: erros})
+        }else{
+            const novoContrato = {
+                numero: req.body.numero,
+                empresa: req.body.empresa,
+                email: req.body.email,
+                fator_reducao: req.body.fator_reducao,
+                fiscal: req.body.fiscal,
+                status: req.body.status
+            }
+        
+            new Contrato(novoContrato).save().then(() => {
+                req.flash("success_msg", "Contrato criado com sucesso.")
+                res.redirect("/adminContratos/contratos")
+            }).catch((err) => {
+                req.flash("error_msg", "Houve um erro ao salvar o contrato, tente novamente.")
+                res.redirect("/adminContratos/contratos")
+            })
+
+        }
+
+
+
+    })
+
+
+    router.get("/contratos/edit/:id", (req,res) => {
+        Contrato.findOne({_id: req.params.id}).populate("empresa").then((contrato) => {
+                    Empresa.find().then((empresas) => {
+                    res.render("admin/editcontrato", {empresas, contrato})
+                    }).catch((err) => {
+                        req.flash("error_msg", "Houve um erro ao carregar as empresas.")
+            res.redirect("/adminContratos")
+                    })
+                        
+        }).catch((err) => {
+            req.flash("error_msg","Houve um erro ao carregar o contrato.")
+            res.redirect("/adminContratos")
+        })
+    })
+
+    router.post("/contratos/edit", (req, res) => {
+        Contrato.findOne({_id: req.body.id}).then((contrato) => {
+            contrato.numero = req.body.numero
+            contrato.empresa = req.body.empresa
+            contrato.fator_reducao = req.body.fator_reducao
+            contrato.email = req.body.email
+            contrato.fiscal = req.body.fiscal
+            contrato.status = req.body.status
+
+            contrato.save().then(() => {
+                req.flash("success_msg", "Contrato editado com sucesso.")
+                res.redirect("/adminContratos/contratos")
+            }).catch((err) => {
+                req.flash("error_msg", "Houve um erro ao editar o contrato.")
+                res.redirect("/adminContratos/contratos")
+            })
         }).catch((err) => {
             req.flash("error_msg", "Houve um erro ao editar o contrato.")
             res.redirect("/adminContratos/contratos")
         })
-    }).catch((err) => {
-        req.flash("error_msg", "Houve um erro ao editar o contrato.")
-        res.redirect("/adminContratos/contratos")
     })
-})
 
 
-router.post("/contratos/delete/", (req, res) => {
-    Contrato.remove({_id: req.body.id}).then(() => {
-        req.flash("success_msg", "Contrato removido com sucesso.")
-        res.redirect("/adminContratos/contratos/")
-    }).catch((err) => {
-        req.flash("error_msg", "Houve um erro ao remover o contrato.")
-        res.redirect("/adminContratos/contratos")
+    router.post("/contratos/delete/", (req, res) => {
+        Contrato.remove({_id: req.body.id}).then(() => {
+            req.flash("success_msg", "Contrato removido com sucesso.")
+            res.redirect("/adminContratos/contratos/")
+        }).catch((err) => {
+            req.flash("error_msg", "Houve um erro ao remover o contrato.")
+            res.redirect("/adminContratos/contratos")
+        })
     })
-})
 
 module.exports = router
 

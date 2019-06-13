@@ -1,0 +1,57 @@
+<h3>Cadastrar insumo</h3>
+{{#each erros}}
+    <div class="alert alert-danger">{{texto}}</div>
+{{else}}
+
+{{/each}}
+
+<div class="card">
+    <div class="card-body">
+        <form action="/insumos/add" method="POST" enctype="multipart/form-data">
+            <div class="form-row">
+                <div class="form-group col-md-8">
+                    <label for="descricao">Descrição:</label>
+                    <input type="text" id="descricao" name="descricao" placeholder="Descrição do ítem." class="form-control" required>
+                </div>  
+                <div class="form-group col-md-4">
+                    <label for="unidade">Unidade de medida: </label>
+                    <input type="text" id="unidade" name="unidade" class="form-control" required>
+                </div>
+            </div>
+
+            <label for="observacao">Observações:</label>
+            <input type="text" id="observacao" name="observacao" class="form-control"><br>
+
+            <div class="custom-file ">                
+                <input type="file" class="custom-file-input" id="arquivo" name="arquivo">
+                <label for="arquivo" class="custom-file-label">Anexar arquivo de imagem (jpg, png, gif) com até 2MB.</label>
+            </div>
+            <div class="form-row mt-4">
+                <div class="col-auto">
+                    <label for="valor_mediano">Valor mediano: </label>
+                    <div class="form-row align-items-center">
+                        <div class="col-auto">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">R$</div>
+                                    </div>
+                                        <input type="text" id="valor_mediano" name="valor_mediano" class="form-control" disabled>
+                                </div>
+                        </div>
+                        <div class="col-auto">
+                            <a href="#" class="btn btn-light">Calcular</a>
+                        </div>                
+                    </div>
+                </div>
+                <div class="col-auto">
+                    <label for="codigo_sinapi">Código SINAPI:</label>
+                    <input type="text" id="codigo_sinapi" name="codigo_sinapi" class="form-control" disabled>
+                </div>
+            </div>
+            <div class="media">
+                <img src="..." class="mr-3" alt="...">                
+            </div>            
+            <button type="submit" class="btn btn-success mt-4">Salvar</button>
+        </form>
+    </div>
+</div>

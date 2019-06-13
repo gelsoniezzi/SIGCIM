@@ -5,6 +5,7 @@
     const app = express()
     const adminContratos = require("./routes/adminContratos")
     const admin = require("./routes/admin")
+    const insumo = require("./routes/insumos")
     const path = require("path")
     const mongoose = require('mongoose')
     const session = require("express-session")
@@ -54,8 +55,13 @@
         res.send("Lista de contratos.")
     })
 
+    app.get("/teste",(req, res) => {
+        res.render("admin/teste")
+    })
+
     app.use('/adminContratos', adminContratos)
     app.use("/admin", admin)
+    app.use("/insumos", insumo)
 
     
 // Outros

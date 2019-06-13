@@ -14,4 +14,6 @@ $(document).ready(() =>{
       $(() => {
         $('[data-toggle="tooltip"]').tooltip()
       })
+      
+      bsCustomFileInput.init()
     });

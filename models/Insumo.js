@@ -8,6 +8,11 @@ const Insumo = new Schema({
         require: true,
 
     },
+    origem: {
+        type: String,
+        required: true,
+        default: "SIGCIM"
+    },
     codigo_origem: {
         type: String,
     },
@@ -21,9 +26,20 @@ const Insumo = new Schema({
         required: true,
         default: 0.0
     },
-    
+    status: {
+        type: String,
+    },
+    imagem: {
+        type: String,
 
-
+    },
+    observacao: {
+        type: String,
+    },
+    coleta: {
+        type: Date,
+        default: Date.now()
+    }    
 })
 
 mongoose.model("insumos", Insumo)
