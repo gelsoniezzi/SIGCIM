@@ -51,17 +51,22 @@
 
 
 // Rotas
-    app.get("/contratos", (req, res) =>{
+    app.get("/contratos", (req, res) => {
         res.send("Lista de contratos.")
     })
 
-    app.get("/teste",(req, res) => {
+    app.get("/teste", (req, res) => {
         res.render("admin/teste")
     })
 
     app.use('/adminContratos', adminContratos)
     app.use("/admin", admin)
     app.use("/insumos", insumo)
+
+    app.get('/', (req, res) => {
+        res.render('admin/index')
+
+    })
 
     
 // Outros

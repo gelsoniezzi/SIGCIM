@@ -65,7 +65,7 @@ const Contrato = mongoose.model("contratos")
 
     router.get("/empresas/edit/:id", (req, res) => {
         Empresa.findOne({_id: req.params.id}).then((empresa) => {
-            res.render("admin/editempresa", {empresa: empresa})
+            res.render("admin/editempresa", {empresa})
         }).catch((err) => {
             req.flash("error_msg", "Empresa não encontrada.")
             res.redirect("/adminContratos/empresas")

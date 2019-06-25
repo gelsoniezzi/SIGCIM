@@ -4,7 +4,7 @@ const express = require("express")
 
 exports.compressImage = (file, size) => {
 
-    const newPath = file.path.split('.')[0] + '.webp'
+    var newPath = file.path.split('.')[0] + '.webp'
         return sharp(file.path)
             .resize(size)
             .toFormat('webp')
@@ -25,9 +25,8 @@ exports.compressImage = (file, size) => {
                         throw err
                     }
                 })
+                newPath = newPath.split('\/public/')[1]
+                console.log("Teste: " + newPath)
                 return newPath
-            })
-
-            
-    
+            })    
 }

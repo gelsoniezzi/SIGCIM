@@ -4,7 +4,7 @@ module.exports = (multer({
     storage: multer.diskStorage({
         //destino
         destination: (req, file, cb) => {            
-            cb(null, './insumos/img')
+            cb(null, './public/img/insumos/')
         },
         //nome do arquivo
         filename: (req, file, cb) => {
