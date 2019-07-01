@@ -1,10 +1,14 @@
 const express = require("express")
 const router = express.Router()
 const mongoose = require("mongoose")
+const XLSX = require('xlsx')
 require("../models/Insumo")
 const Insumo = mongoose.model("insumos")
 const multer  = require('../multer')
 const fileHelper = require('../file-helper')
+const http = require('http');
+const formidable = require('formidable')
+
 
 
 // Rota index
@@ -87,5 +91,22 @@ const fileHelper = require('../file-helper')
     router.post("/edit/", (req, res) => {
 
     })
+
+    router.get("/importar/", (req, res) => {
+        res.render("insumos/importar")
+    })
+
+    router.post("/importar", (req, res) => {
+        var form = new formidable.IncomingForm()
+        form.parse(req, function(err, fields, files) {
+            var f = files[Object.keys(files)[0]]
+            var workbook = XLSX.readFile(f.path)
+            var result = {}
+            result[0] = XLSX.utils.sheet_to_json(workbook);
+            console.log(result[0])
+            res.send(String(result))
+        });
+    })
+
 
 module.exports = router
