@@ -3,7 +3,9 @@ const router = express.Router()
 const mongoose = require("mongoose")
 const XLSX = require('xlsx')
 require("../models/Insumo")
+require("../models/Base")
 const Insumo = mongoose.model("insumos")
+const Base = mongoose.model("bases")
 const multer  = require('../multer')
 const fileHelper = require('../file-helper')
 const http = require('http');
@@ -93,7 +95,13 @@ const formidable = require('formidable')
     })
 
     router.get("/importar/", (req, res) => {
-        res.render("insumos/importar")
+        Base.find().then((bases) => {
+            res.render("insumos/importar", {bases})
+        }).catch((err) => {
+            req.flash("error_msg", "Houve um erro ao listar as bases de dados.")
+            res.redirect("/insumos/bases")
+        })
+        
     })
 
     router.post("/importar", (req, res) => {
@@ -106,6 +114,38 @@ const formidable = require('formidable')
             console.log(result[0])
             res.send(String(result))
         });
+    })
+
+    router.get("/bases", (req, res) => {
+        Base.find().then((bases) => {
+            res.render("insumos/bases", {bases: bases})
+        }).catch(() => {
+            req.flash("error_msg", "Houve um erro ao listar as bases de dados.")
+            res.redirect("/insumos")
+        })
+        
+    })
+
+    router.get("/bases/add", (req, res) => {
+        res.render("insumos/addbase")
+    })
+
+    router.post("/bases/add", (req, res) => {
+
+        const novaBase = {
+            nome: req.body.nome,
+            endereco: req.body.endereco
+        }
+        console.log(novaBase)
+
+        new Base(novaBase).save().then(() => {
+            req.flash("sucess_msg", "Base cadastrada com sucesso.")
+            res.redirect("/insumos/bases")
+        }).catch((err) => {
+            req.flash("error_msg", "Houve um erro ao cadastrar a base, tente novamente.")
+            res.redirect("/insumos/bases")
+        })
+
     })
 
 

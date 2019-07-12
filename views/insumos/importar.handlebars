@@ -9,20 +9,23 @@
     <div class="card-body">
         <form action="/insumos/importar" method="POST" enctype="multipart/form-data">
             <label for="base">Base de dados</label>
-            <select name="base" class="form-control">
+            <select name="base" class="form-control" required>
                 <option value="0">Selecione a fonte base de dados que deseja importar.</option>
-                {{#each base}}
+                {{#each bases}}
                 <option value="{{_id}}">{{nome}}</option>
                 {{else}}
                 <option value="0">Nenhuma base cadastrada.</option>
                 {{/each}}                
             </select> </br>
             <label for="custom-file">Arquivo de dados da fonte.</label>
-            <div class="custom-file">                
-                <input type="file" class="custom-file-input" id="arquivo" name="arquivo">
+            <div class="custom-file mb-4">                
+                <input type="file" class="custom-file-input" id="arquivo" name="arquivo" required>
                 <label for="arquivo" class="custom-file-label">Anexar arquivo XLS ou XLSX.</label>
             </div>
 
+            <label for="linha">Linha do cabeçalho da tabela.</label>
+            <input type="text" name="linha" id="linha" class="form-control" placeholder="Digite o numero da linha que contém o cabeçalho dos dados." required>
+            <br>
             <button type="submit" class="btn btn-success">Importar</button>
         </form>
     </div>
