@@ -105,6 +105,12 @@ const formidable = require('formidable')
     })
 
     router.post("/importar", (req, res) => {
+        var obj = { name: "John", 
+                    today: new Date(), 
+                    city : "New York" };
+
+        console.log(obj)
+
         const importado = req.body.plan_json
         console.log(importado)
         res.redirect("/insumos/")

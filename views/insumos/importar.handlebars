@@ -46,7 +46,7 @@
                 var data = e.target.result;
                 var workbook = XLSX.read(data, { type: "binary" });
                 json = toJson(workbook)
-                $('#plan_json').val(json);
+                $('#plan_json').val(JSON.stringify(json));
                 console.log(json);
             };
 
