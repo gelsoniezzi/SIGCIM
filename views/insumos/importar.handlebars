@@ -26,7 +26,42 @@
             <label for="linha">Linha do cabeçalho da tabela.</label>
             <input type="text" name="linha" id="linha" class="form-control" placeholder="Digite o numero da linha que contém o cabeçalho dos dados." required>
             <br>
+            <input type="hidden"  id="plan_json" name="plan_json" value="teste">
             <button type="submit" class="btn btn-success">Importar</button>
         </form>
     </div>
 </div>
+
+<script>
+    $(document).ready(() => {
+        $('#arquivo').on('change', function (e) {
+            const file = e.target.files[0];
+            console.log(file)
+            onPickFile(file);
+        });
+
+        function onPickFile(file) {
+            var reader = new FileReader();
+            reader.onload = e => {
+                var data = e.target.result;
+                var workbook = XLSX.read(data, { type: "binary" });
+                json = toJson(workbook)
+                $('#plan_json').val(json);
+                console.log(json);
+            };
+
+            reader.readAsBinaryString(file);
+        }
+
+        function toJson(workbook) {
+            var result = {};
+            workbook.SheetNames.forEach(function (sheetName) {
+                var sheet = workbook.Sheets[sheetName];
+                result[sheetName] = XLSX.utils.sheet_to_json(sheet);
+            });
+            return result;
+        }
+    })
+
+
+    </script>

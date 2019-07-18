@@ -94,7 +94,7 @@ const formidable = require('formidable')
 
     })
 
-    router.get("/importar/", (req, res) => {
+    router.get("/importar", (req, res) => {
         Base.find().then((bases) => {
             res.render("insumos/importar", {bases})
         }).catch((err) => {
@@ -105,15 +105,10 @@ const formidable = require('formidable')
     })
 
     router.post("/importar", (req, res) => {
-        var form = new formidable.IncomingForm()
-        form.parse(req, function(err, fields, files) {
-            var f = files[Object.keys(files)[0]]
-            var workbook = XLSX.readFile(f.path)
-            var result = {}
-            result[0] = XLSX.utils.sheet_to_json(workbook);
-            console.log(result[0])
-            res.send(String(result))
-        });
+        const importado = req.body.plan_json
+        console.log(importado)
+        res.redirect("/insumos/")
+        
     })
 
     router.get("/bases", (req, res) => {
