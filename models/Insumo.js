@@ -31,7 +31,6 @@ const Insumo = new Schema({
     },
     imagem: {
         type: String,
-
     },
     observacao: {
         type: String,

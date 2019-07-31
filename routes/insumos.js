@@ -1,6 +1,7 @@
 const express = require("express")
 const router = express.Router()
 const mongoose = require("mongoose")
+const fs = require('fs')
 const XLSX = require('xlsx')
 require("../models/Insumo")
 require("../models/Base")
@@ -105,16 +106,48 @@ const formidable = require('formidable')
     })
 
     router.post("/importar", (req, res) => {
-        var obj = { name: "John", 
-                    today: new Date(), 
-                    city : "New York" };
+        console.log("Req.body.linha " + req.body.linha)
 
-        console.log(obj)
+        var form = new formidable.IncomingForm();
 
-        const importado = req.body.plan_json
-        console.log(importado)
-        res.redirect("/insumos/")
-        
+        form.parse(req, function(err, fields, files) {
+            var f = files[Object.keys(files)[0]]
+            var workbook = XLSX.readFile(f.path)
+            var sheet_name = workbook.SheetNames[0]
+            var sheet = workbook.Sheets[sheet_name]
+            var result = XLSX.utils.sheet_to_json(sheet)
+            
+            var insumosEnviados
+            for( var i = 0; i < result.length; i++){
+                var descricao = result[i]['DESCRICAO DO INSUMO']
+                var observacao = descricao.split('!')
+                var obs
+                if(observacao[1]){
+                    obs = observacao[1]
+                    descricao = observacao[2]
+                }else{
+                    console.log(descricao)
+                }            
+                
+                const novoInsumo = {
+                    origem: req.body.base,
+                    descricao: descricao,
+                    observacao: obs,
+                    codigo_origem: result[i]['CODIGO  '],
+                    unidade_medida: result[i]['UNIDADE'],                
+                    preco_mediano: result[i]['  PRECO MEDIANO R$']
+                }
+
+                new Insumo(novoInsumo).save().then(() => {
+                    insumosEnviados++
+                    //
+                }).catch((err) => {
+                    
+                })
+                
+            }
+            console.log("Insumos enviados" + insumosEnviados)
+        });    
     })
 
     router.get("/bases", (req, res) => {
