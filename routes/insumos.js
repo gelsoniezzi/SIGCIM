@@ -107,15 +107,16 @@ const formidable = require('formidable')
     })
 
     router.post("/importar", (req, res) => {
-        var novoInsumo
-        var insumosEnviados
+        
         var form = new formidable.IncomingForm();
         form.parse(req, function(err, fields, files) {
             var f = files[Object.keys(files)[0]]
             var workbook = XLSX.readFile(f.path)
             var sheet_name = workbook.SheetNames[0]
             var sheet = workbook.Sheets[sheet_name]
-            var result = XLSX.utils.sheet_to_json(sheet)            
+            var result = XLSX.utils.sheet_to_json(sheet)    
+            
+            
 
             var linha = fields.linha
             var fonte_base = fields.base
@@ -125,31 +126,36 @@ const formidable = require('formidable')
             for( var i = 0; i < result.length; i++){
                 var descricao = result[i]['DESCRICAO DO INSUMO']
                 var observacao = descricao.split('!')
-                var obs
+                var obs = ""
+
+                console.log(observacao[1])
                 if(observacao[1]){
                     obs = observacao[1]
                     descricao = observacao[2]
                 }
                 
-                novoInsumo = {
+                var novoInsumo = {
                     origem: fonte_base,            
                     descricao: descricao,
                     preco_mediano: result[i]['  PRECO MEDIANO R$'],
                     observacao: obs,
-                    codigo_origem: result[i]['CODIGO  '],
+                    codigo_origem: result[i]['CODIGO'],
                     unidade_medida: result[i]['UNIDADE'],                
                                        
                 }
 
+                new Insumo(novoInsumo).save().then(() => {
+                    //insumosEnviados++
+                    console.log("Item %s cadastrado.")
+                }).catch((err) => {
+                    console.log("Erro: " + err)                
+                })
+
+
             }
         })
 
-        new Insumo(novoInsumo).save().then(() => {
-            insumosEnviados++
-            //
-        }).catch((err) => {
-            console.log("Erro")                
-        })
+        
     })
 
 
