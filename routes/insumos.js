@@ -26,6 +26,7 @@ const formidable = require('formidable')
 
     router.post("/add", multer.single('arquivo'), (req, res) => {
 
+        
         const novoInsumo = {
             descricao: req.body.descricao,
             unidade_medida: req.body.unidade_medida,
@@ -106,18 +107,21 @@ const formidable = require('formidable')
     })
 
     router.post("/importar", (req, res) => {
-        console.log("Req.body.linha " + req.body.linha)
-
+        var novoInsumo
+        var insumosEnviados
         var form = new formidable.IncomingForm();
-
         form.parse(req, function(err, fields, files) {
             var f = files[Object.keys(files)[0]]
             var workbook = XLSX.readFile(f.path)
             var sheet_name = workbook.SheetNames[0]
             var sheet = workbook.Sheets[sheet_name]
-            var result = XLSX.utils.sheet_to_json(sheet)
+            var result = XLSX.utils.sheet_to_json(sheet)            
+
+            var linha = fields.linha
+            var fonte_base = fields.base
+
+            console.log("Linha do cabeçalho: " + linha)
             
-            var insumosEnviados
             for( var i = 0; i < result.length; i++){
                 var descricao = result[i]['DESCRICAO DO INSUMO']
                 var observacao = descricao.split('!')
@@ -125,30 +129,29 @@ const formidable = require('formidable')
                 if(observacao[1]){
                     obs = observacao[1]
                     descricao = observacao[2]
-                }else{
-                    console.log(descricao)
-                }            
+                }
                 
-                const novoInsumo = {
-                    origem: req.body.base,
+                novoInsumo = {
+                    origem: fonte_base,            
                     descricao: descricao,
+                    preco_mediano: result[i]['  PRECO MEDIANO R$'],
                     observacao: obs,
                     codigo_origem: result[i]['CODIGO  '],
                     unidade_medida: result[i]['UNIDADE'],                
-                    preco_mediano: result[i]['  PRECO MEDIANO R$']
+                                       
                 }
 
-                new Insumo(novoInsumo).save().then(() => {
-                    insumosEnviados++
-                    //
-                }).catch((err) => {
-                    
-                })
-                
             }
-            console.log("Insumos enviados" + insumosEnviados)
-        });    
+        })
+
+        new Insumo(novoInsumo).save().then(() => {
+            insumosEnviados++
+            //
+        }).catch((err) => {
+            console.log("Erro")                
+        })
     })
+
 
     router.get("/bases", (req, res) => {
         Base.find().then((bases) => {

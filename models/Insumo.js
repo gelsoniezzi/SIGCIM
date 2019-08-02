@@ -31,6 +31,7 @@ const Insumo = new Schema({
     },
     imagem: {
         type: String,
+        default: "/img/insumos/semimagem.png"
     },
     observacao: {
         type: String,
