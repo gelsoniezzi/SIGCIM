@@ -1,3 +1,43 @@
-<h4>Insumos</h4>
-
+<h2>Insumos</h2>
+<hr>
+<table class="table table-striped">
+    <thead class="thead-dark">
+        <th scope="col">Origem</th>
+        <th scope="col">Código Origem</th>
+        <th scope="col">Descrição</th>
+        <th scope="col">Un. Medida</th>
+        <th scope="col">Preço</th>
+        <th scope="col">Status</th>
+        <th scope="col">Ações</th>
+    </thead>
+    <tbody>
+        {{#each insumos}}
+        <tr>
+            <td>{{origem}}</td>
+            <td>{{codigo_origem}}</td>
+            <td>{{descricao}}</td>
+            <td>{{unidade_medida}}</td>
+            <td>{{preco_mediano}}</td>
+            <td>{{status}}</td>
+            <td>
+                <form action="/insumos/delete/" method="POST">
+                <a href="/insumos/edit/{{_id}}" class="btn btn-light" data-toggle="tooltip" data-placement="top" title="Editar"><i class="material-icons">edit</i></a>
+                <input type="hidden" name="id" value="{{_id}}">                    
+                <button class="btn btn-light" type="submit" data-toggle="tooltip" data-placement="top" title="Remover"><i class="material-icons">remove_circle</i></button>
+                </form>
+            </td>
+        </tr>
+        {{else}}
+            <tr>
+                <td><h5>Nenhum insumo cadastrado.</h5></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        {{/each}}
+    </tbody>
+</table>
 <a href="/insumos/add"><button class="btn btn-success">Novo</button></a>

@@ -1,4 +1,5 @@
 const mongoose = require("mongoose")
+const mongoosePaginate = require('mongoose-paginate-v2');
 const Schema = mongoose.Schema
 
 const Insumo = new Schema({
@@ -43,3 +44,7 @@ const Insumo = new Schema({
 })
 
 mongoose.model("insumos", Insumo)
+
+Insumo.plugin(mongoosePaginate);
+
+Insumo.paginate().then({})

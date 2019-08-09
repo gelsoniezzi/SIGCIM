@@ -1,6 +1,7 @@
 const express = require("express")
 const router = express.Router()
 const mongoose = require("mongoose")
+const mongoosePaginate = require('mongoose-paginate-v2');
 const fs = require('fs')
 const XLSX = require('xlsx')
 require("../models/Insumo")
@@ -16,7 +17,16 @@ const formidable = require('formidable')
 
 // Rota index
     router.get('/', (req, res) => {
-        res.render("insumos/index")
+        
+
+        /*
+        Insumo.find().populate("origem").sort({origem: 'asc'}).then((insumos) => {
+            res.render("insumos/index", {insumos: insumos})
+        }).catch((err) => {
+            req.flash("error_msg", "Houve um erro ao listar os insumos.")
+            res.redirect("/insumos")
+        })
+        */
     })
 
 // Rotas insumos
