@@ -17,7 +17,30 @@ const formidable = require('formidable')
 
 // Rota index
     router.get('/', (req, res) => {
-        
+
+        const options = {
+            page: 1,
+            limit: 10,
+            collation: {
+                locale: 'en'
+            }
+        };
+
+        Insumo.paginate({}, options, function(err, result) {
+            // result.docs
+            // result.totalDocs = 100
+            // result.limit = 10
+            // result.page = 1
+            // result.totalPages = 10    
+            // result.hasNextPage = true
+            // result.nextPage = 2
+            // result.hasPrevPage = false
+            // result.prevPage = null
+            // result.pagingCounter = 1
+            res.render("insumos/index", {result: result})
+          });
+
+
 
         /*
         Insumo.find().populate("origem").sort({origem: 'asc'}).then((insumos) => {

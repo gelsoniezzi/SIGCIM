@@ -43,8 +43,5 @@ const Insumo = new Schema({
     }    
 })
 
+Insumo.plugin(mongoosePaginate)
 mongoose.model("insumos", Insumo)
-
-Insumo.plugin(mongoosePaginate);
-
-Insumo.paginate().then({})
