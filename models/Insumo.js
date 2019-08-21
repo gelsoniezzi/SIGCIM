@@ -10,9 +10,9 @@ const Insumo = new Schema({
 
     },
     origem: {
-        type: String,
-        required: true,
-        default: "SIGCIM"
+        type: Schema.Types.ObjectId,
+        ref: "bases",
+        required: true
     },
     codigo_origem: {
         type: String,

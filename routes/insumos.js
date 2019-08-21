@@ -16,15 +16,45 @@ const formidable = require('formidable')
 
 
 // Rota index
-    router.get('/', (req, res) => {
+router.get('/', (req, res) => {
+    const page = req.params.page;
+    const options = {
+        page: page,
+        limit: 10,
+        collation: {
+            locale: 'en'
+        }
+    };
 
+    Insumo.paginate({}, options, function(err, result) {
+        // result.docs
+        // result.totalDocs = 100
+        // result.limit = 10
+        // result.page = 1
+        // result.totalPages = 10    
+        // result.hasNextPage = true
+        // result.nextPage = 2
+        // result.hasPrevPage = false
+        // result.prevPage = null
+        // result.pagingCounter = 1
+        res.render("insumos/index", {result: result.docs})
+    })
+
+})
+
+
+// Rotas insumos
+    router.get('/lista/:page', (req, res) => {
+        const page = req.params.page
         const options = {
-            page: 1,
-            limit: 10,
+            page: page,
+            limit: 20,
             collation: {
                 locale: 'en'
-            }
-        };
+            },
+            populate: { path: 'origem',
+                        select: 'nome'}
+        }
 
         Insumo.paginate({}, options, function(err, result) {
             // result.docs
@@ -37,22 +67,12 @@ const formidable = require('formidable')
             // result.hasPrevPage = false
             // result.prevPage = null
             // result.pagingCounter = 1
-            res.render("insumos/index", {result: result})
-          });
-
-
-
-        /*
-        Insumo.find().populate("origem").sort({origem: 'asc'}).then((insumos) => {
-            res.render("insumos/index", {insumos: insumos})
-        }).catch((err) => {
-            req.flash("error_msg", "Houve um erro ao listar os insumos.")
-            res.redirect("/insumos")
+            console.log(result.docs.origem)
+            res.render("insumos/index", {result})
         })
-        */
+
     })
 
-// Rotas insumos
     router.get('/add', (req, res) => {
         res.render("insumos/add")        
     })
