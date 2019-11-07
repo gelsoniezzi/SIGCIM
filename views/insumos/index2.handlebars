@@ -1,22 +1,50 @@
 <h2>Insumos</h2>
 <hr>
-<input type="hidden" id="input_insumos" value="{{insumos}}">
-<table id="table-insumos" class="display" style="width:100%">
-        <thead>
+<table id="table-insumos" class="table table-striped" style="width:100%">
+        <thead class="thead-dark">
             <tr>
                 <th>Origem</th>
-                <th>Código Origem</th>
+                <th>Código</th>
                 <th>Descrição</th>
                 <th>Un. Medida</th>
                 <th>Preço</th>
                 <th>Status</th>
-                <th>Ações</th>
+                <th >Ações</th>
             </tr>
         </thead>
-        <tfoot>
+        <tbody>
+        {{#each insumos}}
+        <tr>
+            <td>{{origem.nome}}</td>
+            <td>{{codigo_origem}}</td>
+            <td>{{descricao}}</td>
+            <td>{{unidade_medida}}</td>
+            <td>{{preco_mediano}}</td>
+            <td>{{status}}</td>
+            <td>
+                <form action="/insumos/delete/" method="POST">
+                <a href="/insumos/edit/{{_id}}" class="btn btn-light btn-sm" data-toggle="tooltip" data-placement="top" title="Editar"><i class="material-icons">edit</i></a>
+                <input type="hidden" name="id" value="{{_id}}">                    
+                <button class="btn btn-light btn-sm" type="submit" data-toggle="tooltip" data-placement="top" title="Remover"><i class="material-icons">remove_circle</i></button>
+                </form>
+            </td>
+        </tr>
+        {{else}}
+            <tr>
+                <td><h5>Nenhum insumo cadastrado.</h5></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        {{/each}}
+    </tbody>
+        <tfoot >
             <tr>
                 <th>Origem</th>
-                <th>Código Origem</th>
+                <th>Código</th>
                 <th>Descrição</th>
                 <th>Un. Medida</th>
                 <th>Preço</th>
@@ -28,12 +56,10 @@
 
 <a href="/insumos/add"><button class="btn btn-success">Novo</button></a>
 
-<script>    
-    var insumos = document.getElementById('input_insumos').value;
-$(document).ready(function() {
-    $('#table-insumos').DataTable( {
-        data: insumos
-    } );
-} );
+<script>  
+    $(document).ready( function () {
+    $('#table-insumos').DataTable();
+    });
+    console.log("terminou")
 </script>
 

@@ -74,7 +74,7 @@ router.get('/', (req, res) => {
     })
 
     router.get('/lista2/', (req, res) => {        
-        Insumo.find().sort({descricao: "asc"}).then((insumos) =>{
+        Insumo.find().populate("origem").sort({descricao: "asc"}).then((insumos) =>{
             res.render("insumos/index2", {insumos})
         })
 
@@ -174,16 +174,16 @@ router.get('/', (req, res) => {
             var workbook = XLSX.readFile(f.path)
             var sheet_name = workbook.SheetNames[0]
             var sheet = workbook.Sheets[sheet_name]
-            var result = XLSX.utils.sheet_to_json(sheet)    
-            
-            
+            var result = XLSX.utils.sheet_to_json(sheet)            
 
-            var linha = fields.linha
+            var linha = fields.linha //pega o campo linha do formulario
             var fonte_base = fields.base
 
             console.log("Linha do cabeçalho: " + linha)
+            var cabecalho_planilha = result[linha]
+            console.log(result)
             
-            for( var i = 0; i < result.length; i++){
+            for(var i = 0; i < result.length; i++){
                 var descricao = result[i]['DESCRICAO DO INSUMO']
                 var observacao = descricao.split('!')
                 var obs = ""
@@ -193,26 +193,30 @@ router.get('/', (req, res) => {
                     obs = observacao[1]
                     descricao = observacao[2]
                 }
+
+                
                 
                 var novoInsumo = {
                     origem: fonte_base,            
                     descricao: descricao,
-                    preco_mediano: result[i]['  PRECO MEDIANO R$'],
+                    preco_mediano: result[i]['PRECO MEDIANO R$'],
                     observacao: obs,
                     codigo_origem: result[i]['CODIGO'],
-                    unidade_medida: result[i]['UNIDADE'],                
-                                       
+                    unidade_medida: result[i]['UNIDADE']                       
                 }
 
                 new Insumo(novoInsumo).save().then(() => {
                     //insumosEnviados++
-                    console.log("Item %s cadastrado.")
+                    console.log("Item" + novoInsumo.origem 
+                                       + novoInsumo.codigo_origem 
+                                       + novoInsumo.descricao
+                                       + "cadastrado.")
                 }).catch((err) => {
-                    console.log("Erro: " + err)                
+                    console.log("Erro: " + err)
                 })
 
 
-            }
+            } 
         })
 
         

@@ -14,8 +14,11 @@ const Insumo = new Schema({
         ref: "bases",
         required: true
     },
+    id_origem: {
+        type: String
+    },
     codigo_origem: {
-        type: String,
+        type: String
     },
     unidade_medida: {
         type: String,
