@@ -1,0 +1,39 @@
+<h2>Insumos</h2>
+<hr>
+<input type="hidden" id="input_insumos" value="{{insumos}}">
+<table id="table-insumos" class="display" style="width:100%">
+        <thead>
+            <tr>
+                <th>Origem</th>
+                <th>Código Origem</th>
+                <th>Descrição</th>
+                <th>Un. Medida</th>
+                <th>Preço</th>
+                <th>Status</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <th>Origem</th>
+                <th>Código Origem</th>
+                <th>Descrição</th>
+                <th>Un. Medida</th>
+                <th>Preço</th>
+                <th>Status</th>
+                <th>Ações</th>
+            </tr>
+        </tfoot> 
+</table>
+
+<a href="/insumos/add"><button class="btn btn-success">Novo</button></a>
+
+<script>    
+    var insumos = document.getElementById('input_insumos').value;
+$(document).ready(function() {
+    $('#table-insumos').DataTable( {
+        data: insumos
+    } );
+} );
+</script>
+

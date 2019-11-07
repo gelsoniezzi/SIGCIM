@@ -73,6 +73,13 @@ router.get('/', (req, res) => {
 
     })
 
+    router.get('/lista2/', (req, res) => {        
+        Insumo.find().sort({descricao: "asc"}).then((insumos) =>{
+            res.render("insumos/index2", {insumos})
+        })
+
+    })
+
     router.get('/add', (req, res) => {
         res.render("insumos/add")        
     })
