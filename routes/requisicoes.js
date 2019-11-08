@@ -1,0 +1,5 @@
+const express = require("express")
+const router = express.Router()
+const mongoose = require("mongoose")
+require("../models/Requisicao")
+const Requisicao = mongoose.model("requisicoes")

@@ -1,7 +1,6 @@
 const express = require("express")
 const router = express.Router()
 const mongoose = require("mongoose")
-const mongoosePaginate = require('mongoose-paginate-v2');
 const fs = require('fs')
 const XLSX = require('xlsx')
 require("../models/Insumo")
@@ -44,38 +43,9 @@ router.get('/', (req, res) => {
 
 
 // Rotas insumos
-    router.get('/lista/:page', (req, res) => {
-        const page = req.params.page
-        const options = {
-            page: page,
-            limit: 20,
-            collation: {
-                locale: 'en'
-            },
-            populate: { path: 'origem',
-                        select: 'nome'}
-        }
-
-        Insumo.paginate({}, options, function(err, result) {
-            // result.docs
-            // result.totalDocs = 100
-            // result.limit = 10
-            // result.page = 1
-            // result.totalPages = 10    
-            // result.hasNextPage = true
-            // result.nextPage = 2
-            // result.hasPrevPage = false
-            // result.prevPage = null
-            // result.pagingCounter = 1
-            console.log(result.docs.origem)
-            res.render("insumos/index", {result})
-        })
-
-    })
-
-    router.get('/lista2/', (req, res) => {        
+    router.get('/lista/', (req, res) => {        
         Insumo.find().populate("origem").sort({descricao: "asc"}).then((insumos) =>{
-            res.render("insumos/index2", {insumos})
+            res.render("insumos/index", {insumos})
         })
 
     })
@@ -206,11 +176,6 @@ router.get('/', (req, res) => {
                 }
 
                 new Insumo(novoInsumo).save().then(() => {
-                    //insumosEnviados++
-                    console.log("Item" + novoInsumo.origem 
-                                       + novoInsumo.codigo_origem 
-                                       + novoInsumo.descricao
-                                       + "cadastrado.")
                 }).catch((err) => {
                     console.log("Erro: " + err)
                 })
