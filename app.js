@@ -6,6 +6,7 @@
     const adminContratos = require("./routes/adminContratos")
     const admin = require("./routes/admin")
     const insumo = require("./routes/insumos")
+    const requisicao = require("./routes/requisicoes")
     const path = require("path")
     const mongoose = require('mongoose')
     const session = require("express-session")
@@ -62,6 +63,7 @@
     app.use('/adminContratos', adminContratos)
     app.use("/admin", admin)
     app.use("/insumos", insumo)
+    app.use("/requisicoes", requisicao)
 
     app.get('/', (req, res) => {
         res.render('admin/index')
