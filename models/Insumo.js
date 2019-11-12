@@ -15,7 +15,7 @@ const Insumo = new Schema({
         required: true
     },
     id_origem: {
-        type: String
+        type: Number
     },
     codigo_origem: {
         type: String

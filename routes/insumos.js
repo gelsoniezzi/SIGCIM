@@ -16,27 +16,8 @@ const formidable = require('formidable')
 
 // Rota index
 router.get('/', (req, res) => {
-    const page = req.params.page;
-    const options = {
-        page: page,
-        limit: 10,
-        collation: {
-            locale: 'en'
-        }
-    };
-
-    Insumo.paginate({}, options, function(err, result) {
-        // result.docs
-        // result.totalDocs = 100
-        // result.limit = 10
-        // result.page = 1
-        // result.totalPages = 10    
-        // result.hasNextPage = true
-        // result.nextPage = 2
-        // result.hasPrevPage = false
-        // result.prevPage = null
-        // result.pagingCounter = 1
-        res.render("insumos/index", {result: result.docs})
+    Insumo.find().populate("origem").sort({descricao: "asc"}).then((insumos) =>{
+        res.render("insumos/index", {insumos})
     })
 
 })
@@ -151,7 +132,6 @@ router.get('/', (req, res) => {
 
             console.log("Linha do cabeçalho: " + linha)
             var cabecalho_planilha = result[linha]
-            console.log(result)
             
             for(var i = 0; i < result.length; i++){
                 var descricao = result[i]['DESCRICAO DO INSUMO']
@@ -164,7 +144,6 @@ router.get('/', (req, res) => {
                     descricao = observacao[2]
                 }
 
-                
                 
                 var novoInsumo = {
                     origem: fonte_base,            

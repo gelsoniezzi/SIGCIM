@@ -8,7 +8,7 @@
                 <th>Descrição</th>
                 <th>Un. Medida</th>
                 <th>Preço</th>
-                <th>Status</th>
+                <th>Observações</th>
                 <th >Ações</th>
             </tr>
         </thead>
@@ -20,7 +20,7 @@
             <td>{{descricao}}</td>
             <td>{{unidade_medida}}</td>
             <td>{{preco_mediano}}</td>
-            <td>{{status}}</td>
+            <td>{{observacao}}</td>
             <td>
                 <form action="/insumos/delete/" method="POST">
                 <a href="/insumos/edit/{{_id}}" class="btn btn-light btn-sm" data-toggle="tooltip" data-placement="top" title="Editar"><i class="material-icons">edit</i></a>
