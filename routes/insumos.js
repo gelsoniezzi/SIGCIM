@@ -32,7 +32,10 @@ router.get('/', (req, res) => {
     })
 
     router.get('/add', (req, res) => {
-        res.render("insumos/add")        
+        Base.find().then((bases) => {
+            res.render("insumos/add", {bases}) 
+        })
+               
     })
 
     router.post("/add", multer.single('arquivo'), (req, res) => {
@@ -94,8 +97,8 @@ router.get('/', (req, res) => {
 
     
     router.get("/edit/:id", (req,res) => {     
-        Insumo.findOne({_id: req.params.id}).then((insumo) => {
-            res.render("insumos/editinsumo", {insumo})
+        Insumo.findOne({_id: req.params.id}).then((insumo) => {            
+             res.render("insumos/editinsumo", {insumo})      
         }).catch((err) => {
             req.flash("error_msg", "Insumo não encontrada.")
             res.redirect("/insumos/")

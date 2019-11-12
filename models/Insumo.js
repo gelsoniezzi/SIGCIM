@@ -6,13 +6,13 @@ const Insumo = new Schema({
 
     descricao: {
         type: String,
-        require: true,
-
+        require: true
     },
     origem: {
         type: Schema.Types.ObjectId,
         ref: "bases",
-        required: true
+        required: true,
+        default: "5dca95bbdeb78b39e4e1257d"
     },
     id_origem: {
         type: Number

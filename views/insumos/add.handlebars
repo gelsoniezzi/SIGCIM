@@ -44,8 +44,19 @@
                     </div>
                 </div>
                 <div class="col-auto">
-                    <label for="codigo_sinapi">Código de origem:</label>
-                    <input type="text" id="codigo_sinapi" name="codigo_sinapi" class="form-control" disabled>
+                    <label for="origem">Origem: </label>
+                    <select name="origem" class="form-control">
+                        <option value="0">Selecione uma base de dados.</option>
+                        {{#each bases}}
+                        <option value="{{_id}}">{{nome}}</option>
+                        {{else}}
+                        <option value="0">Nenhuma base cadastrada.</option>
+                        {{/each}}
+                    </select>
+                </div>
+                <div class="col-auto">
+                    <label for="codigo_origem">Código de origem:</label>
+                    <input type="text" id="codigo_origem" name="codigo_origem" class="form-control" disabled>
                 </div>
             </div>
             <br>
