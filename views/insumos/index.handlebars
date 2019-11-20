@@ -64,10 +64,7 @@
 
 <script>  
     $(document).ready( function () {
-        $('#table-insumos').DataTable({
-        "scrollY": "200px",
-        "paging": false
-        });
+        $('#table-insumos').DataTable();
 
         $('a.toggle-vis').on( 'click', function (e) {
         e.preventDefault();
@@ -78,10 +75,10 @@
         // Toggle the visibility
         column.visible( ! column.visible() );
         });
-
-        document.getElementById("tbody-insumos").classList.add('visible');
         document.getElementById("tbody-insumos").classList.remove('invisible');
-        document.getElementById("spinner-insumos").classList.add("invisible")
+        document.getElementById("tbody-insumos").classList.add('visible');        
+        document.getElementById("spinner-insumos").remove();
+        
     });
 </script>
 
