@@ -18,7 +18,7 @@
                 <span class="sr-only">Loading...</span>
             </div>
         </div>
-        <tbody id="tbody-insumos" class="invisible">   
+        <tbody id="tbody-insumos" class="invisible" hidden>   
                      
             {{#each insumos}}
             <tr>
@@ -66,6 +66,7 @@
         $('#table-insumos').DataTable();    
         document.getElementById("tbody-insumos").classList.add('visible');
         document.getElementById("tbody-insumos").classList.remove('invisible');
+        document.getElementById("tbody-insumos").removeAttribute('hidden')
         document.getElementById("spinner-insumos").classList.add("invisible")
     });
 </script>
