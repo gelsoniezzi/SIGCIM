@@ -127,4 +127,8 @@ router.post("/usuarios/edit", (req, res) => {
 
 })
 
+router.get('/teste', (req, res) => {
+    res.render("admin/teste")
+})
+
 module.exports = router
