@@ -1,27 +1,32 @@
 const mongoose = require("mongoose")
-const mongoosePaginate = require('mongoose-paginate-v2');
 const Schema = mongoose.Schema
 
-const Insumo = new Schema({
-
+const InsumoRequisicao = new Schema({
     descricao: {
         type: String,
         require: true
     },
+    requisicao_id: {
+        type: Schema.Types.ObjectId,
+        ref: "requisicoes"
+    },
     origem: {
         type: Schema.Types.ObjectId,
-        ref: "bases"
+        ref: "bases",
     },
     id_origem: {
-        type: Number
+        type: String
     },
     codigo_origem: {
         type: String
     },
     unidade_medida: {
         type: String,
-        required: true,
-        default: "un."
+        required: true
+    },
+    quantidade: {
+        type: Number,
+        required: true
     },
     preco_mediano: {
         type: Number,
@@ -31,6 +36,9 @@ const Insumo = new Schema({
     status: {
         type: String,
     },
+    status_requisicao: {
+        type: String,
+    },
     imagem: {
         type: String,
         default: "/img/insumos/semimagem.png"
@@ -38,11 +46,16 @@ const Insumo = new Schema({
     observacao: {
         type: String,
     },
+    observacao_requisicao: {
+        type: String,
+    },
     coleta: {
         type: Date,
         default: Date.now()
-    }    
+    },
+    destino: {
+        type: String
+    }
 })
 
-Insumo.plugin(mongoosePaginate)
-mongoose.model("insumos", Insumo)
+mongoose.model("insumosrequisicoes", InsumoRequisicao)

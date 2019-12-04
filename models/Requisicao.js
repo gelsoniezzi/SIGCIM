@@ -32,6 +32,12 @@ const Requisicao = new Schema ({
     contrato: {
         type: Schema.Types.ObjectId,
         ref: "contratos"        
+    },
+    observacoes: {
+        type: String
+    },
+    prazo_entrega: {
+        type: Date
     }
 })
 mongoose.model("requisicoes", Requisicao)
