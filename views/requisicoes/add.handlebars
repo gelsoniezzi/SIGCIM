@@ -94,16 +94,7 @@
                     <th>Ações</th>
                 </tr>
             </thead>
-            <tbody>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tbody>
+            
         </table> 
 
     </div>
@@ -136,8 +127,14 @@
         });
     });
 
+    //Adição de insumos a requisição
+
+    var insumos = []
+
+
     function adicionar_item(id) {
-        console.log("O id é " + id)
+        var novo_insumo = {id_insumo: id, quantidade: 0}
+        insumos.push(novo_insumo)
     }
 
     
