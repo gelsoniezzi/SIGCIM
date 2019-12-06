@@ -159,11 +159,11 @@
 
         var listaInfos = ['id_insumo', 'origem', 'descricao', 'quantidade', 'unidade', 'valor']
 
-        for (var i = 0; i < 7; i++){
+        for (var i = 0; i < 8; i++){
             var cell = document.createElement("td")        
             
             if (i==0){
-                var cellText = document.createTextNode(row.rowIndex)                
+                var cellText = document.createTextNode(row.rowIndex)             
             }else{
                 var cellText = document.createTextNode(novo_insumo[listaInfos[i]])               
             }

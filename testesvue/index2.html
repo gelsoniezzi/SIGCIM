@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <title>Teste Vue :: Document</title>
+</head>
+
+<body>
+    <div id="app">
+        {{message}}
+    </div>
+    <br>
+    <div id="app-2">
+        <span v-bind:title="message2">
+            Passe o mouse sobre mim e veja a dica interligada dinamicamente!
+        </span>
+    </div>
+    <div id="app-3">
+        <p v-if="haveMenssage">Agora você me viu.</p>
+    </div>
+
+    <div id="app-4">
+        <p v-if="menssages.length === 0">Não existem mensagens.</p>
+        <li v-for="menssage in menssages">
+            {{ menssage.text }}
+        </li>
+    </div>
+    
+</body>
+    <script>
+        var app = new Vue({
+            el: "#app",
+            data: {
+                message: "olá vue!"
+            }
+        })
+
+        var app2 = new Vue({
+            el: '#app-2',
+            data:{
+                message2: "Voce carregou esta pagina em " + new Date().toLocaleDateString() 
+            }
+        })
+
+        var app3 = new Vue({
+            el: "#app-3",
+            data: {
+                seen: true
+            }
+        })
+
+        var app4 = new Vue({
+            el: "#app-4",
+            data: { 
+            menssages: [
+                    {text: 'Mensagem 1.'},
+                    {text: 'mensagem 2.'},
+                    {text: "Mensagem 3."}
+                ],
+            haveMenssage: 0
+            
+            }
+        })
+    </script>
+</html>

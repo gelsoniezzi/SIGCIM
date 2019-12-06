@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <title>Document</title>
+</head>
+<body>
+    <div class="container mt-4">
+        <div class="card">
+            <div class="card-body">
+                <div id="app-1">
+                    <table style="font-size:13px" class="table table-striped table-bordered table-sm">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Origem</th>
+                                <th>Código</th>
+                                <th>Descrição</th>
+                                <th>Unidade</th>
+                                <th>Preço</th>
+                                <th>Observações</th>
+                                <th >Ações</th>
+                            </tr>
+                    
+                    <tbody>                         
+                        <tr id="5dd5944028122e4790fd4f38" role="row" >
+                                <td >SINAPI RN</td>
+                                <td>7325</td>
+                                <td> ADITIVO IMPERMEABILIZANTE DE PEGA NORMAL PARA ARGAMASSAS E CONCRETOS SEM ARMACAO</td>
+                                <td>KG</td>
+                                <td>6.39</td>
+                                <td>EM PROCESSO DE DESATIVACAO</td>
+                                <td> 
+                                    <button onclick="adicionar_item('5dd5944028122e4790fd4f38')"><i class="material-icons">add_circle</i></button>                           
+                                </td>
+                        </tr>
+                    </tbody>
+                    </table>
+                    </div>
+            </div>
+        </div>
+        <br>
+        <div id="app-insumos">
+        <div class="card">
+            
+            <div class="card-body">
+                    <h4>Escolha os ítens </h4>
+            <table style="font-size:13px" class="table table-striped table-bordered table-sm">
+                    <thead class="thead-dark">
+                        <tr>                            
+                            <th>Código</th>
+                            <th>Descrição</th>
+                            <th>Unidade</th>
+                            <th>Quant.</th>
+                            <th>Preço</th>
+                            <th>Total</th>
+                            <th >Ações</th>
+                        </tr>
+                
+                <tbody>
+                    
+                    <tr v-for="insumo in insumos">
+                            <td>{{insumo.origem}}.{{insumo.codigo}}</td>
+                            <td>{{insumo.descricao}}</td>
+                            <td>{{insumo.unidade}}</td>
+                            <td><input type="number" name="" id="" value="{{insumo.quant}}"></td>
+                            <td>{{insumo.preco}}</td>
+                            <td>{{insumo.total}}</td>
+                            <td>[Remover]</td>
+
+                    </tr>
+                    <!--
+                        <tr id="5dd5944028122e4790fd4f38" role="row" >
+                            <td>7325</td>
+                            <td> ADITIVO IMPERMEABILIZANTE DE PEGA NORMAL PARA ARGAMASSAS E CONCRETOS SEM ARMACAO</td>
+                            <td>KG</td>
+                            <td><input type="number" name="" id="" ></td>
+                            <td>6.39</td>
+                            <td></td>
+                            <td> 
+                                <button onclick="adicionar_item('5dd5944028122e4790fd4f38')"><i class="material-icons">remove_circle</i></button>                           
+                            </td>
+                        </tr>
+                    -->
+                </tbody>
+                </table>
+                <p v-if="insumos.length === 0">Adicione um insumo.</p>
+            </div>
+        </div>
+        </div>
+    </div>
+    <script>
+        appInsumos = new Vue({
+            el: "#app-insumos",
+            data: {
+
+                insumos: [
+
+                ]
+
+            }
+        })
+
+        
+    </script>
+    
+
+    
+</body>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+</html>
