@@ -17,9 +17,12 @@ router.get('/', (req, res) => {
 
 router.get('/add', (req, res) => {
     Insumo.find().populate("origem").sort({descricao: "asc"}).then((insumos) =>{
-        res.render("requisicoes/add", {insumos})
+        res.render("requisicoes/addvue", {insumos})
     })
 
+})
+
+router.post
 })
 
 

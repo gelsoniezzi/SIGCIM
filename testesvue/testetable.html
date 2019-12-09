@@ -62,14 +62,14 @@
                 
                 <tbody>
                     
-                    <tr v-for="insumo in insumos">
+                    <tr v-for="(insumo, index) in insumos">
                             <td>{{insumo.nome}}.{{insumo.codigo}}</td>
                             <td>{{insumo.descricao}}</td>
                             <td>{{insumo.unidade}}</td>
                             <td><input type="number" name="" id="" value="">{{insumo.quantidade}}</td>
                             <td>{{insumo.preco}}</td>
                             <td>{{insumo.total}}</td>
-                            <td><button v-on:click="remove('5dd5944028122e4790fd4f38')"><i class="material-icons">remove_circle</i></button> [Remover]</td>
+                            <td><button v-on:click="remove(index)"><i class="material-icons">remove_circle</i></button> [Remover]</td>
 
                     </tr>
                     <!--
@@ -103,37 +103,37 @@
 
             },
             methods: {
-                remove: function (id){
-                    appInsumos.insumos = appInsumos.insumos.filter(appInsumos.insumos => id_insumo != id)
-                    console.log(id)
+                remove: function (index){
+                    console.log("Apague" + index)
+                    this.insumos.splice(index, 1)
                 }                                
             }
         })
 
         function adicionar_item(id) {
-        var rowOrigem = document.getElementById(id)
-        var listaNodesOrigem = rowOrigem.children
-        var nomeOrigem = listaNodesOrigem[0].innerHTML
-        var codigoOrigem = listaNodesOrigem[1].innerHTML
-        var descricaoOrigem = listaNodesOrigem[2].innerHTML
-        var unidadeOrigem = listaNodesOrigem[3].innerHTML
-        var precoOrigem = listaNodesOrigem[4].innerHTML
+            var rowOrigem = document.getElementById(id)
+            var listaNodesOrigem = rowOrigem.children
+            var nomeOrigem = listaNodesOrigem[0].innerHTML
+            var codigoOrigem = listaNodesOrigem[1].innerHTML
+            var descricaoOrigem = listaNodesOrigem[2].innerHTML
+            var unidadeOrigem = listaNodesOrigem[3].innerHTML
+            var precoOrigem = listaNodesOrigem[4].innerHTML
 
-        var novo_insumo = { id_insumo: id,
-                            codigo: codigoOrigem,
-                            nome:  nomeOrigem,
-                            descricao: descricaoOrigem,
-                            quantidade: 0,
-                            unidade: unidadeOrigem,
-                            preco: precoOrigem
-                            }
+            var novo_insumo = { id_insumo: id,
+                                codigo: codigoOrigem,
+                                nome:  nomeOrigem,
+                                descricao: descricaoOrigem,
+                                quantidade: 0,
+                                unidade: unidadeOrigem,
+                                preco: precoOrigem
+                                }
 
-            appInsumos.insumos.push(novo_insumo)
-        }
+                appInsumos.insumos.push(novo_insumo)
+            }
 
-        function remover_item(id){
-            console.log("Apague" + id)
-            appInsumos.insumos = appInsumos.insumos.filter(insumos => insumos.id_insumo != id)
+        function remover_item(index){
+            console.log("Apague" + index)
+            this.insumos.splice(index, 1)
         }
 
         
