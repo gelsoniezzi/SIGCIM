@@ -22,8 +22,6 @@ router.get('/add', (req, res) => {
 
 })
 
-router.post
-})
 
 
 module.exports = router

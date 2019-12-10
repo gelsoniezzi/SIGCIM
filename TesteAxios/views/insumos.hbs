@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  {{!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.js"></script> --}}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
+  <title>Insumos</title>
+</head>
+
+<body>
+  <div id="app">
+    <h1>Página de insumos</h1>
+
+    <h2>Insumos cadastrados</h2>
+
+    <table>
+      <tr>
+        <th>id</th>
+        <th>nome</th>
+        <th>valor</th>
+        <th>ações</th>
+      </tr>
+      <tr v-for="(insumo, i) in insumos" :key="i">
+        <td>\{{insumo.id}}</td>
+        <td>\{{insumo.name}}</td>
+        <td>\{{insumo.price}}</td>
+        <td><button @click="add(insumo)">+</button></td>
+      </tr>
+    </table>
+
+    <h2>Insumos selecionados</h2>
+
+    <table>
+      <tr>
+        <th>id</th>
+        <th>nome</th>
+        <th>valor</th>
+        <th>quantidade</th>
+        <th>total</th>
+        <th>ações</th>
+      </tr>
+      <tr v-for="(insumo, i) in selecionados" :key="i">
+        <td>\{{insumo.id}}</td>
+        <td>\{{insumo.name}}</td>
+        <td>\{{insumo.price}}</td>
+        <td><input type="number" v-model="insumo.qty"></td>
+        <td>\{{   (insumo.price||0) * (insumo.qty||0)  }}</td>
+        <td><button @click="remove(insumo)">-</button></td>
+      </tr>
+    </table>
+
+
+    <button @click="save">salvar</button>
+
+    {{!-- Loading enquanto carrega --}}
+    <div v-if="loading">carregando</div>
+
+    {{!-- Mensagem de sucesso --}}
+    <div v-if="message">\{{message}}</div>
+
+
+
+  </div>
+
+  <script>
+
+    var app = new Vue({
+      el: '#app',
+
+      // DADOS
+      data: {
+        // Lista de itens
+        insumos: [
+          { id: 1, name: 'pipoca', price: 3.49 },
+          { id: 2, name: 'guaraná', price: 4.49 },
+          { id: 3, name: 'sal', price: .49 },
+          { id: 4, name: 'manteiga', price: 10.49 },
+        ],
+
+        // Itens selecionados
+        selecionados: [
+
+        ],
+
+        // Carregando
+        loading: false,
+
+        //mensage
+        message: ''
+
+      },
+
+
+      // MÉTODOS  
+      methods: {
+
+        //
+        add(item) {
+          this.selecionados.push({ ...item, qty: 0 })
+        },
+
+        //
+        remove(item) {
+          this.selecionados = this.selecionados.filter(row => row.id !== item.id);
+        },
+
+        //
+        async save() {
+          this.loading = true;
+          const data = this.selecionados.map(row => ({ id: row.id, qty: row.qty }))
+          console.log(data);
+          const url = 'http://localhost:3001/ajax/insumos';
+          const resultado = await axios.post(url, data);
+          this.loading = false
+
+          this.message = resultado.data.message;
+          console.log(resultado)
+
+        }
+      }
+    })
+
+  </script>
+
+</body>
+
+</html>
