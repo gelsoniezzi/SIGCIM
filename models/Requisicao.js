@@ -25,19 +25,60 @@ const Requisicao = new Schema ({
         type: String
     },
     solicitante: {
-        type: Schema.Types.ObjectId,
-        ref: "usuarios",
-        required: true
+        type: String
+        //type: Schema.Types.ObjectId,
+        //ref: "usuarios",
+        //required: true
     },
+
     contrato: {
-        type: Schema.Types.ObjectId,
-        ref: "contratos"        
+        type: String
+        //type: Schema.Types.ObjectId,
+        //ref: "contratos"        
     },
     observacoes: {
         type: String
     },
     prazo_entrega: {
         type: Date
-    }
+    },
+    insumos: [
+        {
+            descricao:{
+                type: String,
+                required: true
+            },
+            base_origem: {
+                type: Schema.Types.ObjectId,
+                ref: "bases"
+            },
+            codigo_origem:{
+                type: String
+            },
+            unidade: {
+                type: String,
+                require: true
+            },
+            preco: {
+                type: Number,
+                required: true,
+                default:0.0
+            },
+            
+            quantidade: {
+                type: Number
+
+            },
+            preco_total:{
+                type: Number
+            },
+            status_requisicao: {
+                type: String
+            },
+            observacao: {
+                type: String,
+            },            
+        }
+    ]
 })
 mongoose.model("requisicoes", Requisicao)

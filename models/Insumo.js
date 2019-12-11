@@ -6,9 +6,9 @@ const Insumo = new Schema({
 
     descricao: {
         type: String,
-        require: true
+        required: true
     },
-    origem: {
+    base_origem: {
         type: Schema.Types.ObjectId,
         ref: "bases"
     },
