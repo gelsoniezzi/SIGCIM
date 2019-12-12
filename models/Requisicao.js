@@ -4,7 +4,7 @@ const Schema = mongoose.Schema
 const Requisicao = new Schema ({
     numero: {
         type: Number,
-        required: true,        
+        //required: true,        
     },
     data_criacao: {
         type: Date,
@@ -15,11 +15,11 @@ const Requisicao = new Schema ({
     },
     quantidade_itens: {
         type: Number,
-        required: true
+        //required: true
     },
     valor_total: {
         type: Number,
-        required: true
+        //required: true
     },
     status:{
         type: String
@@ -46,25 +46,21 @@ const Requisicao = new Schema ({
         {
             descricao:{
                 type: String,
-                required: true
+                //required: true
             },
-            base_origem: {
-                type: Schema.Types.ObjectId,
-                ref: "bases"
+            origem: {
+                type: String
             },
             codigo_origem:{
                 type: String
             },
             unidade: {
                 type: String,
-                require: true
+                //require: true
             },
             preco: {
-                type: Number,
-                required: true,
-                default:0.0
-            },
-            
+                type: Number,                
+            },            
             quantidade: {
                 type: Number
 

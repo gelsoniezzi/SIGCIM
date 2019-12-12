@@ -83,7 +83,7 @@
     <div class="card">
         <form>
             <div class="card-body">
-                    <h4>Escolha os ítens </h4>
+                <h4>Escolha os ítens </h4>
             
             <table style="font-size:13px" class="table table-striped table-bordered table-sm">
                     <thead class="thead-dark">
@@ -95,10 +95,8 @@
                             <th>Preço</th>
                             <th>Total</th>
                             <th >Ações</th>
-                        </tr>
-                
-                <tbody>
-                    
+                        </tr>                
+                <tbody>                    
                     <tr v-for="(insumo, index) in insumos">
                             <td>\{{insumo.nome}}.\{{insumo.codigo}}</td>
                             <td>\{{insumo.descricao}}</td>
@@ -107,7 +105,6 @@
                             <td>\{{insumo.preco}}</td>
                             <td>\{{insumo.preco * insumo.quantidade || 0}}</td>
                             <td><button v-on:click="remove(index)"><i class="material-icons">remove_circle</i></button></td>
-
                     </tr>
 
                 </tbody>
@@ -129,7 +126,7 @@
             
                 <div>
                     <button class="btn btn-success" v-on:click="enviar()">Enviar</button>
-                    <a href="/requisicoes/salvar"><button class="btn btn-primary" >Salvar</button></a>
+                    <button class="btn btn-primary" v-on:click="salvar()">Salvar</button>
                 </div>
             </div>
         </form>
@@ -137,84 +134,90 @@
 </div>
 
 <script>
-        appRequisicoes = new Vue({
-            el: "#app-insumos",
-            data: {
-                insumos: [
+    // Vue
+    appRequisicoes = new Vue({
+        el: "#app-insumos",
+        data: {
+            insumos: [
 
-                ],
-                valor_total: 0,
-                observacoes: '',
-                menssage: ''
+            ],
+            valor_total: 0,
+            observacoes: '',
+            menssage: ''
+        },
+        methods: {
+            remove: function (index){                
+                this.insumos.splice(index, 1)
             },
-            methods: {
-                remove: function (index){
-                    console.log("Apague" + index)
-                    this.insumos.splice(index, 1)
-                },
-                adicionar: function (id){
-                    if(!this.insumos.some(insumo => (insumo.id_insumo === id))){ // verifica se o insumo já está na lista de insumos escolhidos.
-                        var rowOrigem = document.getElementById(id)
-                        var listaNodesOrigem = rowOrigem.children
-                        var nomeOrigem = listaNodesOrigem[0].innerHTML
-                        var codigoOrigem = listaNodesOrigem[1].innerHTML
-                        var descricaoOrigem = listaNodesOrigem[2].innerHTML
-                        var unidadeOrigem = listaNodesOrigem[3].innerHTML
-                        var precoOrigem = listaNodesOrigem[4].innerHTML
+            adicionar: function (id){
+                if(!this.insumos.some(insumo => (insumo.id_insumo === id))){ // verifica se o insumo já está na lista de insumos escolhidos.
+                    var rowOrigem = document.getElementById(id)
+                    var listaNodesOrigem = rowOrigem.children
+                    var nomeOrigem = listaNodesOrigem[0].innerHTML
+                    var codigoOrigem = listaNodesOrigem[1].innerHTML
+                    var descricaoOrigem = listaNodesOrigem[2].innerHTML
+                    var unidadeOrigem = listaNodesOrigem[3].innerHTML
+                    var precoOrigem = listaNodesOrigem[4].innerHTML
 
-                        var novo_insumo = { id_insumo: id,
-                                            codigo: codigoOrigem,
-                                            nome:  nomeOrigem,
-                                            descricao: descricaoOrigem,
-                                            quantidade: 1,
-                                            unidade: unidadeOrigem,
-                                            preco: parseFloat(precoOrigem),                                        
-                                            }
-                        this.insumos.push(novo_insumo)
-                    }                    
-                },
-                async enviar() {
-                    this.loading = true
+                    var novo_insumo = { id_insumo: id,
+                                        codigo: codigoOrigem,
+                                        nome:  nomeOrigem,
+                                        descricao: descricaoOrigem,
+                                        quantidade: 1,
+                                        unidade: unidadeOrigem,
+                                        preco: parseFloat(precoOrigem),                                        
+                                        }
+                    this.insumos.push(novo_insumo)
+                }                    
+            },
+            async enviar() {
+                this.loading = true
+                // Calcular valor_total da requisição
+                this.valor_total = 0
+                for(var i = 0; i < this.insumos.length; i++) {
+                    this.valor_total += insumos[i].quantidade*insumos[i].preco
+                }
+                const insumos = this.insumos.map(row => ({id: row.id_insumo, quantidade: row.quantidade}))
+                const obs = this.observacoes
+                const data = {}
+                data.insumos = insumos
+                data.obs = obs
+                data.valor_total = this.valor_total
+                const url = '/requisicoes/enviar'
+                const resultado = await axios.post(url, data)
+                this.loading = false
+                this.menssage = resultado.data.message
+            },
+            async salvar() {
+                this.loading = true
+                console.log(this.insumos.length)
+                if(this.insumos.length > 0){ //verifica se tem itens
+                    // Calcular valor_total da requisição
+                    this.valor_total = 0
+                    for(var i = 0; i < this.insumos.length; i++){
+                        this.valor_total += insumos[i].quantidade*insumos[i].preco
+                    }
                     const insumos = this.insumos.map(row => ({id: row.id_insumo, quantidade: row.quantidade}))
                     const obs = this.observacoes
                     const data = {}
                     data.insumos = insumos
-                    data.obs = obs                    
-                    const url = '/requisicoes/enviar'
-                    const resultado = await axios.post(url, data)
-                    this.loading = false
-                    this.menssage = resultado.data.message
+                    data.obs = obs
+                    data.valor_total = this.valor_total
+                    console.log(data)
+                    //const url = '/requisicoes/salvar'
+                    //const resultado = await axios.post(url, data)
+                    //this.loading = false
+                    //this.menssage = resultado.data.message
+                }else{
+                    console.log("adicione itens")
                 }
+                
             }
-        })
-
-        function adicionar_item(id) {
-            var rowOrigem = document.getElementById(id)
-            var listaNodesOrigem = rowOrigem.children
-            var nomeOrigem = listaNodesOrigem[0].innerHTML
-            var codigoOrigem = listaNodesOrigem[1].innerHTML
-            var descricaoOrigem = listaNodesOrigem[2].innerHTML
-            var unidadeOrigem = listaNodesOrigem[3].innerHTML
-            var precoOrigem = listaNodesOrigem[4].innerHTML
-
-            var novo_insumo = { 
-                id_insumo: id,
-                codigo: codigoOrigem,
-                nome:  nomeOrigem,
-                descricao: descricaoOrigem,
-                quantidade: 0,
-                unidade: unidadeOrigem,
-                preco: precoOrigem
-            }
-
-                appRequisicoes.insumos.push(novo_insumo)
-            }
-
-        function remover_item(index){
-            this.insumos.splice(index, 1)
         }
+    })
 
-        $(document).ready( () => {
+    // Datatables
+    $(document).ready( () => {
         var table = $('#table-insumos').DataTable({
             "scrollY": "200px",
             "paging": true
@@ -226,14 +229,12 @@
         
         $('a.toggle-vis').on( 'click', function (e) {
             e.preventDefault();
-    
+
             // Get the column API object
             var column = table.column( $(this).attr('data-column') );
-    
+
             // Toggle the visibility
             column.visible( ! column.visible() );
         });
-    });
-
-        
-    </script>
+    });        
+</script>
