@@ -18,7 +18,7 @@ app.get('/insumos', (req, res) => {
 
 app.post('/ajax/insumos', (req, res) => {
   console.log(req.body)
-  // setTimeout(() => {
+  // setTimeout(() => {})
 
   //res.send({ error: false, message: 'Insumos cadsatrados com sucesso' })
   res.redirect('/cadastrou')

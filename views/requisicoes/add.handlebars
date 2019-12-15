@@ -126,8 +126,13 @@
             
                 <div>
                     <button class="btn btn-success" v-on:click="enviar()">Enviar</button>
-                    <button class="btn btn-primary" v-on:click="salvar()">Salvar</button>
+                    <button class="btn btn-primary" @click="salvar()">Salvar</button>
                 </div>
+                {{!-- Loading enquanto carrega --}}
+                <div v-if="loading">Carregando...</div>
+
+                {{!-- Mensagem de sucesso --}}
+                <div v-if="message">\{{message}}</div>
             </div>
         </form>
     </div>
@@ -143,7 +148,8 @@
             ],
             valor_total: 0,
             observacoes: '',
-            menssage: ''
+            message: '',
+            loading: false
         },
         methods: {
             remove: function (index){                
@@ -173,41 +179,43 @@
             async enviar() {
                 this.loading = true
                 // Calcular valor_total da requisição
-                this.valor_total = 0
+                this.valor_total = 60
+                /*
                 for(var i = 0; i < this.insumos.length; i++) {
                     this.valor_total += insumos[i].quantidade*insumos[i].preco
                 }
+                */
                 const insumos = this.insumos.map(row => ({id: row.id_insumo, quantidade: row.quantidade}))
                 const obs = this.observacoes
                 const data = {}
                 data.insumos = insumos
                 data.obs = obs
                 data.valor_total = this.valor_total
+                setTimeout(() => {  },2000)
                 const url = '/requisicoes/enviar'
                 const resultado = await axios.post(url, data)
                 this.loading = false
                 this.menssage = resultado.data.message
+              
             },
             async salvar() {
                 this.loading = true
-                console.log(this.insumos.length)
-                if(this.insumos.length > 0){ //verifica se tem itens
-                    // Calcular valor_total da requisição
-                    this.valor_total = 0
+                if(this.insumos.length > 0){ // Verifica se existem itens na requisicao.
+                    // Calcula valor_total da requisição
+                    this.valor_total = 0                    
                     for(var i = 0; i < this.insumos.length; i++){
-                        this.valor_total += insumos[i].quantidade*insumos[i].preco
-                    }
+                        this.valor_total += (this.insumos[i].quantidade * this.insumos[i].preco)
+                    }                    
                     const insumos = this.insumos.map(row => ({id: row.id_insumo, quantidade: row.quantidade}))
-                    const obs = this.observacoes
                     const data = {}
                     data.insumos = insumos
-                    data.obs = obs
+                    data.obs = this.observacoes
                     data.valor_total = this.valor_total
-                    console.log(data)
-                    //const url = '/requisicoes/salvar'
-                    //const resultado = await axios.post(url, data)
-                    //this.loading = false
-                    //this.menssage = resultado.data.message
+                    const url = '/requisicoes/salvar'
+                    const resultado = await axios.post(url, data)
+                    this.loading = false
+                    window.location.href = '/requisicoes'
+                    this.menssage = resultado.data.message
                 }else{
                     console.log("adicione itens")
                 }

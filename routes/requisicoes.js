@@ -28,12 +28,10 @@ router.get('/add', (req, res) => {
 
 router.post('/salvar', (req,res) => {
     //criar var nova_requisicao e atribuir os valores da req.body.insumos
-    //console.log(req.body)
-
     //preencher insumos buscando do banco de dados
 
     Insumo.find({_id: {$in: req.body.insumos.map(row => (row.id))}}).then((insumo) => {
-        //console.log(insumo)
+        console.log(req.body.valor_total)
 
         var novaRequisicao ={
             //data_criacao: Date.now(),
@@ -64,7 +62,8 @@ router.post('/salvar', (req,res) => {
         //console.log(novaRequisicao)
 
         new Requisicao(novaRequisicao).save().then(() => {
-            console.log("requisicao cadastrada com sucesso.")
+            req.flash("success_msg", "Requisição salva com sucesso.")
+            res.send({error: false, message: 'Requisição salva com sucesso.'})
         }).catch((err) => {
             console.log("Houve um erro ao cadastrar requisicao.")
         })
@@ -90,8 +89,7 @@ router.post('/enviar', (req, res) => {
         prazo_entrega: Date.now(),
         insumos: []
     }
-    //console.log(nova_requisicao)
-    // Copiar as informações de cada insumo para o array de insumos da requisicao.
+
 
     var novo_insumo
         

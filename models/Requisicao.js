@@ -1,5 +1,10 @@
 const mongoose = require("mongoose")
+const mongooseAI = require('mongoose-auto-increment')
 const Schema = mongoose.Schema
+
+var connection = mongoose.createConnection("mongodb://localhost/sigcim");
+
+mongooseAI.initialize(connection);
 
 const Requisicao = new Schema ({
     numero: {
@@ -77,4 +82,5 @@ const Requisicao = new Schema ({
         }
     ]
 })
+Requisicao.plugin(mongooseAI.plugin, {model: 'requisicoes', field: 'numero', startAt: 1,});
 mongoose.model("requisicoes", Requisicao)
