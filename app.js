@@ -2,7 +2,7 @@
     const express = require('express')
     const handlebars = require('express-handlebars')
     const bodyParser = require('body-parser')
-    const app = express()
+    const app = express()    
     const adminContratos = require("./routes/adminContratos")
     const admin = require("./routes/admin")
     const insumo = require("./routes/insumos")
@@ -14,9 +14,7 @@
     const session = require("express-session")
     const flash = require("connect-flash")
     const passport = require('passport')
-    require("./config/auth")(passport)
-    
-    
+    require("./config/auth")(passport)   
 
 // Configuracoes
 
@@ -63,6 +61,7 @@
             next();
         })
         */
+       
 
 
 // Rotas

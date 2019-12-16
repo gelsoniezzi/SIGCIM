@@ -1,44 +1,48 @@
 <h2>Usuários</h2>
 <hr>
-<table class="table table-striped">
-    <thead class="thead-dark">
-        <tr>
-            <th scope="col">Matrícula</th>
-            <th scope="col">Nome</th>
-            <th scope="col">E-mail</th>
-            <th scope="col">Perfil</th>
-            <th scope="col">Status</th>
-            <th scope="col">Ações</th>
-        </tr>
-    </thead>
-    <tbody>
-        {{#each usuarios}}
-            <tr>
-                <td>{{matricula}}</td>
-                <td>{{nome}}</td>
-                <td>{{email}}</td>
-                <td>{{perfil_usuario}}</td>
-                <td>{{status}}</td>
-                <td>
-                    <form action="/usuarios/delete/" method="POST">
-                    <a href="/usuarios/edit/{{_id}}" class="btn btn-light" data-toggle="tooltip" data-placement="top" title="Editar"><i class="material-icons">edit</i></a>
-                    <input type="hidden" name="id" value="{{_id}}">                    
-                    <button class="btn btn-light" type="submit" data-toggle="tooltip" data-placement="top" title="Remover"><i class="material-icons">remove_circle</i></button>
-                </form>
-                </td>
-            </tr>
-        {{else}}
-            <tr>
-                <td><h5>Nenhum usuario cadastrado.</h5></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>            
-            </tr>
-        {{/each}}        
-    </tbody>
-</table>
-<br>
+<div class="card">
+    <div class="card-body">
+        <table class="table table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Matrícula</th>
+                    <th scope="col">Nome</th>
+                    <th scope="col">E-mail</th>
+                    <th scope="col">Perfil</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each usuarios}}
+                    <tr>
+                        <td>{{matricula}}</td>
+                        <td>{{nome}}</td>
+                        <td>{{email}}</td>
+                        <td>{{perfil_usuario}}</td>
+                        <td>{{status}}</td>
+                        <td>
+                            <form action="/usuarios/delete/" method="POST">
+                            <a href="/usuarios/edit/{{_id}}" class="btn btn-light" data-toggle="tooltip" data-placement="top" title="Editar"><i class="material-icons">edit</i></a>
+                            <input type="hidden" name="id" value="{{_id}}">                    
+                            <button class="btn btn-light" type="submit" data-toggle="tooltip" data-placement="top" title="Remover"><i class="material-icons">remove_circle</i></button>
+                        </form>
+                        </td>
+                    </tr>
+                {{else}}
+                    <tr>
+                        <td><h5>Nenhum usuario cadastrado.</h5></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>            
+                    </tr>
+                {{/each}}        
+            </tbody>
+        </table>
+        <br>
 
-<a href="/usuarios/add"><button class="btn btn-success"> NOVO </button></a>
+        <a href="/usuarios/add"><button class="btn btn-success"> NOVO </button></a>
+    </div>
+</div>
