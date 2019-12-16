@@ -7,7 +7,7 @@ require('../models/Usuario')
 const Usuario = mongoose.model("usuarios")
 
 
-module.exports = (passport) => {
+module.exports = passport => {
 
     passport.use(new localStrategy({usernameField: 'matricula', passwordField: 'senha'}, (matricula, senha, done) => {
 
@@ -17,7 +17,7 @@ module.exports = (passport) => {
             }
             bcrypt.compare(senha, usuario.senha, (erro, batem) => {
                 if(batem){
-                    return done(null, usuario)
+                    return done(null, usuario, {message: "Usuario logado"})
                 }else{
                     return done(null, false, {message: "Senha incorreta."})
                 }
@@ -26,11 +26,11 @@ module.exports = (passport) => {
     }))
 
     passport.serializeUser((usuario, done) => {
-        done(null, usuario.id)
+        done(null, usuario.matricula)
     })
 
-    passport.deserializeUser(() => {
-        Usuario.findById(id, (err, usuario) => {
+    passport.deserializeUser((matricula, done) => {
+        Usuario.findOne({matricula: matricula}, (err, usuario) => {
             done(err, usuario)
         })
     })
