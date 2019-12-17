@@ -2,7 +2,7 @@
     const express = require('express')
     const handlebars = require('express-handlebars')
     const bodyParser = require('body-parser')
-    const app = express()    
+    var app = module.exports = express() //const app = express()    
     const adminContratos = require("./routes/adminContratos")
     const admin = require("./routes/admin")
     const insumo = require("./routes/insumos")
@@ -14,7 +14,16 @@
     const session = require("express-session")
     const flash = require("connect-flash")
     const passport = require('passport')
-    require("./config/auth")(passport)   
+    require("./config/auth")(passport)
+    var HandlebarsIntl = require('handlebars-intl')
+
+    var app = module.exports = express();
+    
+    app.set('name', 'SIGCIM - ...');
+    //app.set('port', config.port);
+    //app.set('available locales', config.availableLocales);
+    app.set('default locale', 'pt-BR')
+    
 
 // Configuracoes
 
@@ -39,9 +48,16 @@
     // Body parser
         app.use(bodyParser.urlencoded({extended: true}))
         app.use(bodyParser.json())
+
+    // Setup and export the Express app.
+
     // Handlebars
-        app.engine('handlebars', handlebars({defaultLayout: 'main'}))
-        app.set('view engine', 'handlebars')
+        
+        var hbs = handlebars.create({defaultLayout: 'main'})
+        app.engine(hbs.extname, hbs.engine)
+        app.set('view engine', hbs.extname)        
+        HandlebarsIntl.registerWith(hbs.handlebars)
+
     //mongoose
         mongoose.Promise = global.Promise
         mongoose.connect("mongodb://localhost/sigcim").then(() => {

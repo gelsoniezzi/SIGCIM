@@ -14,6 +14,7 @@ const Contrato = mongoose.model("contratos")
 //rota index
 
 router.get('/', (req, res) => {
+    
     Requisicao.find().sort({data_criacao: "asc"}).then((requisicoes) => {
         res.render("requisicoes/index", {requisicoes})
     }) 
