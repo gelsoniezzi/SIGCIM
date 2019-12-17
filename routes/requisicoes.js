@@ -9,11 +9,11 @@ const Requisicao = mongoose.model("requisicoes")
 const Insumo = mongoose.model("insumos")
 const Usuario = mongoose.model("usuarios")
 const Contrato = mongoose.model("contratos")
-
+const {eAdmin} = require('../helpers/eAdmin')
 
 //rota index
 
-router.get('/', (req, res) => {
+router.get('/', eAdmin,(req, res) => {
     
     Requisicao.find().sort({data_criacao: "asc"}).then((requisicoes) => {
         res.render("requisicoes/index", {requisicoes})

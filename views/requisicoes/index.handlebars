@@ -14,15 +14,14 @@
             <th>Contrato</th>
             <th>Ações</th>
         </tr>
-    </thead>
-    
+    </thead>    
     <tbody>
         {{#each requisicoes}}
             <tr>
                 <th>{{numero}}</th>
                 <th>{{formatDate data_criacao type="short" locale="pt-BR"}}</th>
                 <th>{{quantidade_itens}}</th>
-                <th>{{formatNumber valor_total style="currency" currency="BRL" locale="pt-BR"}}</th>
+                <th>{{formatNumber valor_total style="currency" currency="BRL" locales="pt-BR"}}</th>
                 <th>{{status}}</th>
                 <th>Calcular</th>
                 <th>{{solicitante.nome}}</th>

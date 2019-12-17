@@ -15,14 +15,10 @@
     const flash = require("connect-flash")
     const passport = require('passport')
     require("./config/auth")(passport)
-    var HandlebarsIntl = require('handlebars-intl')
-
-    var app = module.exports = express();
+    var HandlebarsIntl = require('handlebars-intl');
     
-    app.set('name', 'SIGCIM - ...');
-    //app.set('port', config.port);
-    //app.set('available locales', config.availableLocales);
-    app.set('default locale', 'pt-BR')
+    
+    
     
 
 // Configuracoes
@@ -30,6 +26,7 @@
     // Sessao
         app.use(session({
             secret: "SigCIMUfersa",
+            cookie: {maxAge: 30000},
             resave: true,
             saveUninitialized: true
         }))
@@ -42,7 +39,8 @@
             res.locals.success_msg = req.flash("success_msg")
             res.locals.error_msg = req.flash("error_msg")
             res.locals.error = req.flash("error")
-            res.locals.user = req.user || null
+            //res.locals.user = req.user || null
+
             next()
         })
     // Body parser
@@ -50,14 +48,18 @@
         app.use(bodyParser.json())
 
     // Setup and export the Express app.
-
-    // Handlebars
         
+        app.set('name', 'SIGCIM - ...');
+        //app.set('port', config.port);
+        //app.set('available locales', config.availableLocales);
+        app.set('default locale', 'pt-BR')
+
+    // Handlebars        
         var hbs = handlebars.create({defaultLayout: 'main'})
         app.engine(hbs.extname, hbs.engine)
         app.set('view engine', hbs.extname)        
         HandlebarsIntl.registerWith(hbs.handlebars)
-
+        //require('handlebars-intl/dist/locale-data/pt')
     //mongoose
         mongoose.Promise = global.Promise
         mongoose.connect("mongodb://localhost/sigcim").then(() => {
@@ -76,8 +78,7 @@
             console.log("Oi, eu sou um midleware");
             next();
         })
-        */
-       
+        */       
 
 
 // Rotas
@@ -97,8 +98,27 @@
 
     app.get('/', (req, res) => {
         res.render('admin/index')
+    })
+    
+    app.get('/session', (req, res) => {
+        req.session.treinamento = "Formação Node.js"
+        req.session.ano = 2019
+        req.session.user = {
+            matricula: 1885704,
+            email: "gimg@live.com"
+        }
+        res.send("Sessão gerada")
 
     })
+
+    app.get('/leitura', () => {
+        res.json({
+            treinamento: req.session.treinamento,
+            ano: req.session.ano,
+            user: req.session.user
+        })
+    })
+    
 
     
 // Outros

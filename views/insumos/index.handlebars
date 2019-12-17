@@ -25,7 +25,7 @@
                 <td>{{codigo_origem}}</td>
                 <td>{{descricao}}</td>
                 <td>{{unidade_medida}}</td>
-                <td>{{preco_mediano}}</td>
+                <td>{{formatNumber preco_mediano style="currency" currency="BRL" locales="pt-BR"}}</td>
                 <td>{{observacao}}</td>
                 <td>
                     <form action="/insumos/delete/" method="POST">
