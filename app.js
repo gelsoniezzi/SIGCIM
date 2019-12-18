@@ -15,18 +15,14 @@
     const flash = require("connect-flash")
     const passport = require('passport')
     require("./config/auth")(passport)
-    var HandlebarsIntl = require('handlebars-intl');
-    
-    
-    
-    
+    var HandlebarsIntl = require('handlebars-intl');  
 
 // Configuracoes
 
     // Sessao
         app.use(session({
             secret: "SigCIMUfersa",
-            cookie: {maxAge: 30000},
+            cookie: {maxAge: 3000000},
             resave: true,
             saveUninitialized: true
         }))
@@ -100,6 +96,7 @@
         res.render('admin/index')
     })
     
+    /*
     app.get('/session', (req, res) => {
         req.session.treinamento = "Formação Node.js"
         req.session.ano = 2019
@@ -111,13 +108,15 @@
 
     })
 
-    app.get('/leitura', () => {
+    app.get('/leitura', (req, res) => {
         res.json({
             treinamento: req.session.treinamento,
             ano: req.session.ano,
             user: req.session.user
         })
+        
     })
+    */
     
 
     
