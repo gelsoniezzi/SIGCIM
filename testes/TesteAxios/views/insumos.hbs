@@ -2,10 +2,9 @@
     <h1>Página de insumos</h1>
     <hr>
     <div>
-           
-
       {{#each insumos}}
-      {{insumos.descricao}} - {{insumos.valor}}
+      <li>{{descricao}} - {{valor}}</li>
+
       {{else}}
       <p>Nenhum insumo cadastrado.</p>
       {{/each}}
@@ -70,12 +69,14 @@
       // DADOS
       data: {
         // Lista de itens
-        insumos: [
+        insumos: null,
+        
+        /*[
           { id: 1, name: 'pipoca', price: 3.49 },
           { id: 2, name: 'guaraná', price: 4.49 },
           { id: 3, name: 'sal', price: .49 },
           { id: 4, name: 'manteiga', price: 10.49 },
-        ],
+        ],*/
 
         // Itens selecionados
         selecionados: [
@@ -117,6 +118,19 @@
           console.log(resultado)
 
         }
+      },
+      mounted () {
+      axios
+        .get('/envio')
+        .then(response => {
+          console.log(response.data)          
+          this.insumos = response.data
+        })
+        .catch(error => {
+          console.log(error)
+          this.errored = true
+        })
+        .finally(() => this.loading = false)
       }
     })
 

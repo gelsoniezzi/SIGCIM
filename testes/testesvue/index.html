@@ -13,10 +13,11 @@
             <input  type="text" v-model="id" />
             <input  type="text" v-model="name" />
             <button @click="add">adicionar</button>
-
+            <a v-if="estaLogado === true" class="nav-link" href="/usuarios/login">Login</a>
             <div v-for="item in items">
                 <p>ID:{{item.id}} - Name: {{item.name}} <button @click="remove(item)">x</button></p>
             </div>
+             
 
             <!-- cabelaaodh -->
 
@@ -24,6 +25,9 @@
 
 
     </div>
+    <div id="appLogin">
+        <a v-if="estaLogado === true" href="/usuarios/login">Login</a>
+    </div>  
 
     <script>
 
@@ -36,7 +40,9 @@
                 
                 items:[
                     
-                ]
+                ],
+                estaLogado: false
+
             },
             methods:{
                 add(){
@@ -49,6 +55,20 @@
                     this.items = this.items.filter(row => row.id !== item.id)
                 }, 
                 
+            }
+        })
+
+        var appLogin = new Vue({
+            el: '#appLogin',
+            data: {
+                usuario: {
+                matricula: 1885704,
+                perfil: "tecnico"
+            },
+            estaLogado: false
+            },
+            methods: {
+
             }
         })
     </script>

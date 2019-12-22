@@ -1,8 +1,8 @@
 // Carregando modulos
-    const express = require('express')
+    const express = require('express') //importando express
     const handlebars = require('express-handlebars')
     const bodyParser = require('body-parser')
-    var app = module.exports = express() //const app = express()    
+    var app = module.exports = express() //const app = express() <- Passando o express para a val app
     const adminContratos = require("./routes/adminContratos")
     const admin = require("./routes/admin")
     const insumo = require("./routes/insumos")
@@ -35,7 +35,7 @@
             res.locals.success_msg = req.flash("success_msg")
             res.locals.error_msg = req.flash("error_msg")
             res.locals.error = req.flash("error")
-            //res.locals.user = req.user || null
+            res.locals.user = req.user || null
 
             next()
         })
@@ -51,10 +51,28 @@
         app.set('default locale', 'pt-BR')
 
     // Handlebars        
-        var hbs = handlebars.create({defaultLayout: 'main'})
+        var hbs = handlebars.create({defaultLayout: 'main',
+        helpers: {
+            test: function () { return "Lorem ipsum" },
+            json: function (value, options) {
+                return JSON.stringify(value);
+            },
+            currency: function(value){
+              //console.log('currency', value)
+              return Number(value).toLocaleString('pt-BR', { 
+                style:'currency', currency:'BRL'
+              })
+            },
+            date_br:function(strDate){
+              const date = new Date(strDate);
+              // return 'cla'
+              return `${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}`
+            }
+        }}
+        )
         app.engine(hbs.extname, hbs.engine)
         app.set('view engine', hbs.extname)        
-        HandlebarsIntl.registerWith(hbs.handlebars)
+        //HandlebarsIntl.registerWith(hbs.handlebars)
         //require('handlebars-intl/dist/locale-data/pt')
     //mongoose
         mongoose.Promise = global.Promise
@@ -96,7 +114,7 @@
         res.render('admin/index')
     })
     
-    /*
+    
     app.get('/session', (req, res) => {
         req.session.treinamento = "Formação Node.js"
         req.session.ano = 2019
@@ -108,15 +126,21 @@
 
     })
 
-    app.get('/leitura', (req, res) => {
-        res.json({
-            treinamento: req.session.treinamento,
-            ano: req.session.ano,
-            user: req.session.user
+    app.get('/estaLogado', (req, res) => {
+        var usuario = null
+        if (res.locals.user){
+            usuario = {
+                perfil_usuario: res.locals.user.perfil_usuario,
+                nome: res.locals.user.nome,
+                matricula: res.locals.user.matricula
+            }
+        }       
+        res.send({            
+            user: usuario
         })
         
     })
-    */
+    
     
 
     

@@ -137,4 +137,10 @@ router.post('/login', (req, res, next) => {
 
 })
 
+router.get('/logout',(req, res) => {
+    req.logout()
+    req.flash("Você saiu.")
+    res.redirect('/')
+})
+
 module.exports = router

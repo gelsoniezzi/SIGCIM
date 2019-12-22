@@ -63,5 +63,68 @@
         <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
       </li>
     </ul>
+    <div id="appLogin">
+      <!--
+      <a v-if="estaLogado === false" class="nav-link" href="/usuarios/login">Login</a>
+      <div v-if="estaLogado">
+        <ul class="navbar-nav mr-auto">
+        <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          \{{usuario.matricula}}
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+          <a class="dropdown-item" href="/usuarios/logout">Logout</a>
+        </div>
+      </li>
+      -->
+      <ul class="navbar-nav mr-auto">
+      {{#if user}}
+        <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          {{user.matricula}}
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+          <a class="dropdown-item" href="/usuarios/logout">Logout</a>
+        </div>
+      </li>
+      {{else}}
+      <li class="nav-item">
+        <a class="nav-link" href="/usuarios/login">Login</a>
+      </li>
+      {{/if}}
+      </ul>
+      
+      </div>
+    </div>   
   </div>
 </nav>
+
+<script>
+  var appLogin = new Vue({
+    el: '#appLogin',
+    data: {
+      usuario: null,
+    estaLogado: false
+    },
+    methods: {
+
+    },
+    mounted () {
+      axios
+        .get('/estaLogado')
+        .then(response => {
+          console.log(response.data)
+          if (response.data.user != null){
+            this.usuario = response.data.user
+            this.estaLogado = true
+          }
+          
+        })
+        .catch(error => {
+          console.log(error)
+          this.errored = true
+        })
+        .finally(() => this.loading = false)
+    }
+  })
+</script>

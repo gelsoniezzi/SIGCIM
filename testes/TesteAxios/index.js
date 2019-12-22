@@ -17,7 +17,19 @@ app.get('/', (req, res) => {
     {descricao: "Barbeador", valor: 0.50},
     {descricao: "Moto", valor: 1015.50},
   ]
-  res.render('insumos', {insumos: insumos})
+res.render('insumos', {vue: {insumos: ["gelson", "garcia"]}, menssage: "So amor"})
+})
+
+app.get('/envio', (req, res) => {
+  var insumos = [
+    { id: 1, name: 'pipoca', price: 3.49 },
+    { id: 2, name: 'guaraná', price: 4.49 },
+    { id: 3, name: 'sal', price: .49 },
+    { id: 4, name: 'manteiga', price: 10.49 }
+  ]
+  res.send(insumos)
+
+
 })
 
 app.get('/insumos', (req, res) => {
