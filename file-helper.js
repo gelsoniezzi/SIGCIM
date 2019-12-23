@@ -25,7 +25,9 @@ exports.compressImage = (file, size) => {
                         throw err
                     }
                 })
-                newPath = newPath.split('\/public/')[1]
+                //Tratar o caminho da imagem no banco.
+                
+                /*newPath = newPath.split('\/public/')[1]*/
                 console.log("Teste: " + newPath)
                 return newPath
             })    

@@ -33,19 +33,20 @@ router.get('/', (req, res) => {
 
     router.get('/add', (req, res) => {
         Base.find().then((bases) => {
-            res.render("insumos/add", {bases}) 
+            res.render("insumos/add", {bases})
         })
                
     })
 
     router.post("/add", multer.single('arquivo'), (req, res) => {
-
-        
-        const novoInsumo = {
+        var novoInsumo = {
             descricao: req.body.descricao,
-            unidade_medida: req.body.unidade_medida,
+            unidade_medida: req.body.unidade,
             observacao: req.body.observacao,
+            base_origem: req.body.origem,
+            imagem: "/img/insumos/semimagem.png"
         }
+        //console.log(novoInsumo)
 
         var erros = []
 
@@ -55,13 +56,12 @@ router.get('/', (req, res) => {
 
             if(req.file){
                 fileHelper.compressImage(req.file, 100).then((newPatch) => {
-                    const novoInsumo = {
-                        descricao: req.body.descricao,
-                        unidade_medida: req.body.unidade_medida,
-                        observacao: req.body.observacao,
-                        imagem: newPatch
-                    }
-                    console.log("Console.log da insumos" + newPatch)
+                    // tratar o Caminho da foto
+                    console.log(newPatch)
+                    novoInsumo.imagem = newPatch
+                    
+                    console.log("Com imagem: ")
+                    console.log(novoInsumo)
 
                     new Insumo(novoInsumo).save().then(() => {
                         req.flash("success_msg", "Insumo cadastrado com sucesso.")
@@ -69,20 +69,13 @@ router.get('/', (req, res) => {
                     }).catch((err) => {
                         req.flash("error_msg", "Houve um erro ao salvar o insumo, tente novamente.")
                         res.redirect("/insumos")
-                    })       
-
-
+                    })
                 }).catch((err) => {
                     console.log("Houve um erro: "+ err)
                 })            
             }else{
-                const novoInsumo = {
-                    descricao: req.body.descricao,
-                    unidade_medida: req.body.unidade_medida,
-                    observacao: req.body.observacao,
-                    imagem: "/img/insumos/semimagem.png"
-                }
-
+                console.log(novoInsumo)
+                
                 new Insumo(novoInsumo).save().then(() => {
                     req.flash("success_msg", "Insumo cadastrado com sucesso.")
                     res.redirect("/insumos")
@@ -90,15 +83,16 @@ router.get('/', (req, res) => {
                     req.flash("error_msg", "Houve um erro ao salvar o insumo, tente novamente.")
                     res.redirect("/insumos")
                 })
-
             }                 
         }
     })
 
-    
     router.get("/edit/:id", (req,res) => {     
-        Insumo.findOne({_id: req.params.id}).then((insumo) => {            
-             res.render("insumos/editinsumo", {insumo})      
+        Insumo.findOne({_id: req.params.id}).populate("origem").then((insumo) => {
+            Base.find().then((base) => {
+                res.render("insumos/editinsumo", {insumo, base})   
+            })
+                
         }).catch((err) => {
             req.flash("error_msg", "Insumo não encontrada.")
             res.redirect("/insumos/")

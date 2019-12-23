@@ -115,6 +115,7 @@
                     <label for="valor_total">Total: </label>
                         <input type="number" name="" id="valor_total" v-model.number="valor_total">
                     -->
+                    <hr>
                     <label for="observacoes">Observações: </label>
                         <textarea v-model="observacoes" class="form-control" name="" id="observacoes" cols="30" rows="3"></textarea></br>
                     <label for="contrato">Contrato: </label>
@@ -179,7 +180,10 @@
             async enviar() {
                 this.loading = true
                 // Calcular valor_total da requisição
-                this.valor_total = 60
+                this.valor_total = 0                    
+                    for(var i = 0; i < this.insumos.length; i++){
+                        this.valor_total += (this.insumos[i].quantidade * this.insumos[i].preco)
+                    }
                 /*
                 for(var i = 0; i < this.insumos.length; i++) {
                     this.valor_total += insumos[i].quantidade*insumos[i].preco

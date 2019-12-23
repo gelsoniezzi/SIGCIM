@@ -12,20 +12,22 @@ const Insumo = new Schema({
         type: Schema.Types.ObjectId,
         ref: "bases"
     },
+    /*
     id_origem: {
         type: Number
     },
+    */
     codigo_origem: {
         type: String
     },
     unidade_medida: {
         type: String,
-        required: true,
+        //required: true,
         default: "un."
     },
     preco_mediano: {
         type: Number,
-        required: true,
+        //required: true,
         default: 0.0
     },
     status: {

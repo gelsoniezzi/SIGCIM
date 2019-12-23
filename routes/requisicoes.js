@@ -20,7 +20,7 @@ router.get('/', eAdmin,(req, res) => {
     }) 
 })
 
-router.get('/add', (req, res) => {
+router.get('/add', eAdmin, (req, res) => {
     Insumo.find().populate("origem").sort({descricao: "asc"}).then((insumos) =>{
         res.render("requisicoes/add", {insumos})
     })
@@ -32,10 +32,8 @@ router.post('/salvar', (req,res) => {
     //preencher insumos buscando do banco de dados
 
     Insumo.find({_id: {$in: req.body.insumos.map(row => (row.id))}}).then((insumo) => {
-        console.log(req.body.valor_total)
-
         var novaRequisicao ={
-            //data_criacao: Date.now(),
+            data_criacao: Date.now(),
             quantidade_itens: req.body.insumos.length,
             valor_total: req.body.valor_total,
             status: "Salva",
@@ -66,7 +64,7 @@ router.post('/salvar', (req,res) => {
             req.flash("success_msg", "Requisição salva com sucesso.")
             res.send({error: false, message: 'Requisição salva com sucesso.'})
         }).catch((err) => {
-            console.log("Houve um erro ao cadastrar requisicao.")
+            console.log("Houve um erro ao salvar requisicao.")
         })
 
     }).catch((err) => {
@@ -74,8 +72,52 @@ router.post('/salvar', (req,res) => {
     })
 })
 
-router.post('/enviar', (req, res) => {
+router.post('/enviar', eAdmin, (req, res) => {
     //verificar contrato atual
+    var contratoVi = contratoVigente()    
+        
+    Insumo.find({_id: {$in: req.body.insumos.map(row => (row.id))}}).then((insumo) => {
+        
+        var novaRequisicao ={
+            //data_criacao: Date.now(),
+            quantidade_itens: req.body.insumos.length,
+            valor_total: req.body.valor_total,
+            status: "Enviada",
+            solicitante: res.locals.user._id,
+            contrato: contratoVi._id,
+            observacoes: req.body.obs,
+            insumos: []
+        }
+
+        var novoInsumo = {}
+        for(var i = 0; i < req.body.insumos.length; i++){
+        novoInsumo = insumo.map(row => ({ 
+            descricao: row.descricao, 
+            origem: row.origem, 
+            codigo_origem: row.codigo_origem, 
+            unidade: row.unidade_medida,
+            preco: row.preco_mediano
+        }))
+            novoInsumo[i].quantidade = req.body.insumos[i].quantidade
+            novoInsumo[i].observacao = "Implementar observacao individual"
+            novaRequisicao.insumos.push(novoInsumo[i])
+            //console.log(novoInsumo[i])
+        }
+        console.log(novaRequisicao.insumos)
+
+        new Requisicao(novaRequisicao).save().then(() => {
+            req.flash("success_msg", "Requisição enviada com sucesso.")
+            res.send({error: false, message: 'Requisição salva com sucesso.'})
+        }).catch((err) => {
+            console.log("Houve um erro ao enviar requisicao.")
+        })
+
+    }).catch((err) => {
+        console.log("Houve erro ao incluir insumos na requisição: " + err)
+    })
+    
+    /*
+    
     console.log(req.body.insumos)
     var ids = req.body.insumos.map(row => (row.id))
     console.log(ids)
@@ -90,7 +132,6 @@ router.post('/enviar', (req, res) => {
         prazo_entrega: Date.now(),
         insumos: []
     }
-
 
     var novo_insumo
         
@@ -125,6 +166,8 @@ router.post('/enviar', (req, res) => {
         //console.log("Insumo " + i + ": " + req.body.insumos[i].id)
     //req.body.insumos
     res.send({error: false, menssage: 'Insumos cadastrados com sucesso.'})
+
+    */
 })
 
 router.get('/editar', (req, res) => {
@@ -132,3 +175,13 @@ router.get('/editar', (req, res) => {
 })
 
 module.exports = router
+
+    //Funcoes
+
+    //Pesquisar contrato vigente
+    var contratoVigente = () => {
+        Contrato.findOne({status: true}).then((contrato) => {
+            console.log(contrato)
+            return contrato
+        })
+    }
