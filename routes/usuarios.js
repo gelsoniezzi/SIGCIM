@@ -137,7 +137,7 @@ router.post('/login', (req, res, next) => {
 
 })
 
-router.get('/logout',(req, res) => {
+router.get('/logout', (req, res) => {
     req.logout()
     req.flash("Você saiu.")
     res.redirect('/')

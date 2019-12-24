@@ -30,16 +30,13 @@ const Requisicao = new Schema ({
         type: String
     },
     solicitante: {
-        type: String
-        //type: Schema.Types.ObjectId,
-        //ref: "usuarios",
-        //required: true
+        type: Schema.Types.ObjectId,
+        ref: "usuarios",
+        required: true
     },
-
-    contrato: {
-        type: String
-        //type: Schema.Types.ObjectId,
-        //ref: "contratos"        
+    contrato: {        
+        type: Schema.Types.ObjectId,
+        ref: "contratos"        
     },
     observacoes: {
         type: String

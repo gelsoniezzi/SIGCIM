@@ -37,7 +37,7 @@
                                     <div class="input-group-prepend">
                                         <div class="input-group-text">R$</div>
                                     </div>
-                                        <input type="text" id="valor_mediano" name="valor_mediano" class="form-control" disabled>
+                                        <input type="text" id="valor_mediano" name="valor_mediano" class="form-control" value="{{insumo.preco_mediano}}"disabled>
                                 </div>
                         </div>
                         <div class="col-auto">
@@ -47,9 +47,9 @@
                 </div>
                 <div class="col-auto">
                     <label for="origem">Origem: </label>
-                    <select name="origem" class="form-control">
+                    <select name="origem" class="form-control" disabled>
                         <option value="0">Selecione uma base de dados.</option>
-                        {{#each bases}}
+                        {{#each base}}
                         <option value="{{_id}}">{{nome}}</option>
                         {{else}}
                         <option value="0">Nenhuma base cadastrada.</option>
@@ -58,7 +58,7 @@
                 </div>
                 <div class="col-auto">
                     <label for="codigo_origem">Código de origem:</label>
-                    <input type="text" id="codigo_sinapi" name="codigo_origem" class="form-control" disabled>
+                    <input type="text" id="codigo_sinapi" name="codigo_origem" class="form-control" value="{{insumo.codigo_origem}}"disabled>
                 </div>
             </div>
             <br>

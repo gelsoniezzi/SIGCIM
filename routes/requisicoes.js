@@ -13,14 +13,14 @@ const {eAdmin} = require('../helpers/eAdmin')
 
 //rota index
 
-router.get('/', eAdmin,(req, res) => {
+router.get('/', /*eAdmin,*/ (req, res) => {
     
-    Requisicao.find().sort({data_criacao: "asc"}).then((requisicoes) => {
+    Requisicao.find().populate('solicitante').sort({data_criacao: "asc"}).then((requisicoes) => {
         res.render("requisicoes/index", {requisicoes})
     }) 
 })
 
-router.get('/add', eAdmin, (req, res) => {
+router.get('/add', /*eAdmin,*/ (req, res) => {
     Insumo.find().populate("origem").sort({descricao: "asc"}).then((insumos) =>{
         res.render("requisicoes/add", {insumos})
     })
@@ -72,49 +72,56 @@ router.post('/salvar', (req,res) => {
     })
 })
 
-router.post('/enviar', eAdmin, (req, res) => {
+router.post('/enviar', /*eAdmin,*/ (req, res) => {
     //verificar contrato atual
-    var contratoVi = contratoVigente()    
-        
-    Insumo.find({_id: {$in: req.body.insumos.map(row => (row.id))}}).then((insumo) => {
-        
-        var novaRequisicao ={
-            //data_criacao: Date.now(),
-            quantidade_itens: req.body.insumos.length,
-            valor_total: req.body.valor_total,
-            status: "Enviada",
-            solicitante: res.locals.user._id,
-            contrato: contratoVi._id,
-            observacoes: req.body.obs,
-            insumos: []
-        }
+    Contrato.findOne({status: true}).then((contrato) => {
 
-        var novoInsumo = {}
-        for(var i = 0; i < req.body.insumos.length; i++){
-        novoInsumo = insumo.map(row => ({ 
-            descricao: row.descricao, 
-            origem: row.origem, 
-            codigo_origem: row.codigo_origem, 
-            unidade: row.unidade_medida,
-            preco: row.preco_mediano
-        }))
-            novoInsumo[i].quantidade = req.body.insumos[i].quantidade
-            novoInsumo[i].observacao = "Implementar observacao individual"
-            novaRequisicao.insumos.push(novoInsumo[i])
-            //console.log(novoInsumo[i])
-        }
-        console.log(novaRequisicao.insumos)
-
-        new Requisicao(novaRequisicao).save().then(() => {
-            req.flash("success_msg", "Requisição enviada com sucesso.")
-            res.send({error: false, message: 'Requisição salva com sucesso.'})
+        Insumo.find({_id: {$in: req.body.insumos.map(row => (row.id))}}).then((insumo) => {
+        
+            var novaRequisicao = {
+                data_criacao: Date.now(),
+                quantidade_itens: req.body.insumos.length,
+                valor_total: req.body.valor_total,
+                status: "Enviada",
+                solicitante: res.locals.user._id,
+                contrato: contrato._id,
+                observacoes: req.body.obs,
+                insumos: []
+            }
+    
+            var novoInsumo = {}
+            for(var i = 0; i < req.body.insumos.length; i++){
+            novoInsumo = insumo.map(row => ({ 
+                descricao: row.descricao, 
+                origem: row.origem, 
+                codigo_origem: row.codigo_origem, 
+                unidade: row.unidade_medida,
+                preco: row.preco_mediano
+            }))
+                novoInsumo[i].quantidade = req.body.insumos[i].quantidade
+                novoInsumo[i].observacao = "Implementar observacao individual"
+                novaRequisicao.insumos.push(novoInsumo[i])
+                //console.log(novoInsumo[i])
+            }
+            console.log(novaRequisicao.insumos)
+    
+            new Requisicao(novaRequisicao).save().then(() => {
+                req.flash("success_msg", "Requisição enviada com sucesso.")
+                res.send({error: false, message: 'Requisição salva com sucesso.'})
+            }).catch((err) => {
+                console.log("Houve um erro ao enviar requisicao.")
+            })
+    
         }).catch((err) => {
-            console.log("Houve um erro ao enviar requisicao.")
+            console.log("Houve erro ao incluir insumos na requisição: " + err)
+        }).catch((err) => {
+            console.log("Houve erro ao consultar contrato vigente: " + err)
         })
+        
 
-    }).catch((err) => {
-        console.log("Houve erro ao incluir insumos na requisição: " + err)
-    })
+    })   
+    
+    
     
     /*
     
@@ -176,12 +183,7 @@ router.get('/editar', (req, res) => {
 
 module.exports = router
 
-    //Funcoes
+//Funcoes
 
     //Pesquisar contrato vigente
-    var contratoVigente = () => {
-        Contrato.findOne({status: true}).then((contrato) => {
-            console.log(contrato)
-            return contrato
-        })
-    }
+    
