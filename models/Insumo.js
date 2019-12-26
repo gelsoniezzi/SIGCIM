@@ -12,11 +12,6 @@ const Insumo = new Schema({
         type: Schema.Types.ObjectId,
         ref: "bases"
     },
-    /*
-    id_origem: {
-        type: Number
-    },
-    */
     codigo_origem: {
         type: String
     },
@@ -43,7 +38,12 @@ const Insumo = new Schema({
     coleta: {
         type: Date,
         default: Date.now()
-    }    
+    },
+    validade: {
+        type: Date,
+
+    },
+     
 })
 
 Insumo.plugin(mongoosePaginate)

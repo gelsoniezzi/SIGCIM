@@ -1,60 +1,64 @@
 <h2>Requisições</h2>
 <hr>
 {{requisicoes}}
-<table style="font-size:13px" class="table table-striped table-bordered table-sm" >
-    <thead class="thead-dark">
-        <tr>
-            <th>Numero</th>
-            <th>Data</th>
-            <th>Itens</th>
-            <th>Valor total</th>
-            <th>Status</th>
-            <th>Prazo</th>
-            <th>Solicitante</th>
-            <th>Contrato</th>
-            <th>Ações</th>
-        </tr>
-    </thead>    
-    <tbody>
-        {{#each requisicoes}}
-            <tr>
-                <th>{{numero}}</th>
-                <th>{{date_br data_criacao }}</th>
-                <th>{{quantidade_itens}}</th>
-                <th>{{currency valor_total}}</th>
-                <th>{{status}}</th>
-                <th>Calcular</th>
-                <th>{{solicitante.nome}}</th>
-                <th>{{contrato.numero}}</th>
-                <th>Edit, Env, Can</th>
-            </tr>
-        {{else}}
-            <tr>
-                <th><h5>Nenhuma requisição cadastrada.</h5></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-            </tr>
-        {{/each}}
-    </tbody>
-    
-    <tfoot class="thead-dark">
-        <tr>
-            <th>Numero</th>
-            <th>Data</th>
-            <th>Itens</th>
-            <th>Valor total</th>
-            <th>Status</th>
-            <th>Prazo</th>
-            <th>Solicitante</th>
-            <th>Contrato</th>
-            <th>Ações</th>
-        </tr>
-    </tfoot>
-</table>
-<a href="/requisicoes/add"><button class="btn btn-success">Nova</button></a>
+<div class="card">
+    <div class="card-body">
+        <table style="font-size:13px" class="table table-striped table-bordered table-sm" >
+            <thead class="thead-dark">
+                <tr>
+                    <th>Numero</th>
+                    <th>Data</th>
+                    <th>Itens</th>
+                    <th>Valor total</th>
+                    <th>Status</th>
+                    <th>Prazo</th>
+                    <th>Solicitante</th>
+                    <th>Contrato</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>    
+            <tbody>
+                {{#each requisicoes}}
+                    <tr>
+                        <th>{{numero}}</th>
+                        <th>{{date_br data_criacao }}</th>
+                        <th>{{quantidade_itens}}</th>
+                        <th>{{currency valor_total}}</th>
+                        <th>{{status}}</th>
+                        <th>Calcular</th>
+                        <th>{{solicitante.nome}}</th>
+                        <th>{{contrato.numero}}</th>
+                        <th>Edit, Env, Can</th>
+                    </tr>
+                {{else}}
+                    <tr>
+                        <th><h5>Nenhuma requisição cadastrada.</h5></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                {{/each}}
+            </tbody>
+            
+            <tfoot class="thead-dark">
+                <tr>
+                    <th>Numero</th>
+                    <th>Data</th>
+                    <th>Itens</th>
+                    <th>Valor total</th>
+                    <th>Status</th>
+                    <th>Prazo</th>
+                    <th>Solicitante</th>
+                    <th>Contrato</th>
+                    <th>Ações</th>
+                </tr>
+            </tfoot>
+        </table>
+        <a href="/requisicoes/add"><button class="btn btn-success">Nova</button></a>                
+    </div>
+</div>

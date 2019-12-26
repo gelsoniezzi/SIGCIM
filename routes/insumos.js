@@ -100,8 +100,12 @@ router.get('/', (req, res) => {
         
     })
 
-    router.post("/edit/", (req, res) => {
+    router.post("/edit/", (req, res) => { // IMPLEMENTAR
+        res.send("Implementar a rota edit")
+    })
 
+    router.post('/delete', (req, res) => { // IMPLEMENTAR
+        res.send("Implementar a rota delete")
     })
 
     router.get("/importar", (req, res) => {
@@ -129,13 +133,13 @@ router.get('/', (req, res) => {
 
             console.log("Linha do cabeçalho: " + linha)
             var cabecalho_planilha = result[linha]
-            
+            var insumos = []
             for(var i = 0; i < result.length; i++){
                 var descricao = result[i]['DESCRICAO DO INSUMO']
                 var observacao = descricao.split('!')
                 var obs = ""
 
-                console.log(observacao[1])
+                //console.log(observacao[1])
                 if(observacao[1]){
                     obs = observacao[1]
                     descricao = observacao[2]
@@ -150,19 +154,38 @@ router.get('/', (req, res) => {
                     codigo_origem: result[i]['CODIGO'],
                     unidade_medida: result[i]['UNIDADE']                       
                 }
+                insumos.push(novoInsumo)                
+            }
 
-                new Insumo(novoInsumo).save().then(() => {
-                }).catch((err) => {
-                    console.log("Erro: " + err)
-                })
+            var promisse = Insumo.create(insumos, (err, insumos) => {
+                if (err) {
+                    console.log(err)
+                }
+                for( var i = 0; i < insumos.length; i ++){
+                    insumos[i].save()
+                }
 
+            })
+            console.log(promisse)
 
-            } 
-        })
-
-        
+           /* 
+            promisse.then(() => {
+                res.send("Subiu tudo.")
+            })
+            */
+            /*
+            new Insumo(insumos).save().then(() => {
+                req.flash("sucess_msg", "Insumos importados com sucesso.")
+                res.redirect("/insumos/")
+            }).catch((err) => {
+                req.flash("error_msg", "Não foi possível importar os insumos. " + err)
+                res.redirect("/insumos/")
+            })
+            */
+        })       
     })
 
+    // Rotas das BASES
 
     router.get("/bases", (req, res) => {
         Base.find().then((bases) => {
@@ -170,8 +193,7 @@ router.get('/', (req, res) => {
         }).catch(() => {
             req.flash("error_msg", "Houve um erro ao listar as bases de dados.")
             res.redirect("/insumos")
-        })
-        
+        })        
     })
 
     router.get("/bases/add", (req, res) => {
@@ -182,9 +204,9 @@ router.get('/', (req, res) => {
 
         const novaBase = {
             nome: req.body.nome,
+            abreviacao: req.body.abreviacao,
             endereco: req.body.endereco
         }
-        console.log(novaBase)
 
         new Base(novaBase).save().then(() => {
             req.flash("sucess_msg", "Base cadastrada com sucesso.")
@@ -194,6 +216,44 @@ router.get('/', (req, res) => {
             res.redirect("/insumos/bases")
         })
 
+    })
+
+    router.get('/bases/edit/:id', (req, res) => {
+        Base.findOne({_id: req.params.id}).then((base) => {
+            res.render('insumos/editbase', {base})
+        }).catch((err) => {
+            req.flash("error_msg", "Houve um erro ao carregar a base de dados.")
+            res.redirect('/insumos/bases')
+        })
+    })
+
+    router.post('/bases/edit', (req, res) => {
+        Base.findOne({_id: req.body.id}).then((base) => {
+            base.nome = req.body.nome
+            base.abreviacao = req.body.abreviacao
+            base.endereco = req.body.endereco
+
+            base.save().then(() => {
+                req.flash("success_msg", "Base de dados editada com sucesso.")
+                res.redirect("/insumos/bases")
+            }).catch(() => {
+                req.flash("error_msg", "Houve um erro ao editar a base de dados, tente novamente.")
+                res.redirect("/insumos/bases")
+            })
+        }).catch(() => {
+            req.flash("error_msg", "Houve um erro ao pesquisar a base de dados, tente novamente.")
+            res.redirect("/insumos/bases")
+        })
+    })
+
+    router.post('/bases/delete', (req, res) => {
+        Base.remove({_id: req.body.id}).then(() => {
+            req.flash("success_msg", "Base removida com sucesso.")
+            res.redirect("/insumos/bases")
+        }).catch((err) => {
+            req.flash("error_msg", "Não foi possível remover a base de dados, tente novamente.")
+            res.redirect("/insumos/bases")
+        })
     })
 
 

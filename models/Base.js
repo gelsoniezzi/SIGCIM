@@ -6,6 +6,10 @@ const Base = new Schema({
         type: String,
         required: true
     },
+    abreviacao:{
+        type: String,
+        maxlength: 15
+    },
     endereco: {
         type: String,
         required: true

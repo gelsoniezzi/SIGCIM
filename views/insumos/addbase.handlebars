@@ -8,12 +8,13 @@
 <div class="card">
     <div class="card-body">
         <form action="/insumos/bases/add" method="POST">
-        <label for="nome">Fonte da base de dados</label>
-        <input type="text" id="nome" name="nome" placeholder="Nome da fonte de dados" class="form-control"> <br>
-        <label for="endereco">Endereço</label>
-        <input type="text" id="endereco" name="endereco" placeholder="Link da fonte de dados." class="form-control"> <br>
-
-        <button type="submit" class="btn btn-success">Criar</button>
+            <label for="nome">Fonte da base de dados: </label>
+                <input type="text" id="nome" name="nome" placeholder="Nome da fonte de dados" class="form-control"> <br>
+            <label for="nome">Abreviação: </label>
+                <input type="text" id="abreviacao" name="abreviacao" placeholder="Ex.: SINAPI" maxlength="15" class="form-control"> <br>
+            <label for="endereco">Endereço: </label>
+                <input type="text" id="endereco" name="endereco" placeholder="Link da fonte de dados." class="form-control"> <br>
+            <button type="submit" class="btn btn-success">Criar</button>
         </form>
     </div>
 </div>
