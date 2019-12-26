@@ -158,16 +158,16 @@
                 this.insumos.splice(index, 1)
             },
             adicionar: function (id){
-                if(!this.insumos.some(insumo => (insumo.id_insumo === id))){ // verifica se o insumo já está na lista de insumos escolhidos.
-                    var rowOrigem = document.getElementById(id)
-                    var listaNodesOrigem = rowOrigem.children
+                if(!this.insumos.some(insumo => (insumo.id === id))){ // verifica se o insumo já está na lista de insumos escolhidos.
+                    var rowOrigem = document.getElementById(id) //pega a linha do item
+                    var listaNodesOrigem = rowOrigem.children //
                     var nomeOrigem = listaNodesOrigem[0].innerHTML
                     var codigoOrigem = listaNodesOrigem[1].innerHTML
                     var descricaoOrigem = listaNodesOrigem[2].innerHTML
                     var unidadeOrigem = listaNodesOrigem[3].innerHTML
                     var precoOrigem = listaNodesOrigem[4].innerHTML
 
-                    var novo_insumo = { id_insumo: id,
+                    var novo_insumo = { id: id,
                                         codigo: codigoOrigem,
                                         nome:  nomeOrigem,
                                         descricao: descricaoOrigem,
@@ -178,6 +178,7 @@
                     this.insumos.push(novo_insumo)
                 }                    
             },
+
             async enviar() {
                 this.loading = true
                 // Calcular valor_total da requisição
@@ -185,20 +186,17 @@
                     for(var i = 0; i < this.insumos.length; i++){
                         this.valor_total += (this.insumos[i].quantidade * this.insumos[i].preco)
                     }
-                /*
-                for(var i = 0; i < this.insumos.length; i++) {
-                    this.valor_total += insumos[i].quantidade*insumos[i].preco
-                }
-                */
-                const insumos = this.insumos.map(row => ({id: row.id_insumo, quantidade: row.quantidade}))
+                
+                const insumos = this.insumos.map(row => ({id: row.id, quantidade: row.quantidade}))
                 const obs = this.observacoes
-                const data = {}
-                data.insumos = insumos
-                data.obs = obs
-                data.valor_total = this.valor_total
-                setTimeout(() => {  },2000)
+                const requisicao = {}
+                requisicao.insumos = insumos
+                requisicao.obs = obs
+                requisicao.valor_total = this.valor_total
+                setTimeout(() => {  },200000)
                 const url = '/requisicoes/enviar'
-                const resultado = await axios.post(url, data)
+                console.log(requisicao)
+                const resultado = await axios.post(url, requisicao)
                 this.loading = false
                 this.menssage = resultado.data.message
               
@@ -211,7 +209,7 @@
                     for(var i = 0; i < this.insumos.length; i++){
                         this.valor_total += (this.insumos[i].quantidade * this.insumos[i].preco)
                     }                    
-                    const insumos = this.insumos.map(row => ({id: row.id_insumo, quantidade: row.quantidade}))
+                    const insumos = this.insumos.map(row => ({id: row.id, quantidade: row.quantidade}))
                     const data = {}
                     data.insumos = insumos
                     data.obs = this.observacoes

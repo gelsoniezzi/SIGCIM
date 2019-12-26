@@ -1,6 +1,7 @@
 const express = require("express")
 const router = express.Router()
 const mongoose = require("mongoose")
+const mongoosePaginate = require('mongoose-paginate-v2')
 const fs = require('fs')
 const XLSX = require('xlsx')
 require("../models/Insumo")
@@ -8,7 +9,7 @@ require("../models/Base")
 const Insumo = mongoose.model("insumos")
 const Base = mongoose.model("bases")
 const multer  = require('../multer')
-const fileHelper = require('../file-helper')
+const fileHelper = require('../helpers/file')
 const http = require('http');
 const formidable = require('formidable')
 
@@ -25,9 +26,53 @@ router.get('/', (req, res) => {
 
 // Rotas insumos
     router.get('/lista/', (req, res) => {        
-        Insumo.find().populate("origem").sort({descricao: "asc"}).then((insumos) =>{
+        Insumo.find().populate("base_origem").sort({descricao: "asc"}).then((insumos) =>{
             res.render("insumos/index", {insumos})
         })
+
+    })
+
+    router.post('/json/lista', (req, res) => {
+        console.log(req.body)
+        //calcular pagina
+        var pagina = (req.body.start/req.body.length) + 1
+
+        var options = {
+            page: pagina,
+            limit: req.body.length,
+            sort: { codigo_origem: -1},
+            populate: 'base_origem',
+        }
+        console.log(options)
+        
+
+        Insumo.paginate({}, options, ).then((insumos) => {
+            
+            var resposta = {}
+            resposta.data = insumos.docs
+            resposta.recordsTotal = insumos.totalDocs
+
+
+
+            res.send(resposta)
+        }).catch((err) => {
+            console.log("Nao deu certo o paginate.", + err)
+        })
+        /*
+        Insumo.find().populate("origem").sort({descricao: "asc"}).then((insumos) =>{
+            var resposta = {}
+            
+            resposta.draw = 1
+            resposta.recordsTotal = insumos.length
+            resposta.recordsFiltered = insumos.length
+            resposta.data = insumos
+            res.send(resposta)
+        })
+        */
+    })
+
+    router.get('/listajson/', (req, res) => {
+        res.render('insumos/indexjson')
 
     })
 
@@ -94,18 +139,42 @@ router.get('/', (req, res) => {
             })
                 
         }).catch((err) => {
-            req.flash("error_msg", "Insumo não encontrada.")
+            req.flash("error_msg", "Insumo não encontrada." + err)
             res.redirect("/insumos/")
         })
         
     })
 
-    router.post("/edit/", (req, res) => { // IMPLEMENTAR
-        res.send("Implementar a rota edit")
+    router.post("/edit/", (req, res) => {
+        Insumo.findOne({_id: req.body.id}).then((insumo) => {
+            
+            insumo.descricao = req.body.descricao
+            insumo.unidade_medida = req.body.unidade
+            insumo.observacao = req.body.observacao
+
+            insumo.save().then(() => {
+                req.flash("success_msg", "Alterado com sucesso.")
+                res.redirect("/insumos/")
+            }).catch((err) => {
+                req.flash("error_msg", "Não foi possível salvar o ítem. " + err)
+                res.redirect("/insumos/")
+            })
+            
+        }).catch((err) => {
+            req.flash("error_msg", "Não foi possível localizar o ítem. " + err)
+            res.redirect("/insumos/")
+        })
     })
 
-    router.post('/delete', (req, res) => { // IMPLEMENTAR
-        res.send("Implementar a rota delete")
+    router.post('/delete', (req, res) => { 
+        Insumo.deleteOne({_id: req.body.id}).then(() => {
+            req.flash("success_msg", "Insumo removido com sucesso.")
+            res.redirect("/insumos/")
+        }).catch((err) => {
+            req.flash("error_msg", "Houve um erro ao remover o insumo.")
+            res.redirect("/insumos/")
+        })
+        
     })
 
     router.get("/importar", (req, res) => {
@@ -130,6 +199,7 @@ router.get('/', (req, res) => {
 
             var linha = fields.linha //pega o campo linha do formulario
             var fonte_base = fields.base
+            console.log(fields)
 
             console.log("Linha do cabeçalho: " + linha)
             var cabecalho_planilha = result[linha]
@@ -147,7 +217,7 @@ router.get('/', (req, res) => {
 
                 
                 var novoInsumo = {
-                    origem: fonte_base,            
+                    base_origem: fonte_base,            
                     descricao: descricao,
                     preco_mediano: result[i]['PRECO MEDIANO R$'],
                     observacao: obs,
@@ -166,7 +236,7 @@ router.get('/', (req, res) => {
                 }
 
             })
-            console.log(promisse)
+            
 
            /* 
             promisse.then(() => {

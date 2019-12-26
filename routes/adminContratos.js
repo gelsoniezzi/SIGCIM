@@ -160,11 +160,7 @@ const Contrato = mongoose.model("contratos")
                 req.flash("error_msg", "Houve um erro ao salvar o contrato, tente novamente.")
                 res.redirect("/adminContratos/contratos")
             })
-
         }
-
-
-
     })
 
 
@@ -215,6 +211,6 @@ const Contrato = mongoose.model("contratos")
             res.redirect("/adminContratos/contratos")
         })
     })
-
+    
 module.exports = router
 
