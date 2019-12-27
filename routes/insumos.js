@@ -58,10 +58,15 @@ router.get('/', (req, res) => {
             
         }
         console.log('----- OPTIONS --------')
-        console.log(options)
+        console.log(req.body.search.value)
+
+        var query = {}
+
+        if (req.body.search.value != '')
+            query = {$text : {$search: req.body.search.value} }
         
 
-        Insumo.paginate({}, options, ).then((insumos) => {
+        Insumo.paginate(query, options, ).then((insumos) => {
             
             var resposta = {}
             resposta.data = insumos.docs
@@ -78,7 +83,6 @@ router.get('/', (req, res) => {
 
     router.get('/listajson/', (req, res) => {
         res.render('insumos/indexjson')
-
     })
 
     router.get('/add', (req, res) => {
@@ -103,7 +107,6 @@ router.get('/', (req, res) => {
         if(erros.length >0){
             res.render("insumos/add", {erros})
         }else{
-
             if(req.file){
                 fileHelper.compressImage(req.file, 100).then((newPatch) => {
                     // tratar o Caminho da foto

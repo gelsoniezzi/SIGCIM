@@ -45,6 +45,12 @@ const Insumo = new Schema({
     },
      
 })
+Insumo.index({descricao: 'text', 
+            base_origem: 'text', 
+            status: 'text', 
+            unidade_medida: 'text',
+            observacao: 'text',
+            preco_mediano: 'text'})
 
 Insumo.plugin(mongoosePaginate)
 mongoose.model("insumos", Insumo)
