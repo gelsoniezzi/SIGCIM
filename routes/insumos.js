@@ -33,16 +33,31 @@ router.get('/', (req, res) => {
     })
 
     router.post('/json/lista', (req, res) => {
+        console.log('--------------')
         console.log(req.body)
         //calcular pagina
         var pagina = (req.body.start/req.body.length) + 1
 
+        // configura ordenação
+        var numeroColuna = parseInt(req.body.order[0].column)              
+        var colunaOrdenacao = ''
+        if(req.body.order[0].dir == 'asc'){
+            colunaOrdenacao = req.body.columns[numeroColuna].data
+        }else{
+            colunaOrdenacao = '-' + req.body.columns[numeroColuna].data
+        }
+        
+        
+        
         var options = {
             page: pagina,
+            totalPages: 5,
             limit: req.body.length,
-            sort: { codigo_origem: -1},
+            sort: colunaOrdenacao,
             populate: 'base_origem',
+            
         }
+        console.log('----- OPTIONS --------')
         console.log(options)
         
 
@@ -58,17 +73,7 @@ router.get('/', (req, res) => {
         }).catch((err) => {
             console.log("Nao deu certo o paginate.", + err)
         })
-        /*
-        Insumo.find().populate("origem").sort({descricao: "asc"}).then((insumos) =>{
-            var resposta = {}
-            
-            resposta.draw = 1
-            resposta.recordsTotal = insumos.length
-            resposta.recordsFiltered = insumos.length
-            resposta.data = insumos
-            res.send(resposta)
-        })
-        */
+        
     })
 
     router.get('/listajson/', (req, res) => {
