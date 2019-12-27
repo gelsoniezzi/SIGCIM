@@ -25,16 +25,26 @@ router.get('/', (req, res) => {
 
 
 // Rotas insumos
-    router.get('/lista/', (req, res) => {        
+    router.get('/lista/', (req, res) => {      
+
         Insumo.find().populate("base_origem").sort({descricao: "asc"}).then((insumos) =>{
             res.render("insumos/index", {insumos})
         })
 
     })
 
-    router.post('/json/lista', (req, res) => {
+    router.get('/json/lista', (req, res) => {
+        Insumo.find().populate("base_origem").sort({descricao: "asc"}).then((insumos) => {
+            var resposta = {}
+            resposta.data = insumos
+            res.send(resposta)
+        }).catch()
+
+    })
+
+    router.post('/json/listapaginate', (req, res) => {
         console.log('--------------')
-        console.log(req.body)
+        //console.log(req.body)
         //calcular pagina
         var pagina = (req.body.start/req.body.length) + 1
 
@@ -45,35 +55,39 @@ router.get('/', (req, res) => {
             colunaOrdenacao = req.body.columns[numeroColuna].data
         }else{
             colunaOrdenacao = '-' + req.body.columns[numeroColuna].data
-        }
-        
-        
+        }        
         
         var options = {
             page: pagina,
             totalPages: 5,
             limit: req.body.length,
             sort: colunaOrdenacao,
-            populate: 'base_origem',
-            
+            populate: 'base_origem',            
         }
-        console.log('----- OPTIONS --------')
-        console.log(req.body.search.value)
 
         var query = {}
 
         if (req.body.search.value != '')
-            query = {$text : {$search: req.body.search.value} }
+            query = {$text : {$search: req.body.search.value} }            
         
 
         Insumo.paginate(query, options, ).then((insumos) => {
-            
             var resposta = {}
+            resposta.draw = req.body.draw            
             resposta.data = insumos.docs
             resposta.recordsTotal = insumos.totalDocs
+            resposta.recordsFiltered = insumos.totalDocs
 
-
-
+            if(query != {}){                
+                resposta.recordsFiltered = insumos.docs.length
+            }
+            
+            if(insumos.nextPage){
+                resposta.hasNextPage = true
+            }else{
+                resposta.hasNextPage = false
+            }
+                console.log(resposta)
             res.send(resposta)
         }).catch((err) => {
             console.log("Nao deu certo o paginate.", + err)
@@ -82,7 +96,7 @@ router.get('/', (req, res) => {
     })
 
     router.get('/listajson/', (req, res) => {
-        res.render('insumos/indexjson')
+        res.render('insumos/json2')
     })
 
     router.get('/add', (req, res) => {

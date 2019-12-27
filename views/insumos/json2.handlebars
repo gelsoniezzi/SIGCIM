@@ -29,45 +29,40 @@
     </div>
 </div>
 
-
 <script>
+
     $(document).ready(function() {
     $('#insumos').DataTable( {
-        "serverSide": true,
-        "ajax": {
-            url: "/insumos/json/lista",
-            type: "POST",
-            dataType: "json"            
+        serverSide: true,
+        ajax: {url: "/insumos/json/lista",
+            dataSrc: 'data'
         },
-        "processing": true,
-        "start": 0,
-        "columns": [
-            { "data": "base_origem.abreviacao",
-            "searchable": true},
-            { "data": "codigo_origem",
-            "searchable": true
-            },
-            { "data": "descricao",
-            'dir': 'asc',
-            "searchable": true
-            },
-            { "data": "unidade_medida",            
-            "searchable": true
-            },
-            { "data": "preco_mediano",
-            render: $.fn.dataTable.render.number( '.', ',', 2, 'R$ ' ),            
-            "searchable": true},
-            { "data": "observacao",
-            "searchable": true}
-            //{ "data": '' }
-        ],
-        
-
-        /*
-        "language": {
-                "url": 'url_to_the_file'
-        },*/
- 
+        columns: [
+            { "data": "base_origem.abreviacao"},
+            { "data": "codigo_origem"},
+            { "data": "descricao"},
+            { "data": "unidade_medida"},
+            { "data": "preco_mediano"},
+            //render: $.fn.dataTable.render.number( '.', ',', 2, 'R$ ' )}, 
+            { "data": "observacao"}
+        ]
     } );
 } );
+    /*
+    $(document).ready(function() {
+    $('#insumos').DataTable({
+        "ajax": "http://localhost:8081/insumos/json/lista",
+        /*"columns": [
+            { "data": "base_origem.abreviacao"},
+            { "data": "codigo_origem"},
+            { "data": "descricao"},
+            { "data": "unidade_medida"},
+            { "data": "preco_mediano"},
+            //render: $.fn.dataTable.render.number( '.', ',', 2, 'R$ ' )}, 
+            { "data": "observacao"}
+        ]
+        
+    });
+} );
+*/
 </script>
