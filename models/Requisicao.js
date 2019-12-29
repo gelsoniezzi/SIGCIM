@@ -34,6 +34,9 @@ const Requisicao = new Schema ({
         ref: "usuarios",
         required: true
     },
+    campus_destino: {
+        type: String
+    },
     contrato: {        
         type: Schema.Types.ObjectId,
         ref: "contratos"        
@@ -71,7 +74,8 @@ const Requisicao = new Schema ({
                 type: Number
             },
             status_requisicao: {
-                type: String
+                type: String,
+                default: 'Solicitado'
             },
             observacao: {
                 type: String,

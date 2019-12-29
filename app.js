@@ -53,7 +53,6 @@
     // Handlebars        
         var hbs = handlebars.create({defaultLayout: 'main',
         helpers: {
-            test: function () { return "Lorem ipsum" },
             json: function (value, options) {
                 return JSON.stringify(value);
             },
@@ -64,9 +63,15 @@
               })
             },
             date_br:function(strDate){
-              const date = new Date(strDate);
-              // return 'cla'
-              return `${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}`
+            if (strDate){
+                const date = new Date(strDate);              
+                return `${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}`
+            }else{
+                return 'Não informado.'
+            }
+            },
+            inc: (value, options) => {
+                return parseInt(value) + 1      
             }
         }}
         )
@@ -92,7 +97,8 @@
             console.log("Oi, eu sou um midleware");
             next();
         })
-        */       
+        */
+       app.use('/scripts', express.static(__dirname + '/node_modules/'))
 
 
 // Rotas

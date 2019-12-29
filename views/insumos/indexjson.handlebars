@@ -1,5 +1,5 @@
-<h4>Lista de insumos json</h4>
-<hr>
+<h3>Lista de insumos json</h3>
+
 <div class="card">
     <div class="card-body">
         <table id="insumos" class="table table-striped table-sm" style="font-size: 13px; width: 100%">
@@ -28,6 +28,10 @@
         </table>
     </div>
 </div>
+<hr>
+<div id="app">
+    {{insumos}}
+</div>
 
 
 <script>
@@ -55,6 +59,20 @@
                 "url": 'url_to_the_file'
         },*/
  
-    } );
-} );
+    } )
+} )
+
+var app = new Vue({
+    el: '#app',
+    data () {
+        return {
+            insumos: null
+        }
+    },
+    mounted () {
+        axios
+        .get('/insumos/json/lista')
+        .then(response => (this.insumos = response.data))
+    }
+})
 </script>

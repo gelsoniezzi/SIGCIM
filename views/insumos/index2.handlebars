@@ -1,5 +1,4 @@
-<h2>Insumos</h2>
-<hr>
+<h3>Insumos</h3>
 <table id="table-insumos" class="table table-striped" style="width:100%">
         <thead class="thead-dark">
             <tr>
@@ -23,9 +22,9 @@
             <td>{{observacao}}</td>
             <td>
                 <form action="/insumos/delete/" method="POST">
-                <a href="/insumos/edit/{{_id}}" class="btn btn-light btn-sm" data-toggle="tooltip" data-placement="top" title="Editar"><i class="material-icons">edit</i></a>
+                <a href="/insumos/edit/{{_id}}" class="btn btn-light btn-sm" data-toggle="tooltip" data-placement="top" title="Editar"><i class="material-icons md-18">edit</i></a>
                 <input type="hidden" name="id" value="{{_id}}">                    
-                <button class="btn btn-light btn-sm" type="submit" data-toggle="tooltip" data-placement="top" title="Remover"><i class="material-icons">remove_circle</i></button>
+                <button class="btn btn-light btn-sm" type="submit" data-toggle="tooltip" data-placement="top" title="Remover"><i class="material-icons md-18">remove_circle</i></button>
                 </form>
             </td>
         </tr>
