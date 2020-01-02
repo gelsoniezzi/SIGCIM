@@ -50,12 +50,12 @@ router.post("/add", (req, res) => {
             if(req.body.senha != req.body.senha2){
                 erros.push({texto: "As senhas não conferem."})
             }
-            if(req.body.perfil_usuario == 8){
+            if(req.body.perfil == 8){
                 erros.push({texto: "Selecione um perfil."})
             }
-
+                        
             if(erros.length > 0){
-                res.render("/admin/addusuario", {erros, novoUsuario})
+                res.render("admin/addusuario", {erros, novoUsuario})
             }else{
 
                 bcrypt.genSalt(10, (erro, salt) => {

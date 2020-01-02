@@ -3,7 +3,7 @@
     const handlebars = require('express-handlebars')
     const bodyParser = require('body-parser')
     var app = module.exports = express() //const app = express() <- Passando o express para a val app
-    const adminContratos = require("./routes/adminContratos")
+    const contratos = require("./routes/contratos")
     const admin = require("./routes/admin")
     const insumo = require("./routes/insumos")
     const requisicao = require("./routes/requisicoes")
@@ -22,7 +22,7 @@
     // Sessao
         app.use(session({
             secret: "SigCIMUfersa",
-            cookie: {maxAge: 3000000},
+            cookie: {maxAge: 14400000},
             resave: true,
             saveUninitialized: true
         }))
@@ -102,15 +102,12 @@
 
 
 // Rotas
-    app.get("/contratos", (req, res) => {
-        res.send("Lista de contratos.")
-    })
 
     app.get("/teste", (req, res) => {
         res.render("admin/teste")
     })
 
-    app.use('/adminContratos', adminContratos)
+    app.use('/contratos', contratos)
     app.use("/admin", admin)
     app.use('/usuarios', usuario)
     app.use("/insumos", insumo)

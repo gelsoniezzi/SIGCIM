@@ -23,8 +23,8 @@
                         <td>{{fiscal}}</td>
                         <td>{{status}}</td>
                         <td>
-                            <form action="/adminContratos/contratos/delete/" method="POST">
-                            <a href="/adminContratos/contratos/edit/{{_id}}" class="btn btn-light" data-toggle="tooltip" data-placement="top" title="Editar"><i class="material-icons md-18">edit</i></a>
+                            <form action="/contratos/delete/" method="POST">
+                            <a href="/contratos/edit/{{_id}}" class="btn btn-light" data-toggle="tooltip" data-placement="top" title="Editar"><i class="material-icons md-18">edit</i></a>
                             <input type="hidden" name="id" value="{{_id}}">                    
                             <button class="btn btn-light" type="submit" data-toggle="tooltip" data-placement="top" title="Remover"><i class="material-icons md-18">remove_circle</i></button>
                             </form>
@@ -44,6 +44,6 @@
             </tbody>
         </table>
         <br>
-        <a href="/adminContratos/contratos/add"><button class="btn btn-success"> NOVO </button></a>
+        <a href="/contratos/add"><button class="btn btn-success"> NOVO </button></a>
     </div>
 </div>

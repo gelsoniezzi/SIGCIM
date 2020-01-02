@@ -6,7 +6,7 @@ var connection = mongoose.createConnection("mongodb://localhost/sigcim");
 
 mongooseAI.initialize(connection);
 
-const Requisicao = new Schema ({
+const OrdemCompra= new Schema ({
     numero: {
         type: Number,
         //required: true,        
@@ -27,7 +27,7 @@ const Requisicao = new Schema ({
         //required: true
     },
     status:{
-        type: String
+        type: String //Solicitada, Pendente, Entregue, Finalizada 
     },
     solicitante: {
         type: Schema.Types.ObjectId,
@@ -63,31 +63,39 @@ const Requisicao = new Schema ({
                 type: String
             },
             unidade: {
-                type: String,
+                type: String
                 //require: true
             },
             preco: {
-                type: Number,                
+                type: Number          
+            },
+            preco_bdi: {
+                type: Number
             },            
             quantidade: {
                 type: Number
-
             },
             preco_total:{
                 type: Number
             },
-            status_requisicao: {
+            preco_total_bdi:{
+                type: Number
+            },
+            status: {
                 type: String,
-                default: 'Solicitado'
+                default: 'Solicitado' // Solicitado, Entregue, Pendente
+            },
+            observacao_status: {
+                type: String
             },
             destino: {
                 type: String
             },
             observacao: {
-                type: String,
+                type: String
             },            
         }
     ]
 })
-Requisicao.plugin(mongooseAI.plugin, {model: 'requisicoes', field: 'numero', startAt: 1,});
-mongoose.model("requisicoes", Requisicao)
+OrdemCompra.plugin(mongooseAI.plugin, {model: 'ordensCompra', field: 'numero', startAt: 1,});
+mongoose.model("ordensCompra", OrdemCompra)

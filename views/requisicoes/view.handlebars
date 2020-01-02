@@ -38,7 +38,7 @@
             </tbody>            
         </table>
         <div class="form-row">        
-            <div class="col-md-6">
+            <div class="col-md-3">
                 <label for="criacao">Data de criação: </label>
                     <input type="text" class="form-control" name="criacao" id="" value="{{date_br requisicao.data_criacao}}" disabled>
             </div>
@@ -49,6 +49,10 @@
             <div class="col-md-3">
                 <label for="envio">Prazo de entrega: </label>
                     <input type="text" class="form-control" name="envio" id="" value="{{date_br requisicao.prazo_entrega}}" disabled>
+            </div>
+            <div class="col-md-3">
+                <label for="envio">Status: </label>
+                    <input type="text" class="form-control" name="status" id="" value="{{requisicao.status}}" disabled>
             </div>
         </div><br>
         <div class="form-row">

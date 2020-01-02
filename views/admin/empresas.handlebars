@@ -18,8 +18,8 @@
                     <td>{{cnpj}}</td>
                     <td>{{email}}</td>
                     <td>                
-                        <form action="/adminContratos/empresas/delete/" method="POST">
-                            <a href="/adminContratos/empresas/edit/{{_id}}" class="btn btn-light" data-toggle="tooltip" data-placement="top" title="Editar"><i class="material-icons md-18">edit</i></a>
+                        <form action="/contratos/empresas/delete/" method="POST">
+                            <a href="/contratos/empresas/edit/{{_id}}" class="btn btn-light" data-toggle="tooltip" data-placement="top" title="Editar"><i class="material-icons md-18">edit</i></a>
                             <input type="hidden" name="id" value="{{_id}}">                    
                             <button class="btn btn-light" type="submit" data-toggle="tooltip" data-placement="top" title="Remover"><i class="material-icons md-18">remove_circle</i></button>
                         </form>
@@ -38,6 +38,6 @@
             
         </table>
 
-        <a href="/adminContratos/empresas/add"><button class="btn btn-success"> NOVA </button></a>
+        <a href="/contratos/empresas/add"><button class="btn btn-success"> NOVA </button></a>
     </div>
 </div>

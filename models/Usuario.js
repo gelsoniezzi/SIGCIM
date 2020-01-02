@@ -14,10 +14,10 @@ const Usuario = new Schema({
         type: String,
         required: true
     },
-    perfil_usuario: {
+    perfil_usuario: { // 1. 
         type: Number,
         required: true,
-        default: 0
+        default: 5
     },
     senha: {
         type: String,
@@ -33,7 +33,6 @@ const Usuario = new Schema({
         required: true,
         default: 1
     }
-
 })
 
 mongoose.model("usuarios", Usuario)

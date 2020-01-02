@@ -9,25 +9,25 @@ const Requisicao = mongoose.model("requisicoes")
 const Insumo = mongoose.model("insumos")
 const Usuario = mongoose.model("usuarios")
 const Contrato = mongoose.model("contratos")
-const {eAdmin} = require('../helpers/eAdmin')
+const {eTecnico} = require('../helpers/estaLogado')
 
 //rota index
 
-router.get('/', /*eAdmin,*/ (req, res) => {
+router.get('/', eTecnico, (req, res) => {
     
     Requisicao.find().populate({ path: 'contrato', select: 'numero' }).populate({path: 'solicitante', select: 'nome'}).sort({data_criacao: "asc"}).then((requisicoes) => {
         res.render("requisicoes/index", {requisicoes})
     }) 
 })
 
-router.get('/add', eAdmin, (req, res) => {
+router.get('/add', eTecnico, (req, res) => {
     Insumo.find().populate("origem").sort({descricao: "asc"}).then((insumos) =>{
         res.render("requisicoes/add", {insumos})
     })
 
 })
 
-router.post('/salvar', (req,res) => {
+router.post('/salvar', eTecnico, (req,res) => {
     Insumo.find({_id: {$in: req.body.insumos.map(row => (row.id))}}).then((insumos) => {
         var novaRequisicao = {                    
             data_criacao: new Date(),
@@ -68,7 +68,7 @@ router.post('/salvar', (req,res) => {
     })
 })
 
-router.post('/enviar', eAdmin, (req, res) => {
+router.post('/enviar', (req, res) => {
     //verificar contrato atual
     Contrato.findOne({status: true}).then((contrato) => {
         
@@ -121,19 +121,14 @@ router.post('/enviar', eAdmin, (req, res) => {
     })    
 })
 
-router.get('/editar', (req, res) => {
+router.get('/editar', eTecnico, (req, res) => {
 
 })
 
-router.get('/view/:id', (req, res) => {
+router.get('/view/:id', eTecnico, (req, res) => {
     Requisicao.findOne({_id: req.params.id}).populate([{ path: 'solicitante', select: 'nome' }, {path: 'contrato', select: 'numero'}]).then((requisicao) => {
         res.render('requisicoes/view', {requisicao})
     }).catch()
 })
 
 module.exports = router
-
-//Funcoes
-
-    //Pesquisar contrato vigente
-    

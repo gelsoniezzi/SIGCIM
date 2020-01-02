@@ -12,17 +12,8 @@ const multer  = require('../multer')
 const fileHelper = require('../helpers/file')
 const http = require('http');
 const formidable = require('formidable')
-
-
-
-// Rota index
-router.get('/', (req, res) => {
-    Insumo.find().populate("origem").sort({descricao: "asc"}).then((insumos) =>{
-        res.render("insumos/index", {insumos})
-    })
-
-})
-
+const {eTecnico} = require('../helpers/estaLogado')
+const {eAdmin} = require('../helpers/estaLogado')
 
 // Rotas insumos
     router.get('/lista/', (req, res) => {        
@@ -32,7 +23,7 @@ router.get('/', (req, res) => {
 
     })
 
-    router.post('/json/lista', (req, res) => {
+    router.post('/json/lista', eTecnico, (req, res) => {
 
         Insumo.count().then((quantidade) => {
             var pagina = (req.body.start/req.body.length) + 1
@@ -85,24 +76,24 @@ router.get('/', (req, res) => {
         
     })
 
-    router.get('/json/lista', (req, res) => {
+    router.get('/json/lista', eTecnico, (req, res) => {
         Insumo.find().populate("origem").sort({descricao: "asc"}).then((insumos) =>{
             res.send(insumos)
         })
     })
 
-    router.get('/listajson/', (req, res) => {
+    router.get('/listajson/', eTecnico, (req, res) => {
         res.render('insumos/indexjson')
     })
 
-    router.get('/add', (req, res) => {
+    router.get('/add', eTecnico, (req, res) => {
         Base.find().then((bases) => {
             res.render("insumos/add", {bases})
         })
                
     })
 
-    router.post("/add", multer.single('arquivo'), (req, res) => {
+    router.post("/add", eTecnico, multer.single('arquivo'), (req, res) => {
         var novoInsumo = {
             descricao: req.body.descricao,
             unidade_medida: req.body.unidade,
@@ -150,7 +141,7 @@ router.get('/', (req, res) => {
         }
     })
 
-    router.get("/edit/:id", (req,res) => {     
+    router.get("/edit/:id", eTecnico, (req,res) => {     
         Insumo.findOne({_id: req.params.id}).populate("origem").then((insumo) => {
             Base.find().then((base) => {
                 res.render("insumos/editinsumo", {insumo, base})   
@@ -163,7 +154,7 @@ router.get('/', (req, res) => {
         
     })
 
-    router.post("/edit/", (req, res) => {
+    router.post("/edit/", eTecnico, (req, res) => {
         Insumo.findOne({_id: req.body.id}).then((insumo) => {
             
             insumo.descricao = req.body.descricao
@@ -184,7 +175,7 @@ router.get('/', (req, res) => {
         })
     })
 
-    router.post('/delete', (req, res) => { 
+    router.post('/delete', eTecnico, (req, res) => { 
         Insumo.deleteOne({_id: req.body.id}).then(() => {
             req.flash("success_msg", "Insumo removido com sucesso.")
             res.redirect("/insumos/")
@@ -195,7 +186,7 @@ router.get('/', (req, res) => {
         
     })
 
-    router.get("/importar", (req, res) => {
+    router.get("/importar", eAdmin, (req, res) => {
         Base.find().then((bases) => {
             res.render("insumos/importar", {bases})
         }).catch((err) => {
@@ -205,7 +196,7 @@ router.get('/', (req, res) => {
         
     })
 
-    router.post("/importar", (req, res) => {
+    router.post("/importar", eAdmin, (req, res) => {
         
         var form = new formidable.IncomingForm();
         form.parse(req, function(err, fields, files) {
@@ -277,7 +268,7 @@ router.get('/', (req, res) => {
 
     // Rotas das BASES
 
-    router.get("/bases", (req, res) => {
+    router.get("/bases", eTecnico, (req, res) => {
         Base.find().then((bases) => {
             res.render("insumos/bases", {bases: bases})
         }).catch(() => {
@@ -286,11 +277,11 @@ router.get('/', (req, res) => {
         })        
     })
 
-    router.get("/bases/add", (req, res) => {
+    router.get("/bases/add", eTecnico, (req, res) => {
         res.render("insumos/addbase")
     })
 
-    router.post("/bases/add", (req, res) => {
+    router.post("/bases/add", eTecnico, (req, res) => {
 
         const novaBase = {
             nome: req.body.nome,
@@ -308,7 +299,7 @@ router.get('/', (req, res) => {
 
     })
 
-    router.get('/bases/edit/:id', (req, res) => {
+    router.get('/bases/edit/:id', eTecnico, (req, res) => {
         Base.findOne({_id: req.params.id}).then((base) => {
             res.render('insumos/editbase', {base})
         }).catch((err) => {
@@ -317,7 +308,7 @@ router.get('/', (req, res) => {
         })
     })
 
-    router.post('/bases/edit', (req, res) => {
+    router.post('/bases/edit', eTecnico, (req, res) => {
         Base.findOne({_id: req.body.id}).then((base) => {
             base.nome = req.body.nome
             base.abreviacao = req.body.abreviacao
@@ -336,7 +327,7 @@ router.get('/', (req, res) => {
         })
     })
 
-    router.post('/bases/delete', (req, res) => {
+    router.post('/bases/delete', eTecnico, (req, res) => {
         Base.remove({_id: req.body.id}).then(() => {
             req.flash("success_msg", "Base removida com sucesso.")
             res.redirect("/insumos/bases")
