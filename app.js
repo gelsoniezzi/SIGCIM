@@ -72,6 +72,9 @@
             },
             inc: (value, options) => {
                 return parseInt(value) + 1      
+            },
+            fix: (value) => {
+                return value.toFixed(2)
             }
         }}
         )

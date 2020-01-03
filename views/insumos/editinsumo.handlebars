@@ -22,49 +22,49 @@
             </div>
 
             <label for="observacao">Observações:</label>
-            <input type="text" id="observacao" name="observacao" class="form-control" value="{{insumo.observacao}}" ><br>
-
+            <input type="text" id="observacao" name="observacao" class="form-control" value="{{insumo.observacao}}" >
+            <!--
             <div class="custom-file ">                
                 <input type="file" class="custom-file-input" id="arquivo" name="arquivo" disabled> 
                 <label for="arquivo" class="custom-file-label">Anexar arquivo de imagem (jpg, png, gif) com até 2MB.</label>
             </div>
+            -->
             <div class="form-row mt-4">
-                <div class="col-auto">
+                <div class="form-group col-md-3">
                     <label for="valor_mediano">Valor mediano: </label>
-                    <div class="form-row align-items-center">
-                        <div class="col-auto">
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <div class="input-group-text">R$</div>
-                                    </div>
-                                        <input type="text" id="valor_mediano" name="valor_mediano" class="form-control" value="{{insumo.preco_mediano}}"disabled>
-                                </div>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">R$</div>
+                            </div>
+                                <input type="text" id="valor_mediano" name="valor_mediano" class="form-control" value="{{fix insumo.preco_mediano}}">
                         </div>
-                        <div class="col-auto">
-                            <a href="#" class="btn btn-light">Calcular</a>
-                        </div>                
-                    </div>
+                
+                    <!--<div class="col-auto">
+                        <a href="#" class="btn btn-light">Calcular</a>
+                    </div>-->
+                    
                 </div>
-                <div class="col-auto">
+                <div class="form-group col-md-6">
                     <label for="origem">Origem: </label>
-                    <select name="origem" class="form-control" disabled>
-                        <option value="0">Selecione uma base de dados.</option>
-                        {{#each base}}
+                    <select required name="origem" class="form-control" disabled>
+                        <option value="" selected disabled>Não é possível alterar a base de dados.</option>
+                        {{#each bases}}
                         <option value="{{_id}}">{{nome}}</option>
                         {{else}}
                         <option value="0">Nenhuma base cadastrada.</option>
                         {{/each}}
                     </select>
                 </div>
-                <div class="col-auto">
+                <div class="form-group col-md-3">
                     <label for="codigo_origem">Código de origem:</label>
-                    <input type="text" id="codigo_sinapi" name="codigo_origem" class="form-control" value="{{insumo.codigo_origem}}"disabled>
+                    <input type="text" id="codigo_origem" name="codigo_origem" class="form-control" >
                 </div>
             </div>
-            <br>
-            <div class="media">
+            <!-- Reservar para quando implementar upload de imagens
+            <div class="media mt-4">
                 <img src="{{insumo.imagem}}" class="mr-3" >                
-            </div>            
+            </div>
+            -->           
             <button type="submit" class="btn btn-success mt-4">Salvar</button>
         </form>
     </div>

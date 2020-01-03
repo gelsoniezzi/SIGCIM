@@ -1,0 +1,26 @@
+<p>Olha eu aqui</p>
+<table>
+
+<thead>
+    <tr>
+        <th>#</th>
+        <th>Qtd</th>
+        <th>Acoes</th>
+    </tr>
+</thead>
+{{#each requisicoes}}
+    <tr>
+        <td>
+            {{id}}
+        </td>
+        <td>
+            {{qtd}}
+        </td>
+        <td>
+            <a href="/edit/{{id}}">Editar</a>
+        </td>    
+    </tr>
+    {{else}}
+    Nao tem requisicoes aqui.
+{{/each}}
+</table>

@@ -19,33 +19,32 @@
             </div>
 
             <label for="observacao">Observações:</label>
-            <input type="text" id="observacao" name="observacao" class="form-control"><br>
-
+            <input type="text" id="observacao" name="observacao" class="form-control">
+            <!-- Apresentar quando a opção de anexar arquivo estiver implementada.
             <div class="custom-file">                
                 <input type="file" class="custom-file-input" id="arquivo" name="arquivo">
                 <label for="arquivo" class="custom-file-label">Anexar arquivo de imagem (jpg, png, gif) com até 2MB.</label>
             </div>
+            -->
             <div class="form-row mt-4">
-                <div class="col-auto">
+                <div class="form-group col-md-3">
                     <label for="valor_mediano">Valor mediano: </label>
-                    <div class="form-row align-items-center">
-                        <div class="col-auto">
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <div class="input-group-text">R$</div>
-                                    </div>
-                                        <input type="text" id="valor_mediano" name="valor_mediano" class="form-control" disabled>
-                                </div>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">R$</div>
+                            </div>
+                                <input type="text" id="valor_mediano" name="valor_mediano" class="form-control" >
                         </div>
-                        <div class="col-auto">
-                            <a href="#" class="btn btn-light">Calcular</a>
-                        </div>                
-                    </div>
+                
+                    <!--<div class="col-auto">
+                        <a href="#" class="btn btn-light">Calcular</a>
+                    </div>-->
+                    
                 </div>
-                <div class="col-auto">
+                <div class="form-group col-md-6">
                     <label for="origem">Origem: </label>
-                    <select name="origem" class="form-control">
-                        <option value="0">Selecione uma base de dados.</option>
+                    <select required name="origem" class="form-control" >
+                        <option value="" selected disabled>Selecione uma base de dados.</option>
                         {{#each bases}}
                         <option value="{{_id}}">{{nome}}</option>
                         {{else}}
@@ -53,15 +52,16 @@
                         {{/each}}
                     </select>
                 </div>
-                <div class="col-auto">
+                <div class="form-group col-md-3">
                     <label for="codigo_origem">Código de origem:</label>
-                    <input type="text" id="codigo_origem" name="codigo_origem" class="form-control" disabled>
+                    <input type="text" id="codigo_origem" name="codigo_origem" class="form-control" >
                 </div>
             </div>
-            <br>
+            <!-- //Apresentar quando o anexo de imagens estiver implementado.
             <div class="media">
                 <img src="/img/insumos/1560448220405-collage3.webp" class="mr-3" >                
-            </div>            
+            </div>
+            -->            
             <button type="submit" class="btn btn-success mt-4">Salvar</button>
         </form>
     </div>

@@ -16,14 +16,14 @@ const {eTecnico} = require('../helpers/estaLogado')
 const {eAdmin} = require('../helpers/estaLogado')
 
 // Rotas insumos
-    router.get('/lista/', (req, res) => {        
+    router.get('/', (req, res) => {        
         Insumo.find().populate("base_origem").sort({descricao: "asc"}).then((insumos) =>{
             res.render("insumos/index", {insumos})
         })
 
     })
 
-    router.post('/json/lista', eTecnico, (req, res) => {
+    router.post('/json/lista', (req, res) => {
 
         Insumo.count().then((quantidade) => {
             var pagina = (req.body.start/req.body.length) + 1
@@ -76,13 +76,14 @@ const {eAdmin} = require('../helpers/estaLogado')
         
     })
 
-    router.get('/json/lista', eTecnico, (req, res) => {
+    router.get('/json/lista', (req, res) => {
         Insumo.find().populate("origem").sort({descricao: "asc"}).then((insumos) =>{
+            var texto = JSON.stringify(insumos);
             res.send(insumos)
         })
     })
 
-    router.get('/listajson/', eTecnico, (req, res) => {
+    router.get('/listajson/', (req, res) => {
         res.render('insumos/indexjson')
     })
 
@@ -94,12 +95,17 @@ const {eAdmin} = require('../helpers/estaLogado')
     })
 
     router.post("/add", eTecnico, multer.single('arquivo'), (req, res) => {
+        //tratar o valor mediano
+        var preco = parseFloat(req.body.valor_mediano.replace(',','.'))
         var novoInsumo = {
             descricao: req.body.descricao,
             unidade_medida: req.body.unidade,
             observacao: req.body.observacao,
             base_origem: req.body.origem,
-            imagem: "/img/insumos/semimagem.png"
+            codigo_origem: codigo_origem,
+            preco_mediano: preco
+            //imagem: "/img/insumos/semimagem.png"
+            
         }
         //console.log(novoInsumo)
 
@@ -128,8 +134,6 @@ const {eAdmin} = require('../helpers/estaLogado')
                     console.log("Houve um erro: "+ err)
                 })            
             }else{
-                console.log(novoInsumo)
-                
                 new Insumo(novoInsumo).save().then(() => {
                     req.flash("success_msg", "Insumo cadastrado com sucesso.")
                     res.redirect("/insumos")
@@ -156,10 +160,14 @@ const {eAdmin} = require('../helpers/estaLogado')
 
     router.post("/edit/", eTecnico, (req, res) => {
         Insumo.findOne({_id: req.body.id}).then((insumo) => {
-            
+            console.log(req.body.valor_mediano)
+            var preco = parseFloat(req.body.valor_mediano.replace(',','.'))
+
             insumo.descricao = req.body.descricao
             insumo.unidade_medida = req.body.unidade
             insumo.observacao = req.body.observacao
+            insumo.preco_mediano = preco
+            insumo.codigo_origem = req.body.codigo_origem
 
             insumo.save().then(() => {
                 req.flash("success_msg", "Alterado com sucesso.")
@@ -335,6 +343,11 @@ const {eAdmin} = require('../helpers/estaLogado')
             req.flash("error_msg", "Não foi possível remover a base de dados, tente novamente.")
             res.redirect("/insumos/bases")
         })
+    })
+
+    //Rota teste bstable
+    router.get('/bstabletest', (req, res)=> {
+        res.render('insumos/bstabletest')
     })
 
 

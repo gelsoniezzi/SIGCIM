@@ -52,7 +52,7 @@
                     <td>{{codigo_origem}}</td>
                     <td>{{descricao}}</td>
                     <td>{{unidade_medida}}</td>
-                    <td>{{currency preco_mediano}}</td>
+                    <td>{{preco_mediano}}</td>
                     <td>{{observacao}}</td>
                     <td>
                         <form action="/insumos/delete/" method="POST">
@@ -101,7 +101,9 @@
 
 <script>  
     $(document).ready( function () {
-        var table = $('#table-insumos').DataTable();
+        var table = $('#table-insumos').DataTable({
+            "language": {"url": '/js/datatables-ptBR.js'},
+        });
 
         $('a.toggle-vis').on( 'click', function (e) {
             e.preventDefault();

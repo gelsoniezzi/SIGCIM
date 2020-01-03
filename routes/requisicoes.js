@@ -21,7 +21,7 @@ router.get('/', eTecnico, (req, res) => {
 })
 
 router.get('/add', eTecnico, (req, res) => {
-    Insumo.find().populate("origem").sort({descricao: "asc"}).then((insumos) =>{
+    Insumo.find().populate("base_origem").sort({descricao: "asc"}).then((insumos) =>{
         res.render("requisicoes/add", {insumos})
     })
 
@@ -128,6 +128,13 @@ router.get('/editar', eTecnico, (req, res) => {
 router.get('/view/:id', eTecnico, (req, res) => {
     Requisicao.findOne({_id: req.params.id}).populate([{ path: 'solicitante', select: 'nome' }, {path: 'contrato', select: 'numero'}]).then((requisicao) => {
         res.render('requisicoes/view', {requisicao})
+    }).catch()
+})
+
+
+router.get('/json/edit/:id', (req, res) => {
+    Requisicao.findOne({_id: req.params.id}).populate([{ path: 'solicitante', select: 'nome' }, {path: 'contrato', select: 'numero'}]).then((requisicao) => {
+        res.send(requisicao)
     }).catch()
 })
 
