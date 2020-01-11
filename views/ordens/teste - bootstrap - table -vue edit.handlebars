@@ -1,0 +1,91 @@
+<div class="card">
+    <div class="card-body">
+        <div id="table">
+            <bootstrap-table :columns="columns" :data="data" :options="options"></bootstrap-table>
+        </div>
+    </div>
+</div>
+
+<input type="text" >
+
+<script>
+    var app = new Vue({
+    el: '#table',
+    components: {
+        'BootstrapTable': BootstrapTable
+    },
+    data: {
+        columns: [
+        {
+            title: 'Origem',
+            field: 'base_origem.abreviacao'
+        },
+        {
+            field: 'codigo_origem',
+            title: 'Código'
+        },
+        {
+            title: 'Descrição',
+            field: 'descricao',
+            detailFormatter: function (index, row) {
+                return index + '. Item ID: ' + row._id
+            }
+
+        },
+        {
+            title: 'Unidade',
+            field: 'unidade_medida'
+        },
+        {
+            title: 'Preço',
+            field: 'preco_mediano'
+        },
+        {
+            title: 'Observações',
+            field: 'observacao'
+        },
+        {
+            title: 'Ações',
+            align: 'center',
+            formatter: function () {
+              return '<a href="javascript:" class="add"><i class="material-icons md-18">add_circle</i> '
+            },
+            events: {
+                'click .add': function (e, value, row) {
+                    console.log(app)
+                    
+                    //data.selecionados.push({...row, quantidade: 1.0})
+                    if(!app.selecionados.some(insumo => (insumo._id === row._id))){                    
+                        app.selecionados.push({...row, quantidade: 1.0})
+                        //this.message = false
+                    }
+                }
+            }
+        },
+        ],
+        data: [],
+        options: {
+            search: true,
+            showColumns: true,
+            detailView: true,
+            //detailViewIcon: false,
+            detailViewByClick: true,
+            detailFormatter: function(index, row){
+                return '<input type="number"  v-model.number="selecionado.quantidade" name="" id="" value="">'
+            },
+            classes: 'table table-striped table-hover table-sm',
+            theadClasses: 'thead-dark',
+            locale: 'pt-BR',        
+        },
+        selecionados: []
+    },
+    methods: {
+        
+    },
+    mounted () {
+        axios
+        .get('/insumos/ajax/load')
+        .then(response => (this.data = response.data))
+    } 
+    })
+</script>

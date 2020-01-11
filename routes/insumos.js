@@ -102,7 +102,7 @@ const {eAdmin} = require('../helpers/estaLogado')
             unidade_medida: req.body.unidade,
             observacao: req.body.observacao,
             base_origem: req.body.origem,
-            codigo_origem: codigo_origem,
+            codigo_origem: req.body.codigo_origem,
             preco_mediano: preco
             //imagem: "/img/insumos/semimagem.png"
             
@@ -348,6 +348,16 @@ const {eAdmin} = require('../helpers/estaLogado')
     //Rota teste bstable
     router.get('/bstabletest', (req, res)=> {
         res.render('insumos/bstabletest')
+    })
+
+
+
+    //Rotas ajax
+
+    router.get('/ajax/load', (req, res) => {
+        Insumo.find().populate("base_origem").sort({descricao: "asc"}).then((insumos) =>{
+            res.send(insumos)
+        })
     })
 
 

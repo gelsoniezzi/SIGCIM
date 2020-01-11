@@ -2,21 +2,30 @@ const mongoose = require("mongoose")
 const mongooseAI = require('mongoose-auto-increment')
 const Schema = mongoose.Schema
 
-var connection = mongoose.createConnection("mongodb://localhost/sigcim");
-
+var connection = mongoose.createConnection("mongodb://localhost/sigcim")
 mongooseAI.initialize(connection);
 
 const Requisicao = new Schema ({
+    ordem_compra: {
+        type: Boolean,
+        default: false
+    },
     numero: {
         type: Number,
         //required: true,        
+    },
+    numero_ordem: {
+        type: Number
     },
     data_criacao: {
         type: Date,
         default: Date.now()
     },
-    data_envio: {
+    data_ordem: {
         type: Date,
+    },
+    prazo_entrega: {
+        type: Date
     },
     quantidade_itens: {
         type: Number,
@@ -26,8 +35,11 @@ const Requisicao = new Schema ({
         type: Number,
         //required: true
     },
+    valor_total_bdi: {
+        type: Number
+    },
     status:{
-        type: String
+        type: String // [Salva, Cancelada] //Solicitada, Pendente, Entregue, Finalizada 
     },
     solicitante: {
         type: Schema.Types.ObjectId,
@@ -35,7 +47,9 @@ const Requisicao = new Schema ({
         required: true
     },
     campus_destino: {
-        type: String
+        type: Schema.Types.ObjectId,
+        ref: "campi",
+        required: true
     },
     contrato: {        
         type: Schema.Types.ObjectId,
@@ -43,9 +57,6 @@ const Requisicao = new Schema ({
     },
     observacoes: {
         type: String
-    },
-    prazo_entrega: {
-        type: Date
     },
     bdi: {
         type: Number
@@ -56,38 +67,48 @@ const Requisicao = new Schema ({
                 type: String,
                 //required: true
             },
-            origem: {
-                type: String
+            base_origem: {
+                type: Schema.Types.ObjectId,
+                ref: "bases"
             },
             codigo_origem:{
                 type: String
             },
-            unidade: {
+            unidade_medida: {
                 type: String,
                 //require: true
             },
-            preco: {
+            preco_mediano: {
                 type: Number,                
-            },            
+            },
+            preco_bdi: {
+                type: Number
+            },               
             quantidade: {
                 type: Number
-
             },
             preco_total:{
                 type: Number
             },
-            status_requisicao: {
-                type: String,
-                default: 'Solicitado'
+            preco_total_bdi:{
+                type: Number
+            },
+            status: {
+                type: String, //Solicitado, Entregue, Pendente
+
+            },
+            observacao_status: {
+                type: String
             },
             destino: {
                 type: String
             },
             observacao: {
-                type: String,
-            },            
+                type: String
+            },     
+
         }
     ]
 })
-Requisicao.plugin(mongooseAI.plugin, {model: 'requisicoes', field: 'numero', startAt: 1,});
+Requisicao.plugin(mongooseAI.plugin, {model: 'requisicoes', field: 'numero_ordem', startAt: 1});
 mongoose.model("requisicoes", Requisicao)

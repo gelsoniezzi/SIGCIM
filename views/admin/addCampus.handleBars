@@ -1,0 +1,17 @@
+<h3>Adicionar Campus</h3>
+{{#each erros}}
+    <div class="alert alert-danger">{{texto}}</div>
+{{else}}
+{{/each}}
+
+<div class="card">
+    <div class="card-body">
+        <form action="/admin/addCampus" method="POST">
+        <label for="nome">Nome do Campus: </label>
+            <input type="text" class="form-control" name="nome" id="nome" placeholder="Campus Central" required><br>
+        <label for="endereco">Endereço do Campus:</label>
+            <input type="text"class="form-control" name="endereco" id="endereco" placeholder="Av. Francisco Mota, 572 - Bairro Costa e Silva, Mossoró RN | CEP: 59.625-900" required><br>
+        <button type="submit" class="btn btn-success">Salvar</button>
+        </form>
+    </div>
+</div>

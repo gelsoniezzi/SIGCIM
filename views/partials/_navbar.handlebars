@@ -17,7 +17,7 @@
           <a class="dropdown-item" href="/requisicoes">Requisições</a>
           <a class="dropdown-item" href="/requisicoes/add">Criar</a>
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="/ordensCompra">Ordens de Compra</a>          
+          <a class="dropdown-item" href="/requisicoes/ordens">Ordens de Compra</a>          
         </div>
       </li>
       <li class="nav-item dropdown">
@@ -54,7 +54,7 @@
         <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Faturamento</a>
       </li>
     </ul>
-    <div id="appLogin">
+    
       <ul class="navbar-nav mr-auto">
       {{#if user}}
         <li class="nav-item dropdown">
@@ -70,39 +70,7 @@
         <a class="nav-link" href="/usuarios/login">Login</a>
       </li>
       {{/if}}
-      </ul>
-      
-      </div>
+      </ul>    
     </div>   
   </div>
 </nav>
-
-<script>
-  var appLogin = new Vue({
-    el: '#appLogin',
-    data: {
-      usuario: null,
-    estaLogado: false
-    },
-    methods: {
-
-    },
-    mounted () {
-      axios
-        .get('/estaLogado')
-        .then(response => {
-          console.log(response.data)
-          if (response.data.user != null){
-            this.usuario = response.data.user
-            this.estaLogado = true
-          }
-          
-        })
-        .catch(error => {
-          console.log(error)
-          this.errored = true
-        })
-        .finally(() => this.loading = false)
-    }
-  })
-</script>

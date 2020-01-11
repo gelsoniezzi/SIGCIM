@@ -1,19 +1,10 @@
 const mongoose = require("mongoose")
-const mongooseAI = require('mongoose-auto-increment')
 const Schema = mongoose.Schema
 
-var connection = mongoose.createConnection("mongodb://localhost/sigcim");
-
-mongooseAI.initialize(connection);
-
-const OrdemCompra= new Schema ({
+const OrdemCompra = new Schema ({
     numero: {
         type: Number,
         //required: true,        
-    },
-    data_criacao: {
-        type: Date,
-        default: Date.now()
     },
     data_envio: {
         type: Date,
@@ -25,6 +16,9 @@ const OrdemCompra= new Schema ({
     valor_total: {
         type: Number,
         //required: true
+    },
+    valor_total_bdi: {
+        type: Number
     },
     status:{
         type: String //Solicitada, Pendente, Entregue, Finalizada 

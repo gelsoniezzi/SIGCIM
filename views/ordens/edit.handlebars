@@ -1,0 +1,53 @@
+<h3>Confirmação de entrega</h3>
+<div id="ordemCompra">
+    <div class="card">
+        <div class="card-body">
+            <table class="table ">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Origem.Código</th>
+                        <th>Descrição</th>
+                        <th>Unidade</th>
+                        <th>Preço</th>
+                        <th>Preço (BDI)</th>
+                        <th>Quantidade</th>
+                        <th>Valor Total (BDI)</th>
+                        <th>Ações</th> <!-- Definir se  está Entregue, pendente,  -->
+                    </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+    var app = new Vue({
+        el: '#ordemCompra',
+        data: {
+            ordemCompra: {},
+            idOrdemCompra: null,
+
+
+        },
+        methods: {
+            async loadOrdemCompra() {
+                axios
+                .post('/requisicoes/ajax/loadOrdemCompra/'+id)
+                .then(response => (this.ordemCompra = response.data))
+            }
+        },
+        mounted () {
+
+        },
+        async created() {
+            const match = window.location.pathname.match(/\/(?<id>*)\/$/)
+                console.log(match)
+        }
+    })
+</script>
