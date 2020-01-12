@@ -66,10 +66,6 @@
                     <h4>Total da Requisição: \{{total}}</h4> 
                 </div>
                 <div class="form-group">
-                    <!-- //Valor total da requisicao
-                    <label for="valor_total">Total: </label>
-                        <input type="number" name="" id="valor_total" v-model.number="valor_total">
-                    -->
                     <hr>
                     <label for="solicitante">Campus de destino: </label>
                         <select class="form-control" name="" id="destino" v-model="requisicao.campus_destino._id" required>
@@ -126,7 +122,8 @@
                 this.requisicao.insumos.splice(index, 1)
             },
             add (item) {
-                if(!this.requisicao.insumos.some(insumo => (insumo._id === item._id))){                    
+                item.id_original = item._id
+                if(!this.requisicao.insumos.some(insumo => (insumo.id_original === item._id))){                    
                     this.requisicao.insumos.push({...item, quantidade: 1.0})
                     this.message = false
                 }
@@ -135,7 +132,7 @@
             async salvar() {
                 this.loading = true
                 if(this.requisicao.insumos.length > 0){ // Verifica se existem itens na requisicao.
-                    var url = '/requisicoes/salvarRequisicao'
+                    var url = '/requisicoes/editarRequisicao'
                     var destino
                     if (this.ordemCompra) {                        
                         destino = '/requisicoes/ordens'
@@ -148,7 +145,7 @@
                     //data.insumos = insumos
                     //data.observacoes = this.observacoes
                     //data.campus_destino = this.campus_destino
-                    //data.ordem_compra = this.ordemCompra                  
+                    data.ordem_compra = this.ordemCompra                  
                     const resultado = await axios.post(url, data)
                     window.location.href = destino
                     this.message = resultado.data.message

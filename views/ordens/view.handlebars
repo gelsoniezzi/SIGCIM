@@ -1,0 +1,90 @@
+<h2>Ordem de Compra</h2>
+<div id="app">
+<div class="card">
+    <div class="card-body">
+        <h5>Número: \{{requisicao.numero_ordem}}</h5>
+        <p>Data: \{{requisicao.data_ordem}}</p>
+        <p>Prazo de entrega: \{{requisicao.prazo_entrega}}</p>
+        <p>Contrato: \{{requisicao.contrato.numero}}, Bonificação de despesas indiretas (BDI): \{{requisicao.contrato.fator_reducao}}</p>
+        <h5>Status: \{{requisicao.status}}</h5>
+
+
+        <table class="table table-striped table-sm">
+            <thead class="thead-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Base.código</th>
+                    <th>Descrição</th>
+                    <th>Quant.</th>
+                    <th>Unidade</th>
+                    <th>Valor (com BDI)</th>
+                    <th>Total</th>
+                    <th>Situação</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(insumo, i) in requisicao.insumos" :key="i">
+                    <td>\{{i+1}}</td>
+                    <td>\{{insumo.base_origem.abreviacao}}.\{{insumo.codigo_origem}}</td>
+                    <td>\{{insumo.descricao}}</td>
+                    <td>\{{insumo.quantidade}}</td>
+                    <td>\{{insumo.unidade_medida}}</td>
+                    <td>\{{insumo.preco_bdi}}</td>
+                    <td>\{{insumo.preco_total_bdi}}</td>
+                    <td>\{{insumo.status}}</td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th>Total: </th>
+                    <th>\{{requisicao.valor_total_bdi}}</th>
+                    <th></th>
+                </tr>
+            </tfoot>
+        </table>
+
+        <h5>Local de entrega: \{{requisicao.campus_destino.nome}}</h5>
+        Observações: <br>
+        \{{requisicao.observacoes}} <br>
+
+        Solicitante: \{{requisicao.solicitante.nome}}
+        <hr>
+        <h5>Informações de faturamento</h5>
+        <p>Referência:: []</p> 
+        <p>Nota fiscal: []</p>
+
+        <hr>
+        <div>
+            <button class="btn btn-success">Imprimir</button>
+            <button class="btn btn-success">Reenviar e-mail</button>
+        </div>
+
+    </div>
+</div>
+</div>
+
+
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            requisicao: {},
+            id_requisicao: null,
+
+
+        },
+        async created() {
+            const match = window.location.pathname.match(/\/(?<id>\w*)$/)
+            this.id_requisicao = match.groups.id
+
+            const {data} = await axios
+            .get(`/requisicoes/ajax/loadRequisicao/${this.id_requisicao}`)
+            this.requisicao = data
+        }
+    })
+</script>

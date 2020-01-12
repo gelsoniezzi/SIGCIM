@@ -1,0 +1,63 @@
+<h2>Categorias e opções do sistema</h2>
+
+<div class="card">
+    <div class="card-body">
+        <h5>Categorias</h5>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Estado</th>
+                    <th>Ações</th>                    
+                </tr>
+            </thead>
+
+            <tbody>
+                {{#each categorias}}
+                    <tr>
+                        <td>{{nome}}</td>
+                        <td>{{ ativo}}</td>
+                        <td>Edit, Rem</td>
+                    </tr>
+                {{else}}
+
+                {{/each}}
+            </tbody>
+        </table>
+
+        <a href="/admin/categorias/add"><button class="btn btn-success">Criar categoria</button></a>
+    </div>
+</div>
+
+<div class="card mt-4">
+    <div class="card-body ">
+        <h5>Opções</h5>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Categoria</th>
+                    <th>Estado</th>
+                    <th>Ações</th>                    
+                </tr>
+            </thead>
+
+            <tbody>
+                {{#each opcoes}}
+                    <tr>
+                        <td>{{nome}}</td>
+                        <td>{{categoria.nome}}</td>
+                        <td>{{ativo}}</td>
+                        <td>Edit, Rem</td>
+                    </tr>
+                {{else}}
+
+                {{/each}}
+            </tbody>
+        </table>
+
+        <a href="/admin/opcoes/add""><button class="btn btn-success">Criar opção</button></a>
+    </div>
+</div>

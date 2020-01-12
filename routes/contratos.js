@@ -40,6 +40,7 @@ const {eTecnico} = require('../helpers/estaLogado')
         if(erros.length > 0){
             res.render("contratos/add", {erros: erros})
         }else{
+            console.log(req.body.empresa)
             const novoContrato = {
                 numero: req.body.numero,
                 empresa: req.body.empresa,

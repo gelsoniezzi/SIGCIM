@@ -1,0 +1,27 @@
+<div class="card">
+    <div class="card-body">
+        <h2>Adicionar opção</h2>
+
+        <form action="/admin/opcoes/add" method="POST">
+        <label for="categoria"></label>
+            <select name="categoria" class="form-control" required>
+                <option value="" disabled selected>Selecione uma categoria.</option>
+                {{#each categorias}}
+                <option value="{{_id}}">{{nome}}</option>
+                {{else}}
+                <option value="" disabled selected>Nenhuma categoria registrada.</option>
+                {{/each}}
+            </select>
+            <br>
+        <label for="nome">Nome:</label>
+            <input type="text" id="nome" name="nome" placeholder="Solicitado, Entregue, Pendente ... " class="form-control" required><br>
+        
+        <label for="status">Status: </label>
+            <div class="form-control">
+                <input type="radio" name="status" value="true" class="radio-inline" checked> Ativo
+                <input type="radio" name="status" value="false" class="radio-inline"> Inativo
+            </div><br>
+            <button type="submit" class="btn btn-success">Criar</button>  
+        </form>
+    </div>
+</div>
