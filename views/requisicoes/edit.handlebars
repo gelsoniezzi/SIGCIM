@@ -69,11 +69,13 @@
                     <hr>
                     <label for="destino">Campus de destino: </label>
                         <select class="form-control" name="" id="destino" v-model="requisicao.campus_destino._id" required>
-                            <option value="">Selecione</option>
+                            <option value="" disabled>Selecione</option>
 
                             <option v-for="(campus, index) in campi" :value="campus._id">\{{campus.nome}} </option>
 
                         </select><br>
+                    <div class="alert alert-warning" role="alert" v-if="messageCampus != '' && requisicao.campus_destino== null">\{{messageCampus}}</div>
+
                     <label for="observacoes">Observações: </label>
                         <textarea v-model="requisicao.observacoes" class="form-control" name="" id="observacoes" cols="30" rows="3"></textarea></br>
                     <label for="solicitante">Solicitante: </label>
@@ -112,6 +114,7 @@
             observacoes: '',
             error: false,
             message: '',
+            messageCampus: '',
             loading: false,
             ordemCompra: false
         },
@@ -137,7 +140,8 @@
             async salvar() {
                 this.loading = true
                 if(this.requisicao.insumos.length > 0){ // Verifica se existem itens na requisicao.
-                    var url = '/requisicoes/editarRequisicao'
+                    if(this.requisicao.campus_destino){
+                        var url = '/requisicoes/editarRequisicao'
                     var destino
                     if (this.ordemCompra) {                        
                         destino = '/requisicoes/ordens'
@@ -154,6 +158,9 @@
                     const resultado = await axios.post(url, data)
                     window.location.href = destino
                     this.message = resultado.data.message
+                    }else{
+                        this.messageCampus = 'Selecione um campus de destino.'
+                    }
                 }else{
                     this.message = "Inclua itens na requisicao."                    
                 }
