@@ -60,7 +60,7 @@
               //console.log('currency', value)
               return Number(value).toLocaleString('pt-BR', { 
                 style:'currency', currency:'BRL'
-              })
+              }).replace(',','_').replace('.',',').replace('_','.')
             },
             date_br:function(strDate){
             if (strDate){
@@ -84,7 +84,10 @@
         //require('handlebars-intl/dist/locale-data/pt')
     //mongoose
         mongoose.Promise = global.Promise
-        mongoose.connect("mongodb://localhost/sigcim").then(() => {
+        mongoose.connect('mongodb://localhost/sigcim', { 
+            useNewUrlParser: true,
+            useUnifiedTopology: true
+        }).then(() => {
             console.log("Conectado ao mongodb. ")
             
         }).catch((err) => {
@@ -119,18 +122,7 @@
     app.get('/', (req, res) => {
         res.render('admin/index')
     })
-    
-    
-    app.get('/session', (req, res) => {
-        req.session.treinamento = "Formação Node.js"
-        req.session.ano = 2019
-        req.session.user = {
-            matricula: 1885704,
-            email: "gimg@live.com"
-        }
-        res.send("Sessão gerada")
 
-    })
 
     app.get('/estaLogado', (req, res) => {
         var usuario = null

@@ -1,7 +1,12 @@
-<h2>Ordem de Compra</h2>
+<h2>Cancelar ordem de Compra</h2>
 <div id="app">
+<div class="alert alert-danger" role="alert" v-if="itens_entregues">
+  Não é possível cancelar ordem de compra com itens entregues. <a v-bind:href="'/requisicoes/ordens/confirm/'+id_requisicao" class="alert-link">Clique aqui</a> para cancelar ítens específicos.
+</div>
+
 <div class="card">
     <div class="card-body">
+        
         <div class="card">
             <div class="card-body">
                 <div class="row">
@@ -19,7 +24,7 @@
 
                 <div class="row">
                     <div class="col-sm-6">
-                        Data solicitação: <strong>\{{requisicao.data_ordem | data}}</strong>
+                        Data solicitação: <strong>\{{requisicao.data_ordem |data}}</strong>
                     </div>
                     <div class="col-sm-6">
                         Prazo de entrega: <strong>Três dias úteis após a entrega da OC.</strong>
@@ -48,6 +53,7 @@
         </div>
         <br>
         <h5>Insumos</h5>
+
         <table class="table table-striped table-sm">
             <thead class="thead-dark">
                 <tr>
@@ -70,14 +76,9 @@
                     <td>\{{insumo.unidade_medida}}</td>
                     <td>\{{insumo.preco_bdi | brl}}</td>
                     <td>\{{insumo.preco_total_bdi | brl}}</td>
-                    <td>
-                        <select name="" id="status" class="form-control" v-model="requisicao.insumos[i].status" required>
-                            <option v-for="(status, index) in status_insumos" :value="status.nome">\{{status.nome}}</option>
-                        </select>
-                    </td>
+                    <td>\{{insumo.status}}</td>
                 </tr>
             </tbody>
-            
             <tfoot>
                 <tr>
                     <th></th>
@@ -86,16 +87,27 @@
                     <th></th>
                     <th></th>
                     <th>Total: </th>
-                    <th>\{{requisicao.valor_total_bdi}}</th>
+                    <th>\{{requisicao.valor_total_bdi | brl}}</th>
                     <th></th>
                 </tr>
             </tfoot>
         </table>
+
         Observações: <br>
         <textarea class="form-control" name="" id="" cols="30" rows="3" disabled>\{{requisicao.observacoes}} </textarea><br>
 
+        <H4>Informe uma justificativa para o cancelamento:</H4>
+        <textarea class="form-control" name="" id="" cols="30" rows="3" :disabled="itens_entregues" v-model="justificativa"></textarea> <br>
+        <!--
+        <h5>Informações de faturamento</h5>
+        <p>Referência:: []</p> 
+        <p>Nota fiscal: []</p>
+
+        <hr>
+        -->
         <div>
-            <button v-on:click="salvar()" class="btn btn-success">Salvar</button>
+            <button class="btn btn-danger" :disabled="itens_entregues" v-on:click="cancel()">Cancelar</button>
+            <a href="/requisicoes/ordens/"><button class="btn " >Voltar</button></a>
         </div>
 
     </div>
@@ -122,24 +134,35 @@
     var app = new Vue({
         el: '#app',
         data: {
-            requisicao: {},
+            requisicao: {
+                status: '',
+                cancelada: {
+                    status: false,
+                    justificativa: ''
+                },
+                insumos: []
+            },
             id_requisicao: null,
-            status_insumos: null,
+            itens_entregues: false,
+            justificativa: ''
 
 
         },
         methods: {
-            async salvar() {
-                var url = '/requisicoes/ordens/confirm'
-                var destino = '/requisicoes/ordens'
 
+            async cancel() {
+
+                var url = '/requisicoes/ordens/cancel'
+                var destino = '/requisicoes/ordens'
+                this.requisicao.status = 'Cancelada'
+                this.requisicao.cancelada.status = true                   
+                this.requisicao.cancelada.justificativa = this.justificativa
                 const data = {}
                 data.requisicao = this.requisicao
-
                 const resultado = await axios.post(url, data)
-                window.location.href = destino
-            }
+                window.location.href
 
+            }
         },
         async created() {
             const match = window.location.pathname.match(/\/(?<id>\w*)$/)
@@ -147,12 +170,17 @@
 
             const {data} = await axios
             .get(`/requisicoes/ajax/loadRequisicao/${this.id_requisicao}`)
-            this.requisicao = data
-
-            const opcoes = {id: '5e1b29fff98f091a551f5a84'} //id Insumos (ordem compra)
-            const dataOpcoes = await axios
-            .post('/admin/ajax/loadOpcoes', opcoes)
-            this.status_insumos = dataOpcoes.data
+            
+            //verifica se existem itens entregues ou pendentes
+            if (data.insumos.find(element => element.status === 'Pendente' || element.status === 'Entregue')){
+                this.itens_entregues = true  
+            }
+                
+            this.requisicao = {...this.requisicao, ...data}
+            
+        },
+        async mounted() {
+            
         }
     })
 </script>

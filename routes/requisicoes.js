@@ -23,7 +23,6 @@ router.get('/', eTecnico, (req, res) => {
         { path: 'contrato', select: 'numero' },
         {path: 'solicitante', select: 'nome'}, 
         {path: 'campus_destino', select: 'nome'},
-        {path: 'status', select: 'nome'}
     ])
     .sort({data_criacao: "asc"})
     .then((requisicoes) => {
@@ -52,8 +51,6 @@ router.post('/salvarRequisicao', async (req, res) => {
         console.log('Não foi possível localizar os insumos.' + err)
     }
 
-    console.log(req.body.requisicao)
-
     var novaRequisicao = {                    
         data_criacao: new Date(),
         data_ordem: new Date(),
@@ -66,9 +63,8 @@ router.post('/salvarRequisicao', async (req, res) => {
         observacoes: req.body.requisicao.observacoes,
         insumos: [],
         ordem_compra: req.body.requisicao.ordem_compra,
-        status: req.body.requisicao.status._id
     }
-
+    novaRequisicao.status = req.body.requisicao.ordem_compra ? 'Solicitada' : 'Salva'
     var prazo = new Date()
     prazo.setDate(novaRequisicao.data_ordem.getDate()+3)
     novaRequisicao.prazo_entrega = prazo
@@ -84,7 +80,7 @@ router.post('/salvarRequisicao', async (req, res) => {
             preco_bdi: insumos[i].preco_mediano * contrato.fator_reducao,
             quantidade: req.body.requisicao.insumos[i].quantidade,
             preco_total: 0,
-            status_requisicao: req.body.ordem_compra ? '5e1b29fff98f091a551f5a84': '',
+            status: 'Solicitado',
             observacao: '',
         }
         novoInsumo.preco_total = novoInsumo.preco_mediano * novoInsumo.quantidade
@@ -136,6 +132,8 @@ router.post('/editarRequisicao', async (req, res) => {
     requisicao.ordem_compra = req.body.ordem_compra
     requisicao.valor_total = 0
 
+    requisicao.status = req.body.requisicao.ordem_compra ? 'Solicitada' : 'Salva'
+
     if(req.body.ordem_compra){
         requisicao.data_ordem = new Date()
         var prazo = new Date()
@@ -154,7 +152,7 @@ router.post('/editarRequisicao', async (req, res) => {
             preco_bdi: insumos[i].preco_mediano * contrato.fator_reducao,
             quantidade: req.body.requisicao.insumos[i].quantidade,
             preco_total: 0,
-            status_requisicao: req.body.ordem_compra ? '5e1b29fff98f091a551f5a84': '',
+            status: 'Solicitado',
             observacao: '',
         }
         novoInsumo.preco_total = novoInsumo.preco_mediano * novoInsumo.quantidade
@@ -164,7 +162,7 @@ router.post('/editarRequisicao', async (req, res) => {
     }
 
     requisicao.valor_total_bdi = requisicao.valor_total * contrato.fator_reducao
-    req.body.ordem_compra ? requisicao.status = '5e1b2a834944771aa8a0469a': requisicao.status = '5e1b27d21dda6218f1a2ef3c'
+   
 
 
     try {
@@ -200,7 +198,6 @@ router.get('/ordens', eTecnico, (req, res) => {
         { path: 'contrato', select: 'numero' },
         {path: 'solicitante', select: 'nome'}, 
         {path: 'campus_destino', select: 'nome',},
-        {path: 'status', select: 'nome',}
     ])
     .sort({data_criacao: "asc"}).then((requisicoes) => {
         res.render('ordens/index',{requisicoes})
@@ -218,6 +215,70 @@ router.get('/ordens/view/:id', (req, res) => {
 
 router.get('/ordens/confirm/:id', (req, res) => {
     res.render('ordens/confirm')
+})
+
+router.post('/ordens/confirm/', async (req, res) => {
+    try {
+        var requisicao = await Requisicao.findById(req.body.requisicao._id)
+    } catch (error) {
+        req.flash("error_msg", "Não foi possivel localizar a ordem de compra.")
+    }
+    
+    var novosStatus = req.body.requisicao.insumos.map(row => (row.status))
+
+    //console.log(status)
+    var pendente = novosStatus.find(element => element === 'Pendente')
+    var solicitado = novosStatus.find(element => element === 'Solicitado')
+
+    if(solicitado){
+        requisicao.status = 'Solicitada'
+    }else{
+        pendente ? requisicao.status = 'Pendente' : requisicao.status = 'Entregue'
+    }
+
+    for(var i = 0; i < requisicao.insumos.length; i++)
+        requisicao.insumos[i].status = novosStatus[i]
+
+
+    try {  
+        await requisicao.save()
+        req.flash("success_msg", "Alterações salvas com sucesso.")        
+    } catch (err) {
+        req.flash("error_msg", "Não foi possível alterar a ordem de compra.")
+    }
+    
+    res.send('')
+
+})
+
+router.post('/ordens/cancel/', async (req, res) => {
+    //console.log(req.body.requisicao)
+    //Localizar a requisicao (ordem compra)
+    try {
+        var requisicao = await Requisicao.findOne({_id: req.body.requisicao._id})
+    } catch (err) {
+        req.flash("error_msg", "Não foi possivel localizar a ordem de compra.")
+    }
+
+    //alterar os dados
+    requisicao.cancelamento = req.body.requisicao.cancelamento
+    requisicao.status = req.body.requisicao.status
+    for(var i = 0; i < requisicao.insumos.length; i ++)
+        requisicao.insumos[i].status = 'Cancelado'
+    //console.log(requisicao)
+    //Salvar no bd
+    try {
+        requisicao.save()
+    } catch (err) {
+        req.flash("error_msg", "Não foi possivel cancelar a ordem de compra.")
+        res.send({message: 'Deu erro.'})
+    }
+    req.flash("success_msg", "Ordem de compra cancelada com sucesso.")
+        res.send({message: 'Ok.'})
+})
+
+router.get('/ordens/cancel/:id',  (req, res) => {
+    res.render('ordens/cancel')
 })
 
 router.get('/gerarOrdem/:id', async (req, res) => {

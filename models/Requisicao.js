@@ -39,7 +39,7 @@ const Requisicao = new Schema ({
         type: Number
     },
     status:{
-        type: String // Salva, [Cancelada] //Solicitada, Pendente, Entregue, [Finalizada], [Cancelada] 
+        type: String // Salva, [Cancelada] //Solicitada, Pendente, Entregue, [Finalizada], [Cancelada]
     },
     solicitante: {
         type: Schema.Types.ObjectId,
@@ -60,6 +60,10 @@ const Requisicao = new Schema ({
     },
     bdi: {
         type: Number
+    },
+    cancelada: {
+        status: {type: Boolean},
+        justificativa: {type: String}
     },
     insumos: [
         {
@@ -97,10 +101,7 @@ const Requisicao = new Schema ({
                 type: Number
             },
             status: {
-                type: Schema.Types.ObjectId,
-                ref: "opcoes",
-                default: '5e1b2a834944771aa8a0469a'
-                //type: String, //Solicitado, Entregue, Pendente
+                type: String, //Solicitado, Entregue, Pendente
             },
             observacao_status: {
                 type: String

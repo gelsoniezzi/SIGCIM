@@ -21,7 +21,7 @@
                     <tr>
                         <td>{{numero_ordem}}</td>
                         <td>{{contrato.numero}}</td>
-                        <td>{{date_br data_envio }}</td>
+                        <td>{{date_br data_ordem }}</td>
                         <td>{{quantidade_itens}}</td>
                         <td>{{currency valor_total_bdi}}</td>
                         <td>{{status}}</td>
@@ -34,7 +34,7 @@
                             <a href="/requisicoes/ordens/confirm/{{_id}}" data-toggle="tooltip" data-placement="top" title="Confirmar entrega">
                                 <i class="material-icons md-18">move_to_inbox</i>
                             </a> 
-                            <a href="/requisicoes/cancel/{{_id}}" data-toggle="tooltip" data-placement="top" title="Cancelar">
+                            <a href="/requisicoes/ordens/cancel/{{_id}}" data-toggle="tooltip" data-placement="top" title="Cancelar">
                                 <i class="material-icons md-18">cancel</i>
                             </a>
                         </td>

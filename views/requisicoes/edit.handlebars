@@ -21,7 +21,7 @@
                         <td>\{{insumo.codigo_origem}}</td>
                         <td>\{{insumo.descricao}}</td>
                         <td>\{{insumo.unidade_medida}}</td>
-                        <td>\{{insumo.preco_mediano}}</td>
+                        <td>\{{insumo.preco_mediano | brl}}</td>
                         <td>\{{insumo.observacao}}</td>
                         <td><button @click="add(insumo)"><i class="material-icons md-18">add_circle</i></button></td>
                     </tr>
@@ -54,20 +54,20 @@
                             <td>\{{selecionado.base_origem.abreviacao}}.\{{selecionado.codigo_origem}}</td>
                             <td>\{{selecionado.descricao}}</td>
                             <td>\{{selecionado.unidade_medida}}</td>
-                            <td><input type="number"  v-model.number="selecionado.quantidade" name="" id="" value=""></td>
-                            <td>\{{selecionado.preco_mediano}}</td>
-                            <td>\{{selecionado.preco_mediano * selecionado.quantidade || 0}}</td>
+                            <td><input type="number"  class="form-control" style="width:60pt; font-size:13px;" v-model.number="selecionado.quantidade" name="" id="" value=""></td>
+                            <td>\{{selecionado.preco_mediano | brl}}</td>
+                            <td>\{{selecionado.preco_mediano * selecionado.quantidade || 0 | brl}}</td>
                             <td><button v-on:click="remove(index)"><i class="material-icons md-18">remove_circle</i></button></td>
                     </tr>
                 </tbody>
                 </table>
                 <h5 v-if="requisicao.insumos.length === 0">Adicione um insumo.</h5>
                 <div v-if="total != 0">
-                    <h4>Total da Requisição: \{{total}}</h4> 
+                    <h4>Total da Requisição: \{{total | brl}}</h4> 
                 </div>
                 <div class="form-group">
                     <hr>
-                    <label for="solicitante">Campus de destino: </label>
+                    <label for="destino">Campus de destino: </label>
                         <select class="form-control" name="" id="destino" v-model="requisicao.campus_destino._id" required>
                             <option value="">Selecione</option>
 
@@ -92,6 +92,11 @@
 </div>
 
 <script>
+    Vue.filter('brl', function (value) {
+        return Number(value).toLocaleString('pt-BR', { 
+                style:'currency', currency:'BRL'
+              })
+    })
     // Vue
     appRequisicoes = new Vue({
         el: "#app-insumos",

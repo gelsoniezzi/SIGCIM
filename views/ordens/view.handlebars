@@ -2,13 +2,52 @@
 <div id="app">
 <div class="card">
     <div class="card-body">
-        <h5>Número: \{{requisicao.numero_ordem}}</h5>
-        <p>Data: \{{requisicao.data_ordem}}</p>
-        <p>Prazo de entrega: \{{requisicao.prazo_entrega}}</p>
-        <p>Contrato: \{{requisicao.contrato.numero}}, Bonificação de despesas indiretas (BDI): \{{requisicao.contrato.fator_reducao}}</p>
-        <h5>Status: \{{requisicao.status}}</h5>
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <h5>Número: <strong>\{{requisicao.numero_ordem}}</strong></h5>
+                    </div>
+                    <div class="col-sm-4">
+                        Solicitante: <strong>\{{requisicao.solicitante.nome}}</strong>
+                    </div>
+                    <div class="col-sm-4">
+                        Status: <strong>\{{requisicao.status}}</strong>
+                    </div>                        
+                </div>
+                <hr>
 
+                <div class="row">
+                    <div class="col-sm-6">
+                        Data solicitação: <strong>\{{requisicao.data_ordem | data}}</strong>
+                    </div>
+                    <div class="col-sm-6">
+                        Prazo de entrega: <strong>Três dias úteis após a entrega da OC.</strong>
+                    </div>
+                </div>
+                <hr>
+                Local de entrega: <strong>\{{requisicao.campus_destino.nome}}</strong>
+            </div>
+        </div>
+        <br>
 
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Contrato</h5>
+                <div class="row">
+                    <div class="col-sm-6">
+                        Número/Ano: <strong>\{{requisicao.contrato.numero}}</strong>
+                    </div>
+                    <div class="col-sm-6">
+                        Empresa: <strong>\{{requisicao.contrato.empresa.razao_social}}</strong>
+                    </div>                   
+                </div>
+                Bonificação de despesas indiretas (BDI): <strong>\{{requisicao.contrato.fator_reducao}}</strong>
+                
+            </div>
+        </div>
+        <br>
+        <h5>Insumos</h5>
         <table class="table table-striped table-sm">
             <thead class="thead-dark">
                 <tr>
@@ -29,8 +68,8 @@
                     <td>\{{insumo.descricao}}</td>
                     <td>\{{insumo.quantidade}}</td>
                     <td>\{{insumo.unidade_medida}}</td>
-                    <td>\{{insumo.preco_bdi}}</td>
-                    <td>\{{insumo.preco_total_bdi}}</td>
+                    <td>\{{insumo.preco_bdi  | brl}}</td>
+                    <td>\{{insumo.preco_total_bdi  | brl}}</td>
                     <td>\{{insumo.status}}</td>
                 </tr>
             </tbody>
@@ -42,34 +81,56 @@
                     <th></th>
                     <th></th>
                     <th>Total: </th>
-                    <th>\{{requisicao.valor_total_bdi}}</th>
+                    <th>\{{requisicao.valor_total_bdi | brl}}</th>
                     <th></th>
                 </tr>
             </tfoot>
         </table>
 
-        <h5>Local de entrega: \{{requisicao.campus_destino.nome}}</h5>
-        Observações: <br>
-        \{{requisicao.observacoes}} <br>
-
-        Solicitante: \{{requisicao.solicitante.nome}}
+        
+        <br>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Observações</h5>
+                \{{requisicao.observacoes}} 
+            </div>
+        </div>
+        <!--
         <hr>
         <h5>Informações de faturamento</h5>
         <p>Referência:: []</p> 
         <p>Nota fiscal: []</p>
 
         <hr>
-        <div>
-            <button class="btn btn-success">Imprimir</button>
-            <button class="btn btn-success">Reenviar e-mail</button>
-        </div>
+        -->
+        
 
     </div>
 </div>
 </div>
+<br>
+<div>
+            <button class="btn btn-success">Imprimir</button>
+            <button class="btn btn-success">Reenviar e-mail</button>
+</div>
 
 
 <script>
+
+    Vue.filter('data', (strDate) => {
+        if (strDate){
+                const date = new Date(strDate);              
+                return `${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}`
+            }else{
+                return 'Não informado.'
+            }
+    })
+
+    Vue.filter('brl', function (value) {
+        return Number(value).toLocaleString('pt-BR', { 
+                style:'currency', currency:'BRL'
+              })
+    })
     var app = new Vue({
         el: '#app',
         data: {
