@@ -84,10 +84,7 @@
         //require('handlebars-intl/dist/locale-data/pt')
     //mongoose
         mongoose.Promise = global.Promise
-        mongoose.connect('mongodb://localhost/sigcim', { 
-            useNewUrlParser: true,
-            useUnifiedTopology: true
-        }).then(() => {
+        mongoose.connect('mongodb+srv://sigcim20192ufersa:iknA8o0wOZAVOHtn@cluster0-pv9gh.mongodb.net/SIGCIM?retryWrites=true&w=majority', { useNewUrlParser: true,  useUnifiedTopology: true}).then(() => {
             console.log("Conectado ao mongodb. ")
             
         }).catch((err) => {

@@ -6,11 +6,13 @@ require("../models/Insumo")
 require("../models/Usuario")
 require("../models/Contrato")
 require('../models/Opcao')
+require('../models/Campi')
 const Requisicao = mongoose.model("requisicoes")
 const Insumo = mongoose.model("insumos")
 const Usuario = mongoose.model("usuarios")
 const Contrato = mongoose.model("contratos")
 const Opcao = mongoose.model('opcoes')
+const Campus = mongoose.model('campi')
 //Autenticacao
 const {eTecnico} = require('../helpers/estaLogado')
 
@@ -38,25 +40,31 @@ router.get('/add', eTecnico, (req, res) => {
 })
 
 router.post('/salvarRequisicao', async (req, res) => {
-    
+
+    console.log(req.body.requisicao.campus_destino)
     try {
         var contrato = await Contrato.findOne({status: true})
     } catch (err) {
         console.log('Não foi possível localizar o contrato vigente.' + err)
     }  
-
+    
     try {
         var insumos = await Insumo.find({_id: {$in: req.body.requisicao.insumos.map(row => (row.id_original))}})
     }catch (err) {
         console.log('Não foi possível localizar os insumos.' + err)
     }
 
+    try {
+        var campus = await Campus.findById(req.body.requisicao.campus_destino)
+    } catch (err) {
+        console.log('Não foi possível localizar o campus de destino.' + err)
+    }  
     var novaRequisicao = {                    
         data_criacao: new Date(),
         data_ordem: new Date(),
         quantidade_itens: req.body.requisicao.insumos.length,
         valor_total: 0,
-        campus_destino: req.body.requisicao.campus_destino,
+        campus_destino: campus._id,
         contrato: contrato._id,
         bdi: contrato.fator_reducao,
         solicitante: res.locals.user._id,
@@ -91,16 +99,20 @@ router.post('/salvarRequisicao', async (req, res) => {
 
     novaRequisicao.valor_total_bdi = novaRequisicao.valor_total * contrato.fator_reducao
 
-
+    console.log(novaRequisicao)
     try {
         await new Requisicao(novaRequisicao).save()
         if(req.body.ordem_compra){
             req.flash("success_msg", "Ordem de compra enviada com sucesso.")
+            console.log('try ordem compra true')
         }else{
             req.flash("success_msg", "Requisição salva com sucesso.")
+            console.log('try ordem compra false')
         }
     } catch (err) {
-        req.flash("error_msg", "Houve um erro no processo." +err)
+        req.flash("error_msg", "Houve um erro no processo. " + err)
+        console.log('catch' + err)
+        res.send({error: true, message: 'Problemas.'})
     }    
     res.send({error: false, message: 'Requisição enviada com sucesso.'}) 
 })

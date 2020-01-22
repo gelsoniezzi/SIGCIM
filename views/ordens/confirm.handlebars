@@ -86,7 +86,7 @@
                     <th></th>
                     <th></th>
                     <th>Total: </th>
-                    <th>\{{requisicao.valor_total_bdi}}</th>
+                    <th>\{{requisicao.valor_total_bdi | brl}}</th>
                     <th></th>
                 </tr>
             </tfoot>
@@ -149,10 +149,17 @@
             .get(`/requisicoes/ajax/loadRequisicao/${this.id_requisicao}`)
             this.requisicao = data
 
-            const opcoes = {id: '5e1b29fff98f091a551f5a84'} //id Insumos (ordem compra)
+            const opcoes = {id: '5e1f707781ecd7cb05c13a4f'} //id Insumos (ordem compra)
             const dataOpcoes = await axios
             .post('/admin/ajax/loadOpcoes', opcoes)
             this.status_insumos = dataOpcoes.data
         }
     })
 </script>
+
+:
+
+ativo
+:
+true
+nom

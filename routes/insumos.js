@@ -204,7 +204,7 @@ const {eAdmin} = require('../helpers/estaLogado')
         
     })
 
-    router.post("/importar", eAdmin, (req, res) => {
+    router.post("/importar", eAdmin, async (req, res) => {
         
         var form = new formidable.IncomingForm();
         form.parse(req, function(err, fields, files) {
@@ -216,9 +216,7 @@ const {eAdmin} = require('../helpers/estaLogado')
 
             var linha = fields.linha //pega o campo linha do formulario
             var fonte_base = fields.base
-            console.log(fields)
 
-            console.log("Linha do cabeçalho: " + linha)
             var cabecalho_planilha = result[linha]
             var insumos = []
             for(var i = 0; i < result.length; i++){
@@ -244,17 +242,21 @@ const {eAdmin} = require('../helpers/estaLogado')
                 insumos.push(novoInsumo)                
             }
 
-            Insumo.create(insumos, (err, insumos) => {
-                if (err) {
-                    console.log(err)
-                }
-                for( var i = 0; i < insumos.length; i ++){
-                    insumos[i].save()
-                }
-
-            }).then(() => {
-                res.redirect('/insumos/')
-            })
+            try {
+                Insumo.create(insumos, (err, insumos) => {
+                    if (err) {
+                        console.log(err)
+                    }
+                    for( var i = 0; i < insumos.length; i ++){
+                        insumos[i].save()
+                    }
+    
+                })
+                req.flash('success_msg', 'Insumos importados com sucesso.')
+            } catch (err) {
+                req.flash('error_msg', 'Não foi possível importar os insumos.')
+            }
+            res.redirect('/insumos')
             
 
            /* 
