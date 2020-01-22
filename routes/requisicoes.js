@@ -39,7 +39,7 @@ router.get('/add', eTecnico, (req, res) => {
 
 })
 
-router.post('/salvarRequisicao', async (req, res) => {
+router.post('/salvarRequisicao', eTecnico, async (req, res) => {
 
     console.log(req.body.requisicao.campus_destino)
     try {
@@ -117,7 +117,7 @@ router.post('/salvarRequisicao', async (req, res) => {
     res.send({error: false, message: 'Requisição enviada com sucesso.'}) 
 })
 
-router.post('/editarRequisicao', async (req, res) => {
+router.post('/editarRequisicao', eTecnico, async (req, res) => {
 
     // pegar requisicao
     try{
@@ -217,19 +217,19 @@ router.get('/ordens', eTecnico, (req, res) => {
     
 })
 
-router.get('/ordens/edit/:id', (req, res) => {
+router.get('/ordens/edit/:id', eTecnico, (req, res) => {
     res.render('ordens/edit')
 })
 
-router.get('/ordens/view/:id', (req, res) => {
+router.get('/ordens/view/:id', eTecnico,(req, res) => {
     res.render('ordens/view')
 })
 
-router.get('/ordens/confirm/:id', (req, res) => {
+router.get('/ordens/confirm/:id', eTecnico, (req, res) => {
     res.render('ordens/confirm')
 })
 
-router.post('/ordens/confirm/', async (req, res) => {
+router.post('/ordens/confirm/', eTecnico, async (req, res) => {
     try {
         var requisicao = await Requisicao.findById(req.body.requisicao._id)
     } catch (error) {
@@ -263,7 +263,7 @@ router.post('/ordens/confirm/', async (req, res) => {
 
 })
 
-router.post('/ordens/cancel/', async (req, res) => {
+router.post('/ordens/cancel/', eTecnico, async (req, res) => {
     //console.log(req.body.requisicao)
     //Localizar a requisicao (ordem compra)
     try {
@@ -289,11 +289,11 @@ router.post('/ordens/cancel/', async (req, res) => {
         res.send({message: 'Ok.'})
 })
 
-router.get('/ordens/cancel/:id',  (req, res) => {
+router.get('/ordens/cancel/:id',  eTecnico, (req, res) => {
     res.render('ordens/cancel')
 })
 
-router.get('/gerarOrdem/:id', async (req, res) => {
+router.get('/gerarOrdem/:id', eTecnico, async (req, res) => {
 
     try {
         var requisicao = await Requisicao.findOne({_id: req.params.id})
@@ -352,7 +352,7 @@ router.get('/gerarOrdem/:id', async (req, res) => {
 
 })
 
-router.get('/ajax/loadRequisicao/:id', (req, res) => {
+router.get('/ajax/loadRequisicao/:id', eTecnico, (req, res) => {
     Requisicao.findOne({_id: req.params.id})
     .populate([
         {path: 'contrato'},
@@ -365,7 +365,7 @@ router.get('/ajax/loadRequisicao/:id', (req, res) => {
     }).catch()
 })
 
-router.get('/json/edit/:id', (req, res) => {
+router.get('/json/edit/:id', eTecnico, (req, res) => {
     Requisicao.findOne({_id: req.params.id}).populate([{ path: 'solicitante', select: 'nome' }, {path: 'contrato', select: 'numero'}]).then((requisicao) => {
         res.send(requisicao)
     }).catch()

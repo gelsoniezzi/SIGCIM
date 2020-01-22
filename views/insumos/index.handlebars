@@ -1,4 +1,4 @@
-<h3>Insumos</h3>
+<h2>Insumos</h2>
 <div class="card">
     <div class="card-body">
         <div >
@@ -55,11 +55,13 @@
                     <td>{{currency preco_mediano}}</td>
                     <td>{{observacao}}</td>
                     <td>
+                        <div class="row">
                         <form action="/insumos/delete/" method="POST">
                         <a href="/insumos/edit/{{_id}}" class="btn btn-light btn-sm" data-toggle="tooltip" data-placement="top" title="Editar"><i class="material-icons md-18">edit</i></a>
                         <input type="hidden" name="id" value="{{_id}}">                    
                         <button class="btn btn-light btn-sm" type="submit" data-toggle="tooltip" data-placement="top" title="Remover"><i class="material-icons md-18">remove_circle</i></button>
                         </form>
+                        </div>
                     </td>
                 </tr>
                 {{else}}

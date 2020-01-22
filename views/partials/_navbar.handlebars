@@ -9,17 +9,7 @@
       <li class="nav-item active">
         <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
       </li>
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Compras
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-          <a class="dropdown-item" href="/requisicoes">Requisições</a>
-          <a class="dropdown-item" href="/requisicoes/add">Criar</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="/requisicoes/ordens">Ordens de Compra</a>          
-        </div>
-      </li>
+      {{#if user}}
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Insumos
@@ -33,8 +23,18 @@
           <div class="dropdown-divider"></div>
           <a class="dropdown-item disabled" href="#">Cotações</a>
           <a class="dropdown-item disabled" href="#">Orçamentos</a>
+        </div>        
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Requisições e Compras
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+          <a class="dropdown-item" href="/requisicoes">Requisições</a>
+          <a class="dropdown-item" href="/requisicoes/add">Criar requisição</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="/requisicoes/ordens">Ordens de Compra</a>          
         </div>
-        
       </li>
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -55,6 +55,7 @@
       <li class="nav-item">
         <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Faturamento</a>
       </li>
+      {{/if}}
     </ul>
     
       <ul class="navbar-nav ">
