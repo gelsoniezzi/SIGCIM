@@ -87,14 +87,14 @@ const {eTecnico} = require('../helpers/estaLogado')
 
             contrato.save().then(() => {
                 req.flash("success_msg", "Contrato editado com sucesso.")
-                res.redirect("/adminContratos/contratos")
+                res.redirect("/contratos/contratos")
             }).catch((err) => {
                 req.flash("error_msg", "Houve um erro ao editar o contrato.")
-                res.redirect("/adminContratos/contratos")
+                res.redirect("/contratos/contratos")
             })
         }).catch((err) => {
             req.flash("error_msg", "Houve um erro ao editar o contrato.")
-            res.redirect("/adminContratos/contratos")
+            res.redirect("/contratos/contratos")
         })
     })
 
