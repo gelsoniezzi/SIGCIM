@@ -1,0 +1,78 @@
+<h2>Edicao de requisicao</h2>
+{{id}} - {{name}}
+<h5>Lista de insumos</h5>
+<div id="app">
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Nome</th>
+        <th>Preco</th>
+        <th>Acoes</th>
+    </tr>
+    <tr v-for="(insumo, i) in insumos" :key='id'>
+        <td>\{{insumo.id}}</td>
+        <td>\{{insumo.name}}</td>
+        <td>\{{insumo.price}}</td>
+        <td><button @click='add(insumo)'>+</button></td>
+    </tr>
+</table>
+
+<h5>Insumos selecionados</h5>
+<table>
+    <tr>
+        <th>#</th>
+        <th>Nome</th>
+        <th>Preco</th>
+        <th>Quantidade</th>
+        <th>Total</th>
+        <th>Acoes</th>
+    </tr>
+    <tr v-for="(insumo, i) in selecionados" :key="i">
+        <td>\{{insumo.id}}</td>
+        <td>\{{insumo.name}}</td>
+        <td>\{{insumo.price}}</td>
+        <td><input type="number" v-model="insumo.qty"></td>
+        <td>\{{   (insumo.price||0) * (insumo.qty||0)  }}</td>
+        <td><button @click="remove(insumo)">-</button></td>
+    </tr>
+</table>
+</div>
+
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            insumos: null,
+            selecionados: [],
+            loading: false,
+            message: '',
+            errored: false
+        },
+        methods: {
+            add(item){
+                this.selecionados.push(...item, qty: 1)
+            }
+        },
+        mounted () {
+            axios
+            .get('/envio')
+            .then(response => {
+                this.insumos = response.data
+
+                axios
+                .post('/requisicao', {id: 1})
+                .then(resposta => {
+                    this.selecionados = resposta.data
+
+                })
+            })
+            .catch(error => {
+                console.log(error)
+                this.errored = true
+            })
+            .finally(() => {
+                this.loading = false
+            })
+        }
+    })
+</script>

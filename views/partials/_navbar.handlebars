@@ -11,11 +11,13 @@
       </li>
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Requisições
+          Compras
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-          <a class="dropdown-item" href="/requisicoes">Listar</a>
+          <a class="dropdown-item" href="/requisicoes">Requisições</a>
           <a class="dropdown-item" href="/requisicoes/add">Criar</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="/requisicoes/ordens">Ordens de Compra</a>          
         </div>
       </li>
       <li class="nav-item dropdown">
@@ -23,14 +25,14 @@
           Insumos
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="/insumos/lista">Listar</a>
+          <a class="dropdown-item" href="/insumos/">Listar</a>
           <a class="dropdown-item" href="/insumos/add">Cadastrar</a>          
           <div class="dropdown-divider"></div>
           <a class="dropdown-item" href="/insumos/bases">Bases de dados</a>
           <a class="dropdown-item" href="/insumos/importar">Importar</a>
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#">Cotações</a>
-          <a class="dropdown-item" href="#">Orçamentos</a>
+          <a class="dropdown-item disabled" href="#">Cotações</a>
+          <a class="dropdown-item disabled" href="#">Orçamentos</a>
         </div>
         
       </li>
@@ -39,46 +41,23 @@
           Administração
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="/adminContratos/contratos">Contratos</a>
-          <a class="dropdown-item" href="/adminContratos/empresas">Empresas</a>          
+          <a class="dropdown-item" href="/contratos">Contratos</a>
+          <a class="dropdown-item" href="/contratos/empresas">Empresas</a>          
           <div class="dropdown-divider"></div>
           <a class="dropdown-item" href="/usuarios">Usuários</a>
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#">Relatórios</a>
+          <a class="dropdown-item" href="/admin/sistema">Opções e categorias</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item disabled" href="#">Relatórios</a>
         </div>
         
       </li>
-      </li>
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Faturamento
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="/adminContratos/contratos">Contratos</a>
-          <a class="dropdown-item" href="/adminContratos/empresas">Empresas</a>          
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#">Usuários</a>
-        </div>        
-      </li>
       <li class="nav-item">
-        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Faturamento</a>
       </li>
     </ul>
-    <div id="appLogin">
-      <!--
-      <a v-if="estaLogado === false" class="nav-link" href="/usuarios/login">Login</a>
-      <div v-if="estaLogado">
-        <ul class="navbar-nav mr-auto">
-        <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          \{{usuario.matricula}}
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-          <a class="dropdown-item" href="/usuarios/logout">Logout</a>
-        </div>
-      </li>
-      -->
-      <ul class="navbar-nav mr-auto">
+    
+      <ul class="navbar-nav ">
       {{#if user}}
         <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -93,39 +72,7 @@
         <a class="nav-link" href="/usuarios/login">Login</a>
       </li>
       {{/if}}
-      </ul>
-      
-      </div>
+      </ul> 
     </div>   
   </div>
 </nav>
-
-<script>
-  var appLogin = new Vue({
-    el: '#appLogin',
-    data: {
-      usuario: null,
-    estaLogado: false
-    },
-    methods: {
-
-    },
-    mounted () {
-      axios
-        .get('/estaLogado')
-        .then(response => {
-          console.log(response.data)
-          if (response.data.user != null){
-            this.usuario = response.data.user
-            this.estaLogado = true
-          }
-          
-        })
-        .catch(error => {
-          console.log(error)
-          this.errored = true
-        })
-        .finally(() => this.loading = false)
-    }
-  })
-</script>

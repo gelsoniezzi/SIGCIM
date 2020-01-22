@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.15.5/dist/bootstrap-table.min.css">
+    
+    <title>Teste BS-Table</title>
+</head>
+<body>
+    <div id="table">
+        <bootstrap-table :columns="columns" :data="data" :options="options"></bootstrap-table>
+    </div>
+    <div id="app">
+        {{info}}
+    </div>
+    
+</body>
+
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script src="https://unpkg.com/bootstrap-table@1.15.5/dist/bootstrap-table.min.js"></script>
+<script src="https://unpkg.com/bootstrap-table@1.15.5/dist/bootstrap-table-vue.min.js"></script>
+<script src="https://unpkg.com/bootstrap-table@1.15.5/dist/locale/bootstrap-table-pt-BR.min.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+<script>
+    var app = new Vue({
+    el: '#app',
+    components: {
+      'BootstrapTable': BootstrapTable
+    },
+    data: {
+        columns: [
+            {
+                title: 'Item ID',
+                field: 'id'
+            },
+            {
+                field: 'name',
+                title: 'Item Name'
+            }, {
+                field: 'price',
+                title: 'Item Price'
+            }
+        ],
+        data: [
+            {
+                id: 1,
+                name: 'Item 1',
+                price: '$1'
+            }
+            ],
+        options: {
+            search: true,
+            showColumns: true
+            },
+        info: null
+    },
+    methods: {
+
+    },
+    mounted () {
+        axios
+        .get('http://localhost:8081/insumos/json/lista')
+        .then(response => (this.info = response))
+
+    }
+
+  })
+</script>
+</html>

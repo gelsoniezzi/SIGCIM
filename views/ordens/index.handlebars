@@ -1,0 +1,74 @@
+<h2>Ordens de compra</h2>
+<hr>
+<div class="card">
+    <div class="card-body">
+        <table style="font-size:13px" class="table table-striped table-bordered table-sm" >
+            <thead class="thead-dark">
+                <tr>
+                    <th>Número</th>
+                    <th>Contrato</th>
+                    <th>Data</th>
+                    <th>Itens</th>
+                    <th>Valor total (BDI)</th>
+                    <th>Status</th>
+                    <th>Campus</th>
+                    <th>Solicitante</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>    
+            <tbody>
+                {{#each requisicoes}}
+                    <tr>
+                        <td>{{numero_ordem}}</td>
+                        <td>{{contrato.numero}}</td>
+                        <td>{{date_br data_ordem }}</td>
+                        <td>{{quantidade_itens}}</td>
+                        <td>{{currency valor_total_bdi}}</td>
+                        <td>{{status}}</td>
+                        <td>{{campus_destino.nome}}</td>
+                        <td>{{solicitante.nome}}</td>
+                        <td>
+                            <a href="/requisicoes/ordens/view/{{_id}}" data-toggle="tooltip" data-placement="top" title="Visualizar">
+                                <i class="material-icons md-18">folder_open</i>
+                            </a> 
+                            <a href="/requisicoes/ordens/confirm/{{_id}}" data-toggle="tooltip" data-placement="top" title="Confirmar entrega">
+                                <i class="material-icons md-18">move_to_inbox</i>
+                            </a> 
+                            <a href="/requisicoes/ordens/cancel/{{_id}}" data-toggle="tooltip" data-placement="top" title="Cancelar">
+                                <i class="material-icons md-18">cancel</i>
+                            </a>
+                        </td>
+                    </tr>
+                {{else}}
+                    <tr>
+                        <td><h5>Nenhuma ordem de compra cadastrada.</h5></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                {{/each}}
+            </tbody>
+            
+            <tfoot class="thead-dark">
+                <tr>
+                    <th>Número</th>
+                    <th>Contrato</th>
+                    <th>Data</th>
+                    <th>Itens</th>
+                    <th>Valor total (BDI)</th>
+                    <th>Status</th>
+                    <th>Campus</th>
+                    <th>Solicitante</th>
+                    <th>Ações</th>
+
+                </tr>
+            </tfoot>
+        </table>
+        <a href="/requisicoes/add"><button class="btn btn-success">Nova</button></a>                
+    </div>
+</div>

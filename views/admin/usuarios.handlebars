@@ -1,5 +1,4 @@
-<h2>Usuários</h2>
-<hr>
+<h3>Usuários</h3>
 <div class="card">
     <div class="card-body">
         <table class="table table-striped">
@@ -23,9 +22,9 @@
                         <td>{{status}}</td>
                         <td>
                             <form action="/usuarios/delete/" method="POST">
-                            <a href="/usuarios/edit/{{_id}}" class="btn btn-light" data-toggle="tooltip" data-placement="top" title="Editar"><i class="material-icons">edit</i></a>
+                            <a href="/usuarios/edit/{{_id}}" class="btn btn-light" data-toggle="tooltip" data-placement="top" title="Editar"><i class="material-icons md-18">edit</i></a>
                             <input type="hidden" name="id" value="{{_id}}">                    
-                            <button class="btn btn-light" type="submit" data-toggle="tooltip" data-placement="top" title="Remover"><i class="material-icons">remove_circle</i></button>
+                            <button class="btn btn-light" type="submit" data-toggle="tooltip" data-placement="top" title="Remover"><i class="material-icons md-18">remove_circle</i></button>
                         </form>
                         </td>
                     </tr>

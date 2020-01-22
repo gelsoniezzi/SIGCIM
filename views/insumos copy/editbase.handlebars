@@ -1,0 +1,21 @@
+<h3>Editar Base de Dados</h3>
+{{#each erros}}
+    <div class="alert alert-danger">{{texto}}</div>
+{{else}}
+
+{{/each}}
+
+<div class="card">
+    <div class="card-body">
+        <form action="/insumos/bases/edit" method="POST">
+            <input type="hidden" name="id" value="{{base._id}}">
+            <label for="nome">Fonte da base de dados: </label>
+                <input type="text" id="nome" name="nome" value="{{base.nome}}" placeholder="Nome da fonte de dados" class="form-control"> <br>
+            <label for="nome">Abreviação: </label>
+                <input type="text" id="abreviacao" name="abreviacao" value="{{base.abreviacao}}" placeholder="Ex.: SINAPI" maxlength="15" class="form-control"> <br>
+            <label for="endereco">Endereço: </label>
+                <input type="text" id="endereco" name="endereco" value="{{base.endereco}}" placeholder="Link da fonte de dados." class="form-control"> <br>
+            <button type="submit" class="btn btn-success">Salvar</button>
+        </form>
+    </div>
+</div>

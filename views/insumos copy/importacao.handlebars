@@ -1,0 +1,45 @@
+<h3>Importação</h3>
+{{#each erros}}
+    <div class="alert alert-danger">{{texto}}</div>
+{{else}}
+
+{{/each}}
+
+<div class="card">
+    <div class="card-body">
+        <form action="/insumos/importar" method="POST" enctype="multipart/form-data">
+            <label for="codigo">Código: </label>
+            <select id="codigo"> 
+                <option value="volvo">Volvo</option>
+
+            </select>
+            <label for="codigo">Descrição: </label>
+            <select id="descricao"> 
+                <option value="volvo">Volvo</option>                
+            </select>
+            <label for="codigo">Unidade de Medida: </label>
+            <select id="unidade"> 
+                <option value="volvo">Volvo</option>
+                <option value="saab">Saab</option>
+                <option value="mercedes">Mercedes</option>
+                <option value="audi">Audi</option>
+            </select>
+            <label for="codigo">Preço: </label>
+            <select id="preco"> 
+                <option value="volvo">Volvo</option>
+                <option value="saab">Saab</option>
+                <option value="mercedes">Mercedes</option>
+                <option value="audi">Audi</option>
+            </select>
+            <label for="codigo">Comentários: </label>
+            <select id="status"> 
+                <option value="volvo">Volvo</option>
+
+            </select>
+
+            <select id="observacoes"> 
+            </select>
+            
+        </form>
+    </div>
+</div>

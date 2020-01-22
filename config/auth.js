@@ -22,7 +22,9 @@ module.exports = passport => {
                     return done(null, false, {message: "Senha incorreta."})
                 }
             })
-        }).catch()
+        }).catch(() => {
+            console.log("Houve um erro ao localizar usuários.")
+        })
     }))
 
     passport.serializeUser((usuario, done) => {

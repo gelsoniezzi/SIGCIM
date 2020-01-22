@@ -1,0 +1,186 @@
+<h2>Cancelar ordem de Compra</h2>
+<div id="app">
+<div class="alert alert-danger" role="alert" v-if="itens_entregues">
+  Não é possível cancelar ordem de compra com itens entregues. <a v-bind:href="'/requisicoes/ordens/confirm/'+id_requisicao" class="alert-link">Clique aqui</a> para cancelar ítens específicos.
+</div>
+
+<div class="card">
+    <div class="card-body">
+        
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <h5>Número: <strong>\{{requisicao.numero_ordem}}</strong></h5>
+                    </div>
+                    <div class="col-sm-4">
+                        Solicitante: <strong>\{{requisicao.solicitante.nome}}</strong>
+                    </div>
+                    <div class="col-sm-4">
+                        Status: <strong>\{{requisicao.status}}</strong>
+                    </div>                        
+                </div>
+                <hr>
+
+                <div class="row">
+                    <div class="col-sm-6">
+                        Data solicitação: <strong>\{{requisicao.data_ordem |data}}</strong>
+                    </div>
+                    <div class="col-sm-6">
+                        Prazo de entrega: <strong>Três dias úteis após a entrega da OC.</strong>
+                    </div>
+                </div>
+                <hr>
+                Local de entrega: <strong>\{{requisicao.campus_destino.nome}}</strong>
+            </div>
+        </div>
+        <br>
+
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Contrato</h5>
+                <div class="row">
+                    <div class="col-sm-6">
+                        Número/Ano: <strong>\{{requisicao.contrato.numero}}</strong>
+                    </div>
+                    <div class="col-sm-6">
+                        Empresa: <strong>\{{requisicao.contrato.empresa.razao_social}}</strong>
+                    </div>                   
+                </div>
+                Bonificação de despesas indiretas (BDI): <strong>\{{requisicao.contrato.fator_reducao}}</strong>
+                
+            </div>
+        </div>
+        <br>
+        <h5>Insumos</h5>
+
+        <table class="table table-striped table-sm">
+            <thead class="thead-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Base.código</th>
+                    <th>Descrição</th>
+                    <th>Quant.</th>
+                    <th>Unidade</th>
+                    <th>Valor (com BDI)</th>
+                    <th>Total</th>
+                    <th>Situação</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(insumo, i) in requisicao.insumos" :key="i">
+                    <td>\{{i+1}}</td>
+                    <td>\{{insumo.base_origem.abreviacao}}.\{{insumo.codigo_origem}}</td>
+                    <td>\{{insumo.descricao}}</td>
+                    <td>\{{insumo.quantidade}}</td>
+                    <td>\{{insumo.unidade_medida}}</td>
+                    <td>\{{insumo.preco_bdi | brl}}</td>
+                    <td>\{{insumo.preco_total_bdi | brl}}</td>
+                    <td>\{{insumo.status}}</td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th>Total: </th>
+                    <th>\{{requisicao.valor_total_bdi | brl}}</th>
+                    <th></th>
+                </tr>
+            </tfoot>
+        </table>
+
+        Observações: <br>
+        <textarea class="form-control" name="" id="" cols="30" rows="3" disabled>\{{requisicao.observacoes}} </textarea><br>
+
+        <H4>Informe uma justificativa para o cancelamento:</H4>
+        <textarea class="form-control" name="" id="" cols="30" rows="3" :disabled="itens_entregues" v-model="justificativa"></textarea> <br>
+        <!--
+        <h5>Informações de faturamento</h5>
+        <p>Referência:: []</p> 
+        <p>Nota fiscal: []</p>
+
+        <hr>
+        -->
+        <div>
+            <button class="btn btn-danger" :disabled="itens_entregues" v-on:click="cancel()">Cancelar</button>
+            <a href="/requisicoes/ordens/"><button class="btn " >Voltar</button></a>
+        </div>
+
+    </div>
+</div>
+</div>
+
+
+<script>
+    Vue.filter('data', (strDate) => {
+        if (strDate){
+                const date = new Date(strDate);              
+                return `${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}`
+            }else{
+                return 'Não informado.'
+            }
+    })
+
+    Vue.filter('brl', function (value) {
+        return Number(value).toLocaleString('pt-BR', { 
+                style:'currency', currency:'BRL'
+              })
+    })
+
+    var app = new Vue({
+        el: '#app',
+        data: {
+            requisicao: {
+                status: '',
+                cancelada: {
+                    status: false,
+                    justificativa: ''
+                },
+                insumos: []
+            },
+            id_requisicao: null,
+            itens_entregues: false,
+            justificativa: ''
+
+
+        },
+        methods: {
+
+            async cancel() {
+
+                var url = '/requisicoes/ordens/cancel'
+                var destino = '/requisicoes/ordens'
+                this.requisicao.status = 'Cancelada'
+                this.requisicao.cancelada.status = true                   
+                this.requisicao.cancelada.justificativa = this.justificativa
+                const data = {}
+                data.requisicao = this.requisicao
+                const resultado = await axios.post(url, data)
+                window.location.href
+
+            }
+        },
+        async created() {
+            const match = window.location.pathname.match(/\/(?<id>\w*)$/)
+            this.id_requisicao = match.groups.id
+
+            const {data} = await axios
+            .get(`/requisicoes/ajax/loadRequisicao/${this.id_requisicao}`)
+            
+            //verifica se existem itens entregues ou pendentes
+            if (data.insumos.find(element => element.status === 'Pendente' || element.status === 'Entregue')){
+                this.itens_entregues = true  
+            }
+                
+            this.requisicao = {...this.requisicao, ...data}
+            
+        },
+        async mounted() {
+            
+        }
+    })
+</script>

@@ -1,0 +1,165 @@
+<h2>Ordem de Compra</h2>
+<div id="app">
+<div class="card">
+    <div class="card-body">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <h5>Número: <strong>\{{requisicao.numero_ordem}}</strong></h5>
+                    </div>
+                    <div class="col-sm-4">
+                        Solicitante: <strong>\{{requisicao.solicitante.nome}}</strong>
+                    </div>
+                    <div class="col-sm-4">
+                        Status: <strong>\{{requisicao.status}}</strong>
+                    </div>                        
+                </div>
+                <hr>
+
+                <div class="row">
+                    <div class="col-sm-6">
+                        Data solicitação: <strong>\{{requisicao.data_ordem | data}}</strong>
+                    </div>
+                    <div class="col-sm-6">
+                        Prazo de entrega: <strong>Três dias úteis após a entrega da OC.</strong>
+                    </div>
+                </div>
+                <hr>
+                Local de entrega: <strong>\{{requisicao.campus_destino.nome}}</strong>
+            </div>
+        </div>
+        <br>
+
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Contrato</h5>
+                <div class="row">
+                    <div class="col-sm-6">
+                        Número/Ano: <strong>\{{requisicao.contrato.numero}}</strong>
+                    </div>
+                    <div class="col-sm-6">
+                        Empresa: <strong>\{{requisicao.contrato.empresa.razao_social}}</strong>
+                    </div>                   
+                </div>
+                Bonificação de despesas indiretas (BDI): <strong>\{{requisicao.contrato.fator_reducao}}</strong>
+                
+            </div>
+        </div>
+        <br>
+        <h5>Insumos</h5>
+        <table class="table table-striped table-sm">
+            <thead class="thead-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Base.código</th>
+                    <th>Descrição</th>
+                    <th>Quant.</th>
+                    <th>Unidade</th>
+                    <th>Valor (com BDI)</th>
+                    <th>Total</th>
+                    <th>Situação</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(insumo, i) in requisicao.insumos" :key="i">
+                    <td>\{{i+1}}</td>
+                    <td>\{{insumo.base_origem.abreviacao}}.\{{insumo.codigo_origem}}</td>
+                    <td>\{{insumo.descricao}}</td>
+                    <td>\{{insumo.quantidade}}</td>
+                    <td>\{{insumo.unidade_medida}}</td>
+                    <td>\{{insumo.preco_bdi | brl}}</td>
+                    <td>\{{insumo.preco_total_bdi | brl}}</td>
+                    <td>
+                        <select name="" id="status" class="form-control" v-model="requisicao.insumos[i].status" required>
+                            <option v-for="(status, index) in status_insumos" :value="status.nome">\{{status.nome}}</option>
+                        </select>
+                    </td>
+                </tr>
+            </tbody>
+            
+            <tfoot>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th>Total: </th>
+                    <th>\{{requisicao.valor_total_bdi | brl}}</th>
+                    <th></th>
+                </tr>
+            </tfoot>
+        </table>
+        Observações: <br>
+        <textarea class="form-control" name="" id="" cols="30" rows="3" disabled>\{{requisicao.observacoes}} </textarea><br>
+
+        <div>
+            <button v-on:click="salvar()" class="btn btn-success">Salvar</button>
+        </div>
+
+    </div>
+</div>
+</div>
+
+
+<script>
+    Vue.filter('data', (strDate) => {
+        if (strDate){
+                const date = new Date(strDate);              
+                return `${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}`
+            }else{
+                return 'Não informado.'
+            }
+    })
+
+    Vue.filter('brl', function (value) {
+        return Number(value).toLocaleString('pt-BR', { 
+                style:'currency', currency:'BRL'
+              })
+    })
+
+    var app = new Vue({
+        el: '#app',
+        data: {
+            requisicao: {},
+            id_requisicao: null,
+            status_insumos: null,
+
+
+        },
+        methods: {
+            async salvar() {
+                var url = '/requisicoes/ordens/confirm'
+                var destino = '/requisicoes/ordens'
+
+                const data = {}
+                data.requisicao = this.requisicao
+
+                const resultado = await axios.post(url, data)
+                window.location.href = destino
+            }
+
+        },
+        async created() {
+            const match = window.location.pathname.match(/\/(?<id>\w*)$/)
+            this.id_requisicao = match.groups.id
+
+            const {data} = await axios
+            .get(`/requisicoes/ajax/loadRequisicao/${this.id_requisicao}`)
+            this.requisicao = data
+
+            const opcoes = {id: '5e1f707781ecd7cb05c13a4f'} //id Insumos (ordem compra)
+            const dataOpcoes = await axios
+            .post('/admin/ajax/loadOpcoes', opcoes)
+            this.status_insumos = dataOpcoes.data
+        }
+    })
+</script>
+
+:
+
+ativo
+:
+true
+nom

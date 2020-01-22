@@ -12,107 +12,100 @@ const multer  = require('../multer')
 const fileHelper = require('../helpers/file')
 const http = require('http');
 const formidable = require('formidable')
-
-
-
-// Rota index
-router.get('/', (req, res) => {
-    Insumo.find().populate("origem").sort({descricao: "asc"}).then((insumos) =>{
-        res.render("insumos/index", {insumos})
-    })
-
-})
-
+const {eTecnico} = require('../helpers/estaLogado')
+const {eAdmin} = require('../helpers/estaLogado')
 
 // Rotas insumos
-    router.get('/lista/', (req, res) => {      
-
+    router.get('/', (req, res) => {        
         Insumo.find().populate("base_origem").sort({descricao: "asc"}).then((insumos) =>{
             res.render("insumos/index", {insumos})
         })
 
     })
 
-    router.get('/json/lista', (req, res) => {
-        Insumo.find().populate("base_origem").sort({descricao: "asc"}).then((insumos) => {
-            var resposta = {}
-            resposta.data = insumos
-            res.send(resposta)
-        }).catch()
+    router.post('/json/lista', (req, res) => {
 
+        Insumo.count().then((quantidade) => {
+            var pagina = (req.body.start/req.body.length) + 1
+
+            // configura ordenação
+            var numeroColuna = parseInt(req.body.order[0].column)              
+            var colunaOrdenacao = ''
+            if(req.body.order[0].dir == 'asc'){
+                colunaOrdenacao = req.body.columns[numeroColuna].data
+            }else{
+                colunaOrdenacao = '-' + req.body.columns[numeroColuna].data
+            }
+            var options = {
+                page: pagina,
+                totalPages: 5,
+                limit: req.body.length,
+                sort: colunaOrdenacao,
+                populate: 'base_origem',
+                
+            }
+            console.log('----- OPTIONS --------')
+            console.log(req.body.search.value)
+    
+            var query = {}
+    
+            if (req.body.search.value != '')
+                query = {$text : {$search: req.body.search.value} }
+            
+    
+            Insumo.paginate(query, options, ).then((insumos) => {
+                
+                var resposta = {}
+                resposta.draw = req.body.draw
+                resposta.recordsTotal = quantidade
+                resposta.recordsFiltered = insumos.totalDocs
+                resposta.data = insumos.docs
+
+    
+    
+                res.send(resposta)
+            }).catch((err) => {
+                console.log("Nao deu certo o paginate.", + err)
+            })
+
+        })
+        console.log('--------------')
+        console.log(req.body)
+        //calcular pagina
+
+        
     })
 
-    router.post('/json/listapaginate', (req, res) => {
-        console.log('--------------')
-        //console.log(req.body)
-        //calcular pagina
-        var pagina = (req.body.start/req.body.length) + 1
-
-        // configura ordenação
-        var numeroColuna = parseInt(req.body.order[0].column)              
-        var colunaOrdenacao = ''
-        if(req.body.order[0].dir == 'asc'){
-            colunaOrdenacao = req.body.columns[numeroColuna].data
-        }else{
-            colunaOrdenacao = '-' + req.body.columns[numeroColuna].data
-        }        
-        
-        var options = {
-            page: pagina,
-            totalPages: 5,
-            limit: req.body.length,
-            sort: colunaOrdenacao,
-            populate: 'base_origem',            
-        }
-
-        var query = {}
-
-        if (req.body.search.value != '')
-            query = {$text : {$search: req.body.search.value} }            
-        
-
-        Insumo.paginate(query, options, ).then((insumos) => {
-            var resposta = {}
-            resposta.draw = req.body.draw            
-            resposta.data = insumos.docs
-            resposta.recordsTotal = insumos.totalDocs
-            resposta.recordsFiltered = insumos.totalDocs
-
-            if(query != {}){                
-                resposta.recordsFiltered = insumos.docs.length
-            }
-            
-            if(insumos.nextPage){
-                resposta.hasNextPage = true
-            }else{
-                resposta.hasNextPage = false
-            }
-                console.log(resposta)
-            res.send(resposta)
-        }).catch((err) => {
-            console.log("Nao deu certo o paginate.", + err)
+    router.get('/json/lista', (req, res) => {
+        Insumo.find().populate("origem").sort({descricao: "asc"}).then((insumos) =>{
+            var texto = JSON.stringify(insumos);
+            res.send(insumos)
         })
-        
     })
 
     router.get('/listajson/', (req, res) => {
-        res.render('insumos/json2')
+        res.render('insumos/indexjson')
     })
 
-    router.get('/add', (req, res) => {
+    router.get('/add', eTecnico, (req, res) => {
         Base.find().then((bases) => {
             res.render("insumos/add", {bases})
         })
                
     })
 
-    router.post("/add", multer.single('arquivo'), (req, res) => {
+    router.post("/add", eTecnico, multer.single('arquivo'), (req, res) => {
+        //tratar o valor mediano
+        var preco = parseFloat(req.body.valor_mediano.replace(',','.'))
         var novoInsumo = {
             descricao: req.body.descricao,
             unidade_medida: req.body.unidade,
             observacao: req.body.observacao,
             base_origem: req.body.origem,
-            imagem: "/img/insumos/semimagem.png"
+            codigo_origem: req.body.codigo_origem,
+            preco_mediano: preco
+            //imagem: "/img/insumos/semimagem.png"
+            
         }
         //console.log(novoInsumo)
 
@@ -141,8 +134,6 @@ router.get('/', (req, res) => {
                     console.log("Houve um erro: "+ err)
                 })            
             }else{
-                console.log(novoInsumo)
-                
                 new Insumo(novoInsumo).save().then(() => {
                     req.flash("success_msg", "Insumo cadastrado com sucesso.")
                     res.redirect("/insumos")
@@ -154,7 +145,7 @@ router.get('/', (req, res) => {
         }
     })
 
-    router.get("/edit/:id", (req,res) => {     
+    router.get("/edit/:id", eTecnico, (req,res) => {     
         Insumo.findOne({_id: req.params.id}).populate("origem").then((insumo) => {
             Base.find().then((base) => {
                 res.render("insumos/editinsumo", {insumo, base})   
@@ -167,12 +158,16 @@ router.get('/', (req, res) => {
         
     })
 
-    router.post("/edit/", (req, res) => {
+    router.post("/edit/", eTecnico, (req, res) => {
         Insumo.findOne({_id: req.body.id}).then((insumo) => {
-            
+            console.log(req.body.valor_mediano)
+            var preco = parseFloat(req.body.valor_mediano.replace(',','.'))
+
             insumo.descricao = req.body.descricao
             insumo.unidade_medida = req.body.unidade
             insumo.observacao = req.body.observacao
+            insumo.preco_mediano = preco
+            insumo.codigo_origem = req.body.codigo_origem
 
             insumo.save().then(() => {
                 req.flash("success_msg", "Alterado com sucesso.")
@@ -188,7 +183,7 @@ router.get('/', (req, res) => {
         })
     })
 
-    router.post('/delete', (req, res) => { 
+    router.post('/delete', eTecnico, (req, res) => { 
         Insumo.deleteOne({_id: req.body.id}).then(() => {
             req.flash("success_msg", "Insumo removido com sucesso.")
             res.redirect("/insumos/")
@@ -199,7 +194,7 @@ router.get('/', (req, res) => {
         
     })
 
-    router.get("/importar", (req, res) => {
+    router.get("/importar", eAdmin, (req, res) => {
         Base.find().then((bases) => {
             res.render("insumos/importar", {bases})
         }).catch((err) => {
@@ -209,7 +204,7 @@ router.get('/', (req, res) => {
         
     })
 
-    router.post("/importar", (req, res) => {
+    router.post("/importar", eAdmin, async (req, res) => {
         
         var form = new formidable.IncomingForm();
         form.parse(req, function(err, fields, files) {
@@ -221,9 +216,7 @@ router.get('/', (req, res) => {
 
             var linha = fields.linha //pega o campo linha do formulario
             var fonte_base = fields.base
-            console.log(fields)
 
-            console.log("Linha do cabeçalho: " + linha)
             var cabecalho_planilha = result[linha]
             var insumos = []
             for(var i = 0; i < result.length; i++){
@@ -249,15 +242,21 @@ router.get('/', (req, res) => {
                 insumos.push(novoInsumo)                
             }
 
-            var promisse = Insumo.create(insumos, (err, insumos) => {
-                if (err) {
-                    console.log(err)
-                }
-                for( var i = 0; i < insumos.length; i ++){
-                    insumos[i].save()
-                }
-
-            })
+            try {
+                Insumo.create(insumos, (err, insumos) => {
+                    if (err) {
+                        console.log(err)
+                    }
+                    for( var i = 0; i < insumos.length; i ++){
+                        insumos[i].save()
+                    }
+    
+                })
+                req.flash('success_msg', 'Insumos importados com sucesso.')
+            } catch (err) {
+                req.flash('error_msg', 'Não foi possível importar os insumos.')
+            }
+            res.redirect('/insumos')
             
 
            /* 
@@ -279,7 +278,7 @@ router.get('/', (req, res) => {
 
     // Rotas das BASES
 
-    router.get("/bases", (req, res) => {
+    router.get("/bases", eTecnico, (req, res) => {
         Base.find().then((bases) => {
             res.render("insumos/bases", {bases: bases})
         }).catch(() => {
@@ -288,11 +287,11 @@ router.get('/', (req, res) => {
         })        
     })
 
-    router.get("/bases/add", (req, res) => {
+    router.get("/bases/add", eTecnico, (req, res) => {
         res.render("insumos/addbase")
     })
 
-    router.post("/bases/add", (req, res) => {
+    router.post("/bases/add", eTecnico, (req, res) => {
 
         const novaBase = {
             nome: req.body.nome,
@@ -310,7 +309,7 @@ router.get('/', (req, res) => {
 
     })
 
-    router.get('/bases/edit/:id', (req, res) => {
+    router.get('/bases/edit/:id', eTecnico, (req, res) => {
         Base.findOne({_id: req.params.id}).then((base) => {
             res.render('insumos/editbase', {base})
         }).catch((err) => {
@@ -319,7 +318,7 @@ router.get('/', (req, res) => {
         })
     })
 
-    router.post('/bases/edit', (req, res) => {
+    router.post('/bases/edit', eTecnico, (req, res) => {
         Base.findOne({_id: req.body.id}).then((base) => {
             base.nome = req.body.nome
             base.abreviacao = req.body.abreviacao
@@ -338,13 +337,28 @@ router.get('/', (req, res) => {
         })
     })
 
-    router.post('/bases/delete', (req, res) => {
+    router.post('/bases/delete', eTecnico, (req, res) => {
         Base.remove({_id: req.body.id}).then(() => {
             req.flash("success_msg", "Base removida com sucesso.")
             res.redirect("/insumos/bases")
         }).catch((err) => {
             req.flash("error_msg", "Não foi possível remover a base de dados, tente novamente.")
             res.redirect("/insumos/bases")
+        })
+    })
+
+    //Rota teste bstable
+    router.get('/bstabletest', (req, res)=> {
+        res.render('insumos/bstabletest')
+    })
+
+
+
+    //Rotas ajax
+
+    router.get('/ajax/load', (req, res) => {
+        Insumo.find().populate("base_origem").sort({descricao: "asc"}).then((insumos) =>{
+            res.send(insumos)
         })
     })
 

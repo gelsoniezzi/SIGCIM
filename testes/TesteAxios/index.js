@@ -17,19 +17,30 @@ app.get('/', (req, res) => {
     {descricao: "Barbeador", valor: 0.50},
     {descricao: "Moto", valor: 1015.50},
   ]
-res.render('insumos', {vue: {insumos: ["gelson", "garcia"]}, menssage: "So amor"})
+res.render('insumos', {insumos})
+})
+
+app.get('/lista', (req, res) => {
+  var requisicoes = [
+    {id: 1, qtd: 2, itens: [{desc: 'Mouse', qtd: 3, price: 2.99}, {desc: 'Toalha', qtd: 5, price: 0.99}]},
+    {id: 2, qtd: 1, itens: [{desc: 'Acucar', qtd: 1, price: 1}, {desc: 'Toalha', qtd: 2, price: 0.99}]},
+    {id: 3, qtd: 3, itens: [{desc: 'Mouse', qtd: 3, price: 2.99}, {desc: 'Toalha', qtd: 5, price: 0.99}, {desc: 'Copo', qtd: 1, price: 5.99}]}
+  ]
+  res.render('requisicoes', {requisicoes})
+})
+
+app.get('/edit/:id',(req, res) => {
+  res.render('edit',{id: 1, name: 'Gelson'})
 })
 
 app.get('/envio', (req, res) => {
   var insumos = [
-    { id: 1, name: 'pipoca', price: 3.49 },
-    { id: 2, name: 'guaraná', price: 4.49 },
-    { id: 3, name: 'sal', price: .49 },
-    { id: 4, name: 'manteiga', price: 10.49 }
+    { id: 1, name: 'pipoca2', price: 3.49 },
+    { id: 2, name: 'guaraná2', price: 4.49 },
+    { id: 3, name: 'sal2', price: .49 },
+    { id: 4, name: 'manteiga3', price: 10.49 }
   ]
   res.send(insumos)
-
-
 })
 
 app.get('/insumos', (req, res) => {
@@ -39,11 +50,7 @@ app.get('/insumos', (req, res) => {
 
 app.post('/ajax/insumos', (req, res) => {
   console.log(req.body)
-  // setTimeout(() => {})
-
-  //res.send({ error: false, message: 'Insumos cadsatrados com sucesso' })
-  res.redirect('/cadastrou')
-  // }, 1000)
+  res.send({message: 'cadastrou'})
 })
 
 

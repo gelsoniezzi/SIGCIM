@@ -3,7 +3,7 @@
     const handlebars = require('express-handlebars')
     const bodyParser = require('body-parser')
     var app = module.exports = express() //const app = express() <- Passando o express para a val app
-    const adminContratos = require("./routes/adminContratos")
+    const contratos = require("./routes/contratos")
     const admin = require("./routes/admin")
     const insumo = require("./routes/insumos")
     const requisicao = require("./routes/requisicoes")
@@ -22,7 +22,7 @@
     // Sessao
         app.use(session({
             secret: "SigCIMUfersa",
-            cookie: {maxAge: 3000000},
+            cookie: {maxAge: 14400000},
             resave: true,
             saveUninitialized: true
         }))
@@ -53,7 +53,6 @@
     // Handlebars        
         var hbs = handlebars.create({defaultLayout: 'main',
         helpers: {
-            test: function () { return "Lorem ipsum" },
             json: function (value, options) {
                 return JSON.stringify(value);
             },
@@ -61,12 +60,21 @@
               //console.log('currency', value)
               return Number(value).toLocaleString('pt-BR', { 
                 style:'currency', currency:'BRL'
-              })
+              }).replace(',','_').replace('.',',').replace('_','.')
             },
             date_br:function(strDate){
-              const date = new Date(strDate);
-              // return 'cla'
-              return `${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}`
+            if (strDate){
+                const date = new Date(strDate);              
+                return `${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}`
+            }else{
+                return 'Não informado.'
+            }
+            },
+            inc: (value, options) => {
+                return parseInt(value) + 1      
+            },
+            fix: (value) => {
+                return value.toFixed(2)
             }
         }}
         )
@@ -76,7 +84,7 @@
         //require('handlebars-intl/dist/locale-data/pt')
     //mongoose
         mongoose.Promise = global.Promise
-        mongoose.connect("mongodb://localhost/sigcim").then(() => {
+        mongoose.connect('mongodb+srv://sigcim20192ufersa:iknA8o0wOZAVOHtn@cluster0-pv9gh.mongodb.net/SIGCIM?retryWrites=true&w=majority', { useNewUrlParser: true,  useUnifiedTopology: true}).then(() => {
             console.log("Conectado ao mongodb. ")
             
         }).catch((err) => {
@@ -92,19 +100,17 @@
             console.log("Oi, eu sou um midleware");
             next();
         })
-        */       
+        */
+       app.use('/scripts', express.static(__dirname + '/node_modules/'))
 
 
 // Rotas
-    app.get("/contratos", (req, res) => {
-        res.send("Lista de contratos.")
-    })
 
     app.get("/teste", (req, res) => {
         res.render("admin/teste")
     })
 
-    app.use('/adminContratos', adminContratos)
+    app.use('/contratos', contratos)
     app.use("/admin", admin)
     app.use('/usuarios', usuario)
     app.use("/insumos", insumo)
@@ -113,18 +119,7 @@
     app.get('/', (req, res) => {
         res.render('admin/index')
     })
-    
-    
-    app.get('/session', (req, res) => {
-        req.session.treinamento = "Formação Node.js"
-        req.session.ano = 2019
-        req.session.user = {
-            matricula: 1885704,
-            email: "gimg@live.com"
-        }
-        res.send("Sessão gerada")
 
-    })
 
     app.get('/estaLogado', (req, res) => {
         var usuario = null
