@@ -1,8 +1,8 @@
 const mongoose = require("mongoose")
 const mongooseAI = require('mongoose-auto-increment')
 const Schema = mongoose.Schema
-
-var connection = mongoose.createConnection("mongodb+srv://sigcim20192ufersa:iknA8o0wOZAVOHtn@cluster0-pv9gh.mongodb.net/SIGCIM?retryWrites=true&w=majority")
+const db = require('../config/db')
+var connection = mongoose.createConnection(db.mongoURI)
 mongooseAI.initialize(connection);
 
 const Requisicao = new Schema ({

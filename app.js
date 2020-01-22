@@ -16,7 +16,7 @@
     const passport = require('passport')
     require("./config/auth")(passport)
     var HandlebarsIntl = require('handlebars-intl');  
-
+    const db = require('./config/db')
 // Configuracoes
 
     // Sessao
@@ -84,7 +84,7 @@
         //require('handlebars-intl/dist/locale-data/pt')
     //mongoose
         mongoose.Promise = global.Promise
-        mongoose.connect('mongodb+srv://sigcim20192ufersa:iknA8o0wOZAVOHtn@cluster0-pv9gh.mongodb.net/SIGCIM?retryWrites=true&w=majority', { useNewUrlParser: true,  useUnifiedTopology: true}).then(() => {
+        mongoose.connect(db.mongoURI, { useNewUrlParser: true,  useUnifiedTopology: true}).then(() => {
             console.log("Conectado ao mongodb. ")
             
         }).catch((err) => {
@@ -140,7 +140,7 @@
 
     
 // Outros
-    const PORT = 8081
+    const PORT = process.env.PORT || 8081
     app.listen(PORT, () => {
         console.log("Servidor rodando!")
     })
