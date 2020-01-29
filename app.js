@@ -85,8 +85,7 @@
     //mongoose
         mongoose.Promise = global.Promise
         mongoose.connect(db.mongoURI, { useNewUrlParser: true,  useUnifiedTopology: true}).then(() => {
-            console.log("Conectado ao mongodb. ")
-            
+            console.log("Conectado ao mongodb. ")            
         }).catch((err) => {
             console.log("Erro ao se conectar ao mongodb: "+ err)
         })
@@ -94,22 +93,10 @@
         
     // Public
         app.use(express.static(path.join(__dirname, "public")))
-
-        /*
-        app.use((req, res, next) =>{
-            console.log("Oi, eu sou um midleware");
-            next();
-        })
-        */
-       app.use('/scripts', express.static(__dirname + '/node_modules/'))
+        app.use('/scripts', express.static(__dirname + '/node_modules/')) //Verificar esse comportamento.
 
 
 // Rotas
-
-    app.get("/teste", (req, res) => {
-        res.render("admin/teste")
-    })
-
     app.use('/contratos', contratos)
     app.use("/admin", admin)
     app.use('/usuarios', usuario)
@@ -120,7 +107,10 @@
         res.render('admin/index')
     })
 
+    app.get('/home', (req, res) => res.render('sistema/home'))
 
+
+    /*
     app.get('/estaLogado', (req, res) => {
         var usuario = null
         if (res.locals.user){
@@ -132,13 +122,10 @@
         }       
         res.send({            
             user: usuario
-        })
-        
+        })        
     })
-    
-    
+    */
 
-    
 // Outros
     const PORT = process.env.PORT || 8081
     app.listen(PORT, () => {

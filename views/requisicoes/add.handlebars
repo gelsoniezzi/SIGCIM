@@ -3,8 +3,11 @@
 <div id="app-insumos">
     <div class="card">
         <div class="card-body" >
-            <h4>Escolha os itens clicando no botão <i class="material-icons md-18">add_circle</i>: </h4>
-            <table id="table-insumos" style="font-size:13px; " class="table table-striped table-bordered table-sm" style="width:100%">
+            <h4>Clique no botão <i class="material-icons md-18">add_circle</i> para adicionar o insumo na requisição. </h4>
+            <hr>
+            <label for="buscar"></label>
+            <input v-model="filterValue" id='buscar' class="form-control" placeholder="Buscar insumos"><br>
+                <table id="table-insumos" style="font-size:13px; heigth: 10px" class="table table-striped table-bordered table-sm" >
                 <thead class="thead-dark">
                     <tr>
                         <th>Origem</th>
@@ -17,7 +20,7 @@
                     </tr>
                 </thead>
                 <tbody>   
-                    <tr v-for="(insumo, i) in insumos" :key="i">
+                    <tr v-for="(insumo, i) in insumosFiltrados " :key="i">
                         <td>\{{insumo.base_origem.abreviacao}}</td>
                         <td>\{{insumo.codigo_origem}}</td>
                         <td>\{{insumo.descricao}}</td>
@@ -28,6 +31,7 @@
                     </tr>
                 </tbody>    
             </table>
+            
         </div>
     </div>
     <br>
@@ -115,12 +119,14 @@
             insumos: [],
             campi: [],
             opcoes: null,
+            filterValue: '',
             requisicao: {
                 insumos: [],
                 ordem_compra: false,
                 campus_destino: null,
                 observacoes: '',
-                status: 'Salva'
+                status: 'Salva',
+                
 
             },
             //selecionados: [],
@@ -138,6 +144,11 @@
                 return this.requisicao.insumos.reduce((somaTotal, valorAtual) => {
                     return Number(somaTotal) + Number(valorAtual.preco_mediano) * Number(valorAtual.quantidade)
                 }, 0) || 0
+            },
+            insumosFiltrados: function() {
+                return this.insumos.filter(insumo =>{
+                    return insumo.descricao.toLowerCase().includes(this.filterValue.toLowerCase())
+                })
             }
         },
         methods: {

@@ -1,0 +1,40 @@
+    <div id="app">
+        {{message}}
+
+        <button v-on:click="buscar">Carregar insumos</button>
+        <input v-model="filterValue"/>
+        <ul>
+
+            <li>Eu aqui</li>
+
+            <li v-for="insumo in insumosFiltrados ">\{{ insumo.descricao }}</li>
+        </ul>
+    </div>
+    
+    <script>
+        var app = new Vue({
+        el: '#app',
+        data: {
+            message: 'Hello Vue!',
+            insumos: [{descricao: 'Inicial'},],
+            filterValue: ''
+
+        },
+        computed: {
+            insumosFiltrados: function() {
+                return this.insumos.filter(insumo =>{
+                    return insumo.descricao.toLowerCase().includes(this.filterValue.toLowerCase())
+                })
+            }
+        },
+        methods: {
+            async buscar() {
+                alert('eu aqui')
+                axios
+                .get('/insumos/ajax/load')
+                .then(response => (this.insumos = response.data))
+
+            }
+        },
+        })
+    </script>

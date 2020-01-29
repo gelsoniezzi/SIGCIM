@@ -28,7 +28,7 @@
   },
   "name": "sigcim",
   "version": "1.0.0",
-  "description": "Sistema de Gerenciamento de Compras de Insumos de Manutencao",
+  "description": "Sistema de Gestão de Compras de Insumos de Manutencao",
   "main": "app.js",
   "devDependencies": {},
   "scripts": {

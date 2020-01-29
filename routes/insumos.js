@@ -348,8 +348,8 @@ const {eAdmin} = require('../helpers/estaLogado')
     })
 
     //Rota teste bstable
-    router.get('/bstabletest', (req, res)=> {
-        res.render('insumos/bstabletest')
+    router.get('/vuetest', (req, res)=> {
+        res.render('insumos/vuetest')
     })
 
 
