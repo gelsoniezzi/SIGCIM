@@ -24,7 +24,7 @@
     "passport-local": "^1.0.0",
     "popper.js": "^1.16.0",
     "sharp": "^0.22.1",
-    "xlsx": "^0.14.5"
+    "xlsx": "^0.17.0"
   },
   "name": "sigcim",
   "version": "1.0.0",
